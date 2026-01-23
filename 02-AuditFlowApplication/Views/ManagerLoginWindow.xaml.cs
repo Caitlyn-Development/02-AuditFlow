@@ -6,11 +6,11 @@ using System.Windows.Controls;
 
 namespace _02_AuditFlowApplication.Views
 {
-    public partial class LoginWindow : Window
+    public partial class ManagerLoginWindow : Window
     {
         private readonly AuthenticationService _authService;
 
-        public LoginWindow()
+        public ManagerLoginWindow()
         {
             InitializeComponent();
             _authService = new AuthenticationService();
@@ -49,9 +49,9 @@ namespace _02_AuditFlowApplication.Views
             }
         }
 
-        private void ManagerLoginButton_Click(object sender, RoutedEventArgs e)
+        private void AuditorLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.ManagerLogin(this);
+            NavigationHelper.AuditorLogin(this);
         }
     }
 }

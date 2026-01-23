@@ -1,17 +1,16 @@
-﻿using _02_AuditFlowApplication.Views;
+﻿using _02_AuditFlowApplication.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using _02_AuditFlowApplication.Helpers;
 
-namespace _02_AuditFlowApplication
+namespace _02_AuditFlowApplication.Views
 {
-    public partial class MainWindow : Window
+    public partial class AuditView : Window
     {
         private DateTime currentMonth;
         private Dictionary<DateTime, List<string>> auditEvents;
 
-        public MainWindow()
+        public AuditView()
         {
             InitializeComponent();
             currentMonth = new DateTime(2026, 10, 1); // October 2026 as shown in wireframe

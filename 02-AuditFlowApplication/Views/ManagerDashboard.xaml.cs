@@ -1,17 +1,15 @@
-﻿using _02_AuditFlowApplication.Views;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using _02_AuditFlowApplication.Helpers;
 
-namespace _02_AuditFlowApplication
+namespace _02_AuditFlowApplication.Views
 {
-    public partial class MainWindow : Window
+    public partial class ManagerDashboard : Window
     {
         private DateTime currentMonth;
         private Dictionary<DateTime, List<string>> auditEvents;
 
-        public MainWindow()
+        public ManagerDashboard()
         {
             InitializeComponent();
             currentMonth = new DateTime(2026, 10, 1); // October 2026 as shown in wireframe
@@ -152,24 +150,12 @@ namespace _02_AuditFlowApplication
             PopulateCalendar();
         }
 
-        private void DashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToDashboard(this);
-        }
-
-        private void AuditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToAudits(this);
-        }
-
-        private void TasksButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToTasks(this);
-        }
-
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Logout(this);
+            // Navigate back to login window
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
         }
     }
 }
