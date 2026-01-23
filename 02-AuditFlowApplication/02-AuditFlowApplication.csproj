@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>_02_AuditFlowApplication</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\PNG\AuditFlow Logo.png" />
+    <None Remove="Resources\PNG\New Project %285%29 %281%29.png" />
+    <None Remove="Resources\Svg\business-time-solid-full.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\PNG\AuditFlow Logo.png" />
+    <Resource Include="Resources\PNG\New Project (5) (1).png" />
+    <Resource Include="Resources\Svg\business-time-solid-full.svg" />
+  </ItemGroup>
+
+</Project>
