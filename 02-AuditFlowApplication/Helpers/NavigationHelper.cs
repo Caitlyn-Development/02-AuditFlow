@@ -1,60 +1,62 @@
 ﻿using _02_AuditFlowApplication.Views;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace _02_AuditFlowApplication.Helpers
 {
     public static class NavigationHelper
     {
-        public static void NavigateToDashboard(Window currentWindow)
+
+        private static ContentControl _contentControl;
+        private static UserControl _currentView;
+
+        public static void Initialise(ContentControl contentControl)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            currentWindow.Close();
+            _contentControl = contentControl;
         }
 
-        public static void NavigateToManagerDash(Window currentWindow)
+        public static void NavigateToView(UserControl newView)
         {
-            ManagerDashboard managerDashboard = new ManagerDashboard();
-            managerDashboard.Show();
-            currentWindow.Close();
+            if (_contentControl == null)
+                throw new InvalidOperationException("Navigation Helper not initialised");
+
+            _currentView = newView;
+            _contentControl.Content = newView;
         }
 
-        public static void NavigateToAudits(Window currentWindow)
+        public static void NavigateToDashboard()
         {
-            Views.AuditView auditView = new Views.AuditView();
-            auditView.Show();
-            currentWindow.Close();
+            NavigateToView(new DashboardWindow());
         }
 
-        public static void NavigateToTasks(Window currentWindow)
+        public static void NavigateToManagerDash()
         {
-            Views.TaskView taskView = new Views.TaskView();
-            taskView.Show();
-            currentWindow.Close();
+            NavigateToView(new ManagerDashboard());
         }
 
-        public static void Logout(Window currentWindow)
+        public static void NavigateToAudits()
         {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-            currentWindow.Close();
+            NavigateToView(new AuditView());
         }
 
-        public static void AuditorLogin(Window currentWindow)
+        public static void NavigateToTasks()
         {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-            currentWindow.Close();
+            NavigateToView(new TaskView());
         }
 
-        public static void ManagerLogin(Window currentWindow)
+        public static void Logout()
         {
-            ManagerLoginWindow managerLoginWindow = new ManagerLoginWindow();
-            managerLoginWindow.Show();
-            currentWindow.Close();
+            NavigateToView(new LoginWindow());
+        }
+
+        public static void ShowLogin()
+        {
+            NavigateToView(new LoginWindow());
+        }
+
+        public static void ManagerLogin()
+        {
+            NavigateToView(new ManagerLoginWindow());
         }
     }
 }

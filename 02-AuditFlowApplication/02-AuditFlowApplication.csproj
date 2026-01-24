@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <None Remove="Resources\PNG\AuditFlow Logo.png" />
-    <None Remove="Resources\PNG\New Project %285%29 %281%29.png" />
     <None Remove="Resources\PNG\PurpleLogoImage.png" />
     <None Remove="Resources\Svg\arrow-right-from-bracket-solid-full.svg" />
     <None Remove="Resources\Svg\business-time-solid-full.svg" />
@@ -34,7 +33,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\PNG\AuditFlow Logo.png" />
-    <Resource Include="Resources\PNG\New Project (5) (1).png" />
+    <Resource Include="Resources\PNG\TealLogoImage.png" />
     <Resource Include="Resources\PNG\PurpleLogoImage.png" />
     <Resource Include="Resources\Svg\arrow-right-from-bracket-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

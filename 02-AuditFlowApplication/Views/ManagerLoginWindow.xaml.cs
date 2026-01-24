@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace _02_AuditFlowApplication.Views
 {
-    public partial class ManagerLoginWindow : Window
+    public partial class ManagerLoginWindow : UserControl
     {
         private readonly AuthenticationService _authService;
 
@@ -35,12 +35,8 @@ namespace _02_AuditFlowApplication.Views
                 // Store current user in application properties
                 Application.Current.Properties["CurrentUser"] = user;
 
-                // Open main window
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
+                NavigationHelper.NavigateToDashboard();
 
-                // Close login window
-                this.Close();
             }
             else
             {
@@ -51,7 +47,7 @@ namespace _02_AuditFlowApplication.Views
 
         private void AuditorLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.AuditorLogin(this);
+            NavigationHelper.ShowLogin();
         }
     }
 }

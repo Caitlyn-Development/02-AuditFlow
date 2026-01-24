@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace _02_AuditFlowApplication.Views
 {
-    public partial class AuditView : Window
+    public partial class AuditView : UserControl
     {
         private DateTime currentMonth;
         private Dictionary<DateTime, List<string>> auditEvents;
@@ -153,22 +153,22 @@ namespace _02_AuditFlowApplication.Views
 
         private void DashboardButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToDashboard(this);
+            NavigationHelper.NavigateToDashboard();
         }
 
         private void AuditsButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToAudits(this);
+            NavigationHelper.NavigateToAudits();
         }
 
         private void TasksButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToTasks(this);
+            NavigationHelper.NavigateToTasks();
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Logout(this);
+            NavigationHelper.Logout();
         }
     }
 }

@@ -24,8 +24,8 @@ namespace _02_AuditFlowApplication
             authService.InitializeDefaultAdmin();
 
             // Show login window
-            var loginWindow = new Views.LoginWindow();
-            loginWindow.Show();
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
         }
     }
 }
