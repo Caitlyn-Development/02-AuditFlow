@@ -13,7 +13,10 @@
     <None Remove="Resources\PNG\AuditFlow Logo.png" />
     <None Remove="Resources\PNG\PurpleLogoImage.png" />
     <None Remove="Resources\Svg\arrow-right-from-bracket-solid-full.svg" />
+    <None Remove="Resources\Svg\arrow-up-from-bracket-solid-full.svg" />
     <None Remove="Resources\Svg\business-time-solid-full.svg" />
+    <None Remove="Resources\Svg\file-lines-regular-full.svg" />
+    <None Remove="Resources\Svg\file-pdf-regular-full.svg" />
     <None Remove="Resources\Svg\filter-solid-full.svg" />
     <None Remove="Resources\Svg\flag-regular-full.svg" />
     <None Remove="Resources\Svg\gear-solid-full.svg" />
@@ -38,7 +41,16 @@
     <Resource Include="Resources\Svg\arrow-right-from-bracket-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Svg\arrow-up-from-bracket-solid-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Svg\business-time-solid-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Svg\file-lines-regular-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Svg\file-pdf-regular-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Svg\filter-solid-full.svg">

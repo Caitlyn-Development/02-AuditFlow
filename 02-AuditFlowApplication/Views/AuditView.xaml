@@ -157,83 +157,47 @@
                                Foreground="#FF1E1E1E" FontFamily="Verdana" FontWeight="Bold" Width="1121" HorizontalAlignment="Left"><Run Text="Audit "/><Run Language="en-gb" Text="Scheduling"/></TextBlock>
 
                     <!-- Statistics Cards Row -->
-                    <Grid Margin="0,0,0,40" Width="1453">
+                    <Grid Margin="0,0,0,40" Width="1452">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Name="TotalAudits" Width="Auto"/>
-                            <ColumnDefinition Name="InProgressAudits" Width="Auto"/>
-                            <ColumnDefinition Name="CompletedAudits" Width="Auto"/>
-                            <ColumnDefinition Name="OverdueAudits" Width="Auto"/>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition  Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Total Audits Card -->
-                        <Border Grid.Column="0" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Margin="24,0,50,0" Padding="10,10,10,10" Height="110" VerticalAlignment="Center" Width="227">
+                        <Border Grid.Column="0" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Height="80" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0" Width="100">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
                             <StackPanel>
-                                <Grid Margin="0,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Name="CardTitle" Width="*"/>
-                                        <ColumnDefinition Name="CardIcon" Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Total Audits" 
-                                           FontSize="18" 
-                                           Foreground="#FF1E1E1E" FontFamily="Verdana" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="139" Padding="0,5,0,5"/>
-                                    <Border Grid.Column="1" Background="#E3F2FD"
-        CornerRadius="4"
-        Margin="70,0,0,0"
-        VerticalAlignment="Top" Width="30" Height="30">
-                                    </Border>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="5" 
-                                               FontSize="20" 
-                                               FontWeight="Bold" 
-                                               Foreground="#FF1E1E1E" FontFamily="Verdana"/>
-                                </StackPanel>
-                                <TextBlock Text="Total audits assigned to you" 
-                                           FontSize="14" 
-                                           Foreground="#FF1E1E1E"
-                                           TextWrapping="Wrap" FontFamily="Verdana" Padding="0,5,0,5"/>
+                                <svgc:SvgViewbox Source="/Resources/Svg/filter-solid-full.svg" Height="40" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,10"/>
+                                <StackPanel Orientation="Horizontal"/>
                             </StackPanel>
                         </Border>
 
                         <!-- Audits In Progress Card -->
-                        <Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="110" VerticalAlignment="Center" Width="227" Grid.Column="1">
+                        <Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="500" Grid.Column="1">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
                             <StackPanel>
                                 <Grid Margin="0,0,0,0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="69"/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Audits In Progress" 
-                                           FontSize="18" 
-                                           Foreground="#FF1E1E1E" FontFamily="Verdana" Grid.ColumnSpan="2" Padding="0,5,0,5" Margin="0,0,36,0"/>
-                                    <Border Grid.Column="1" Background="#FFF3E0"
-                                            CornerRadius="4"
-        Margin="70,0,0,0"
-        VerticalAlignment="Top" Width="30" Height="30">
-                                    </Border>
+                                    <StackPanel Grid.Column="0">
+                                        <svgc:SvgViewbox Source="/Resources/Svg/magnifying-glass-solid-full.svg" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,3,0,10"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Search Audits" Foreground="#1e1e1e" FontFamily="Verdana" FontSize="18" HorizontalAlignment="Left" Width="408" Grid.Column="1" Margin="15,21,0,21"/>
                                 </Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="3" 
-                                               FontSize="20" 
-                                               FontWeight="Bold" 
-                                               Foreground="#FF1E1E1E" FontFamily="Verdana"/>
-                                </StackPanel>
-                                <TextBlock Text="Currently active audits" 
-                                           FontSize="14" 
-                                           Foreground="#FF1E1E1E"
-                                           Margin="0,5,0,0"
-                                           TextWrapping="Wrap" FontFamily="Verdana" Padding="0,5,0,5"/>
+                                <StackPanel Orientation="Horizontal"/>
                             </StackPanel>
                         </Border>
 
                         <!-- Completed Audits Card -->
-                        <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="110" VerticalAlignment="Center" Width="227">
+                        <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
@@ -243,35 +207,14 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" 
-                                           FontSize="18" 
-                                           Foreground="#FF1E1E1E" 
-                                           FontFamily="Verdana" 
-                                           Padding="0,5,0,5"
-                                           Text="Completed Audits" Grid.ColumnSpan="2" Margin="0,0,39,0"></TextBlock>
-                                    <Border Grid.Column="1" Background="#E8F5E9"
-        CornerRadius="4"
-        Margin="70,0,0,0"
-        VerticalAlignment="Top" Width="30" Height="30">
-                                    </Border>
-
+                                    <TextBlock Grid.Column="0" Text="All Types" Foreground="#1e1e1e" FontFamily="Verdana" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,15,0,15"/>
                                 </Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="2" 
-                                               FontSize="20" 
-                                               FontWeight="Bold" 
-                                               Foreground="#FF1E1E1E" FontFamily="Verdana"/>
-                                </StackPanel>
-                                <TextBlock Text="Closed audits" 
-                                           FontSize="14" 
-                                           Foreground="#FF1E1E1E"
-                                           Margin="0,5,0,0"
-                                           TextWrapping="Wrap" FontFamily="Verdana" Padding="0,5,0,5"/>
+                                <StackPanel Orientation="Horizontal"/>
                             </StackPanel>
                         </Border>
 
                         <!-- Overdue Audits Card -->
-                        <Border Grid.Column="3" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="110" VerticalAlignment="Center" Width="227">
+                        <Border Grid.Column="3" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
@@ -281,25 +224,9 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Overdue Audits" 
-                                           FontSize="18" 
-                                           Foreground="#FF1E1E1E" FontFamily="Verdana" Padding="0,5,0,5" Grid.ColumnSpan="2" Margin="0,0,53,0"/>
-                                    <Border Grid.Column="1" Background="#FFEBEE"
-        CornerRadius="4"
-        Margin="70,0,0,0"
-        VerticalAlignment="Top" Width="30" Height="30"/>
+                                    <TextBlock Grid.Column="0" Text="All Status" FontSize="18" FontFamily="Verdana" Foreground="#1e1e1e" Margin="0,15,0,15"/>
                                 </Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="0" 
-                                               FontSize="20" 
-                                               FontWeight="Bold" 
-                                               Foreground="#FF1E1E1E" FontFamily="Verdana"/>
-                                </StackPanel>
-                                <TextBlock Text="Audits past due date" 
-                                           FontSize="14" 
-                                           Foreground="#FF1E1E1E"
-                                           Margin="0,5,0,0"
-                                           TextWrapping="Wrap" FontFamily="Verdana" Padding="0,5,0,5"/>
+                                <StackPanel Orientation="Horizontal"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -308,7 +235,7 @@
                     <Border Background="White" 
                             CornerRadius="10" 
                             Padding="25"
-                            Margin="0,0,0,25" BorderThickness="2,2,2,2" Width="1459">
+                            Margin="0,0,0,25" BorderThickness="2,2,2,2" Width="1459" Height="383">
                         <Border.BorderBrush>
                             <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                         </Border.BorderBrush>
@@ -319,79 +246,42 @@
                         <StackPanel>
                             <!-- Calendar Header -->
                             <Grid Margin="0,0,0,20">
-                                <TextBlock Text="Calendar" 
+                                <TextBlock 
                                            FontSize="22" 
                                            FontWeight="SemiBold"
                                            Foreground="#FF1E1E1E"
-                                           VerticalAlignment="Center" FontFamily="Verdana" Margin="0,0,1283,0"/>
+                                           VerticalAlignment="Center" FontFamily="Verdana" Margin="0,0,1141,0"><Run Text="Scheduled "/><Run Language="en-gb" Text="Audits"/></TextBlock>
 
                                 <StackPanel Orientation="Horizontal" 
-                                            HorizontalAlignment="Left" Margin="537,0,0,0" Width="868">
-                                    <Button Content="◀" 
-                                            x:Name="PrevMonthButton"
-                                            Width="35"
-                                            Height="35"
-                                            Background="#F5F5F5"
-                                            BorderThickness="0"
-                                            Cursor="Hand"
-                                            Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="CalendarMonthYear"
-                                               Text="October 2026" 
-                                               FontSize="16"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"
-                                               Margin="10,0" FontFamily="Verdana"/>
-                                    <Button Content="▶" 
-                                            x:Name="NextMonthButton"
-                                            Width="35"
-                                            Height="35"
-                                            Background="#F5F5F5"
-                                            BorderThickness="0"
-                                            Cursor="Hand"
-                                            Margin="10,0,0,0"/>
-                                </StackPanel>
+                                            HorizontalAlignment="Left" Margin="537,0,0,0" Width="868"/>
                             </Grid>
 
                             <!-- Calendar Grid -->
-                            <Grid>
+                            <Grid Height="284">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="67"/>
+                                    <ColumnDefinition Width="Auto" MinWidth="33"/>
+                                    <ColumnDefinition Width="Auto" MinWidth="50"/>
+                                    <ColumnDefinition Width="Auto" MinWidth="101"/>
+                                    <ColumnDefinition Width="Auto" MinWidth="49"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" MinHeight="40"/>
+                                    <RowDefinition Height="Auto" MinHeight="40"/>
+                                    <RowDefinition Height="Auto" MinHeight="40"/>
+                                    <RowDefinition Height="Auto" MinHeight="40"/>
+                                    <RowDefinition Height="Auto" MinHeight="40"/>
                                 </Grid.RowDefinitions>
-
-                                <!-- Day Headers -->
-                                <UniformGrid Grid.Row="0" Rows="1" Columns="7" Margin="0,0,0,10">
-                                    <TextBlock Text="Mon" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                    <TextBlock Text="Tue" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                    <TextBlock Text="Wed" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                    <TextBlock Text="Thur" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                    <TextBlock Text="Fri" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                    <TextBlock Text="Sat" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold"/>
-                                    <TextBlock Text="Sun" HorizontalAlignment="Center" Foreground="#999999" FontSize="14" FontWeight="SemiBold" FontFamily="Verdana"/>
-                                </UniformGrid>
-
-                                <!-- Calendar Days -->
-                                <UniformGrid x:Name="CalendarGrid" 
-                                             Grid.Row="1" 
-                                             Rows="5" 
-                                             Columns="7">
-                                    <!-- Days will be populated programmatically -->
-                                    <!-- Example structure for reference -->
-                                    <Border Background="#F8F8F8" 
-                                            Margin="2" 
-                                            Height="80"
-                                            BorderBrush="#E0E0E0"
-                                            BorderThickness="1">
-                                        <StackPanel Margin="8">
-                                            <TextBlock Text="1" FontSize="14" Foreground="#666"/>
-                                        </StackPanel>
-                                    </Border>
-                                </UniformGrid>
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Audit Name" FontFamily="Verdana" FontSize="16" Width="281" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Text="Type" FontFamily="Verdana" FontSize="16" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="2" Grid.Row="0" Text="Start Date" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="3" Grid.Row="0" Text="Due Date" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="4" Grid.Row="0" Text="Recurring" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="5" Grid.Row="0" Text="Status" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
                             </Grid>
                         </StackPanel>
                     </Border>
-
-                    <!-- Upcoming Deadlines Section -->
                 </StackPanel>
             </ScrollViewer>
         </Grid>

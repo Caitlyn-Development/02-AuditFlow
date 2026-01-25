@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:_02_AuditFlowApplication"
+        xmlns:local="clr-namespace:_02_AuditFlowApplication" 
+        xmlns:svgc="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf"
         mc:Ignorable="d"
         Background="#FFFFFF">
 
@@ -84,32 +85,31 @@
 
                 <!-- Right Side Icons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2" Margin="1092,0,0,0">
-                    <Button Content="⚙" 
-                            FontSize="20"
-                            Width="50"
-                            Height="50"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Margin="5,0" Foreground="Black"/>
+                    <Button Width="50"
+        Height="50"
+        BorderThickness="0"
+        Cursor="Hand"
+        Background="Transparent"
+        Margin="5,0">
+                        <svgc:SvgViewbox Source="/Resources/Svg/gear-solid-full.svg"/>
+                    </Button>
                     <Button Content="●" 
-                            FontSize="20"
-                            Width="50"
-                            Height="50"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Margin="5,0" Foreground="Black"/>
+        FontSize="20"
+        Width="50"
+        Height="50"
+        Background="Transparent"
+        BorderThickness="0"
+        Cursor="Hand"
+        Margin="5,0" Foreground="Black"/>
                     <Button x:Name="LogoutButton"
-                            Content="↪" 
-                            Click="LogoutButton_Click"
-                            FontSize="20"
-                            Width="50"
-                            Height="50"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Margin="5,0" Foreground="Black"/>
+        Width="50"
+        Height="50"
+        BorderThickness="0"
+        Cursor="Hand"
+        Background="Transparent"
+        Margin="5,0">
+                        <svgc:SvgViewbox Source="/Resources/Svg/arrow-right-from-bracket-solid-full.svg"/>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>
