@@ -280,7 +280,7 @@ Style="{StaticResource MenuButtonStyle}" Click="TasksButton_Click" Foreground="#
                     <Border Background="White" 
                             CornerRadius="10" 
                             Padding="25"
-                            Margin="0,20,0,25" BorderThickness="2,2,2,2" MinWidth="1459" MinHeight="1004" Width="1444">
+                            Margin="0,20,0,25" BorderThickness="2,2,2,2" MinWidth="1459" MinHeight="1004" Width="1444" Height="768">
                         <Border.BorderBrush>
                             <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                         </Border.BorderBrush>
@@ -296,7 +296,7 @@ Style="{StaticResource MenuButtonStyle}" Click="TasksButton_Click" Foreground="#
                                 <StackPanel Orientation="Horizontal" 
                 HorizontalAlignment="Left" Margin="537,0,0,0" Width="868"/>
                             </Grid>
-                            <Grid Height="700" HorizontalAlignment="Left">
+                            <Grid HorizontalAlignment="Left" Height="904">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
@@ -304,11 +304,11 @@ Style="{StaticResource MenuButtonStyle}" Click="TasksButton_Click" Foreground="#
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" MinHeight="150" />
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="630"/>
+                                    <RowDefinition Height="Auto" MinHeight="0" />
+                                    <RowDefinition Height="Auto" MinHeight="0"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" FontFamily="Verdana" FontSize="22" Width="281" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27"><Run Language="en-gb" Text="Select Task"/></TextBlock>
+                                <TextBlock Grid.Row="0" FontFamily="Verdana" FontSize="18" Width="281" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27"><Run Language="en-gb" Text="Select Task"/></TextBlock>
                                 <ComboBox Grid.Row="0" Text="Select Task" Width="280" HorizontalAlignment="Center" Margin="0,40,0,60" BorderBrush="#FF1E1E1E" BorderThickness="2,2,2,2" FontFamily="Verdana" Foreground="#FF1E1E1E" FontSize="16">
                                     <ComboBox.Background>
                                         <LinearGradientBrush EndPoint="0,1">
@@ -322,18 +322,31 @@ Style="{StaticResource MenuButtonStyle}" Click="TasksButton_Click" Foreground="#
                                         <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                                     </Border.BorderBrush>
                                     <StackPanel>
-                                        <TextBlock Text="Drag and drop files here. Supports: PDF, Word and Images." FontFamily="Verdana" FontSize="24" Padding="10,10,10,10" TextWrapping="Wrap" HorizontalAlignment="Center" Width="356" Margin="0,20,0,10"/>
+                                        <TextBlock Text="Drag and drop files here. Supports: PDF, Word and Images." FontFamily="Verdana" FontSize="22" Padding="10,10,10,10" TextWrapping="Wrap" HorizontalAlignment="Center" Width="356" Margin="0,20,0,10"/>
                                         <svgc:SvgViewbox Source="/Resources/Svg/arrow-up-from-bracket-solid-full.svg" Width="180" Height="180"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Height="80" HorizontalAlignment="Center" Margin="0,440,0,0" Width="600" VerticalAlignment="Top">
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Height="70" HorizontalAlignment="Center" Margin="0,440,0,0" Width="600" VerticalAlignment="Top">
                                     <Border.BorderBrush>
                                         <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                                     </Border.BorderBrush>
                                     <StackPanel>
-                                        <svgc:SvgViewbox Source="/Resources/Svg/file-pdf-regular-full.svg" Height="50" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,6,0,10"/>
+                                        <svgc:SvgViewbox Source="/Resources/Svg/file-pdf-regular-full.svg" Height="50" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Height="70" HorizontalAlignment="Center" Margin="0,440,0,0" Width="600" VerticalAlignment="Bottom">
+                                    <Border.BorderBrush>
+                                        <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
+                                    </Border.BorderBrush>
+                                    <StackPanel>
+                                        <svgc:SvgViewbox Source="/Resources/Svg/file-lines-regular-full.svg" Height="50" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <Button Grid.Column="1" Grid.Row="2" Content="Submit Evidence" FontFamily="Verdana" FontSize="16" Width="200" Height="40" Margin="5,10,5,10" Background="#FF003B49" FontWeight="Bold">
+                                    <Button.BorderBrush>
+                                        <SolidColorBrush Color="#FF1E1E1E" Opacity="0.8"/>
+                                    </Button.BorderBrush>
+                                </Button>
                             </Grid>
                         </StackPanel>
                     </Border>
