@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.RightsManagement;
-using System.Text;
 
 namespace _02_AuditFlowApplication.Models
 {
@@ -25,33 +21,35 @@ namespace _02_AuditFlowApplication.Models
 
         [Required] public AuditStatus Status { get; set; } = AuditStatus.NotStarted;
 
-        [ForeignKey("CreatedBy")]
-        public int CreatedByUserID  { get; set; }
-        public virtual User CreatedBy {  get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        [ForeignKey("CreatedBy")] public int CreatedByUserID  { get; set; }
 
-        public enum AuditType 
-        {
+        public virtual User CreatedBy {  get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+    }
+
+    public enum AuditType
+    {
         Security = 1,
         Safety = 2,
         Quality = 3,
         DataProtection = 4,
         Financial = 5
-        }
-        public enum AuditStatus
-        {
-            NotStarted = 1,
-            InProgress = 2,
-            Completed = 3,
-            Overdue = 4
-        }
+    }
 
-        public enum RecurrenceFrequency
-        {
-            Weekly = 1,
-            Monthly = 2,
-            Quarterly = 3,
-            Annual = 4
-        }
+    public enum AuditStatus
+    {
+        NotStarted = 1,
+        InProgress = 2,
+        Completed = 3,
+        Overdue = 4
+    }
+
+    public enum RecurrenceFrequency
+    {
+        Weekly = 1,
+        Monthly = 2,
+        Quarterly = 3,
+        Annual = 4
     }
 }

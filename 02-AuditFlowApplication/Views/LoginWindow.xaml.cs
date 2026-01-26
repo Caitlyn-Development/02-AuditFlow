@@ -8,7 +8,6 @@ namespace _02_AuditFlowApplication.Views
 {
     public partial class LoginWindow : UserControl
     {
-
         private readonly AuthenticationService _authService;
 
         public LoginWindow()
@@ -33,10 +32,8 @@ namespace _02_AuditFlowApplication.Views
 
             if (user != null)
             {
-                // Store current user in application properties
                 Application.Current.Properties["CurrentUser"] = user;
 
-                // Open main window
                 NavigationHelper.NavigateToDashboard();
             }
             else

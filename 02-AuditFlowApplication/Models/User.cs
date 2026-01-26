@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Permissions;
-using System.Security.RightsManagement;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace _02_AuditFlowApplication.Models
 {
@@ -23,10 +18,11 @@ namespace _02_AuditFlowApplication.Models
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public enum UserRole
-        {
-            Auditor = 1,
-            Manager = 2
-        }
     }
-    } 
+
+    public enum UserRole
+    {
+        Auditor = 1,
+        Manager = 2
+    }
+} 

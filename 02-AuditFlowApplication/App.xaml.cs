@@ -1,5 +1,6 @@
 ﻿using _02_AuditFlowApplication.Data;
 using _02_AuditFlowApplication.Services;
+using System.IO;
 using System.Windows;
 
 namespace _02_AuditFlowApplication
@@ -13,15 +14,7 @@ namespace _02_AuditFlowApplication
         {
             base.OnStartup(e);
 
-            // Initialize database
-            using (var context = new AppDataContext())
-            {
-                context.Database.EnsureCreated();
-            }
-
-            // Initialize default admin user
-            var authService = new AuthenticationService();
-            authService.InitializeDefaultAdmin();
+            DatabaseHelper.InitialiseDatabase();
 
             // Show login window
             var mainWindow = new MainWindow();

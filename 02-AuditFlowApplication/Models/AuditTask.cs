@@ -7,30 +7,26 @@ namespace _02_AuditFlowApplication.Models
     {
         [Key] public int TaskId { get; set; }
 
-        [Required]
-        [MaxLength(200)]
-        public string TaskName { get; set; }
+        [Required][MaxLength(200)] public string TaskName { get; set; }
 
         public string Description { get; set; }
 
-        [Required]
-        [ForeignKey("Audit")]
-        public int AuditId { get; set; }
-        public virtual Audit Audit { get; set; }
+        [Required][ForeignKey("Audit")] public int AuditId { get; set; }
 
-        [Required]
-        [ForeignKey("AssignedTo")]
-        public int AssignedToUserId { get; set; }
-        public virtual User AssignedTo { get; set; }
+        public virtual Audit Audit{ get; set; }
+
+        [Required][ForeignKey("AssignedToUser")] public int AssignedToUserId { get; set; }
+
+        public virtual User AssignedToUser { get; set; }
 
         [Required] public DateTime DueDate { get; set; }
 
-        [Required] public TaskStatus Status { get; set; } = TaskStatus.NotStarted;
+        [Required] public AuditTaskStatus Status { get; set; } = AuditTaskStatus.NotStarted;
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 
-    public enum TaskStatus
+    public enum AuditTaskStatus
     {
         NotStarted = 1,
         InProgress = 2,

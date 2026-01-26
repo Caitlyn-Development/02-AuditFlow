@@ -33,7 +33,7 @@ namespace _02_AuditFlowApplication.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AuditTask>()
-                .HasOne(t => t.AssignedTo)
+                .HasOne(t => t.AssignedToUser)
                 .WithMany()
                 .HasForeignKey(t => t.AssignedToUserId)
                 .OnDelete(DeleteBehavior.Restrict);
