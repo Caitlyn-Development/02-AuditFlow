@@ -9,6 +9,7 @@
         Background="#FFFFFF">
 
     <UserControl.Resources>
+
         <!-- Button Style -->
         <Style x:Key="MenuButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -57,6 +58,107 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="0,20,0,15"/>
             <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+
+        <!-- Combo Box Style -->
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="#1e1e1e"
+                                            BorderThickness="2"
+                                            Focusable="False"
+                                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Selected Item Display -->
+                                            <ContentPresenter Grid.Column="0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                Margin="20,0,0,0"
+                                                                Content="{TemplateBinding Content}"
+                                                                ContentTemplate="{TemplateBinding ContentTemplate}"/>
+
+                                            <!-- Dropdown Arrow -->
+                                            <Path Grid.Column="1"
+                                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                                      Fill="#1E1E1E"
+                                                      HorizontalAlignment="Right"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,20,0"
+                                                      Width="12"
+                                                      Height="8"
+                                                      Stretch="Uniform"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+
+                            <!-- Dropdown Popup -->
+                            <Popup x:Name="Popup"
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                <Border Background="White"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Margin="0,4,0,0"
+                                            MinWidth="{TemplateBinding ActualWidth}">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2" Color="#000000"/>
+                                    </Border.Effect>
+                                    <ScrollViewer Margin="0,4">
+                                        <StackPanel IsItemsHost="True"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Combo Box Item Style -->
+        <Style x:Key="ComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#1E1E1E"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                    BorderThickness="0"
+                                    Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#E3F2FD"/>
+                                <Setter Property="Foreground" Value="#2196F3"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 
@@ -178,7 +280,157 @@
                         </Border>
 
                         <!-- Search Audits -->
-                        <Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="500" Grid.Column="1">
+                        <Border CornerRadius="15" 
+        BorderThickness="2" 
+        Padding="15,0,15,0" 
+        Margin="0,0,50,0" 
+        Height="80" 
+        VerticalAlignment="Center" 
+        Width="500" 
+        Grid.Column="1"
+        Background="White">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.1" Color="#000000"/>
+                            </Border.Effect>
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
+                            </Border.BorderBrush>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Search Icon -->
+                                <svgc:SvgViewbox Grid.Column="0"
+                        Source="/Resources/Svg/magnifying-glass-solid-full.svg" 
+                        Height="30" 
+                        Width="30" 
+                        VerticalAlignment="Center" 
+                        Margin="0,0,15,0"/>
+
+                                <!-- Search TextBox -->
+                                <TextBox x:Name="SearchTextBox"
+                 Grid.Column="1"
+                 FontFamily="Verdana" 
+                 FontSize="18" 
+                 Foreground="#1E1E1E"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 VerticalAlignment="Center"
+                 TextChanged="SearchTextBox_TextChanged"
+                 GotFocus="SearchTextBox_GotFocus"
+                 LostFocus="SearchTextBox_LostFocus">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="TextBox">
+                                                        <Grid>
+                                                            <!-- Placeholder Text -->
+                                                            <TextBlock x:Name="PlaceholderText"
+                                             Text="Search Audits"
+                                             FontFamily="Verdana"
+                                             FontSize="18"
+                                             Foreground="#999999"
+                                             VerticalAlignment="Center"
+                                             IsHitTestVisible="False">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+
+                                                            <!-- Actual TextBox -->
+                                                            <ScrollViewer x:Name="PART_ContentHost" 
+                                                VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+
+                                <!-- Search Suggestions Popup -->
+                                <Popup x:Name="SearchPopup"
+               Grid.Column="1"
+               PlacementTarget="{Binding ElementName=SearchTextBox}"
+               Placement="Bottom"
+               IsOpen="False"
+               AllowsTransparency="True"
+               StaysOpen="False"
+               Width="470">
+                                    <Border Background="White"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Margin="0,4,0,0"
+                    MaxHeight="300">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.2" Color="#000000"/>
+                                        </Border.Effect>
+                                        <ListBox x:Name="SearchResultsListBox"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         SelectionChanged="SearchResultsListBox_SelectionChanged"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Padding" Value="15,12"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <Border Background="{TemplateBinding Background}"
+                                                BorderThickness="0"
+                                                Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#F5F5F5"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter Property="Background" Value="#E3F2FD"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding AuditName}"
+                                         FontFamily="Verdana"
+                                         FontSize="16"
+                                         FontWeight="SemiBold"
+                                         Foreground="#1E1E1E"/>
+                                                        <TextBlock FontFamily="Verdana"
+                                         FontSize="12"
+                                         Foreground="#666666"
+                                         Margin="0,4,0,0">
+                                    <Run Text="{Binding Type}"/>
+                                    <Run Text=" • "/>
+                                    <Run Text="{Binding StatusDisplay}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <!--<Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="500" Grid.Column="1">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
@@ -195,41 +447,82 @@
                                 </Grid>
                                 <StackPanel Orientation="Horizontal"/>
                             </StackPanel>
-                        </Border>
+                        </Border>-->
 
                         <!-- Audit Types Filter -->
-                        <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
+                        <Border Grid.Column="2" 
+                                Style="{StaticResource StatCardStyle}" 
+                                CornerRadius="15" 
+                                BorderThickness="2" 
+                                Padding="10" 
+                                Margin="0,0,50,0" 
+                                Height="80" 
+                                VerticalAlignment="Center" 
+                                Width="227">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                             </Border.BorderBrush>
-                            <StackPanel>
-                                <Grid Margin="0,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="All Types" Foreground="#1e1e1e" FontFamily="Verdana" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,15,0,15"/>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal"/>
-                            </StackPanel>
+                            <ComboBox x:Name="TypeFilterBox"
+                                      FontSize="16"
+                                      FontFamily="Verdana"
+                                      Foreground="#1e1e1e"
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="TypeFilterBox_Changed">
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="All Types" IsSelected="True"/>
+                                    <ComboBoxItem Content="Security"/>
+                                    <ComboBoxItem Content="Safety"/>
+                                    <ComboBoxItem Content="Quality"/>
+                                    <ComboBoxItem Content="Data Protection"/>
+                                    <ComboBoxItem Content="Financial"/>
+                                </ComboBox.Items>
+                            </ComboBox>
                         </Border>
 
                         <!-- Status Filter -->
-                        <Border Grid.Column="3" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
+                        <!--<Border Grid.Column="3" 
+                                Style="{StaticResource StatCardStyle}" 
+                                CornerRadius="15" 
+                                BorderThickness="2" 
+                                Padding="0" 
+                                Margin="0,0,50,0" 
+                                Height="80" 
+                                VerticalAlignment="Center" 
+                                Width="227"
+                                Background="White">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
-                            </Border.BorderBrush>
-                            <StackPanel>
-                                <Grid Margin="0,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="All Status" FontSize="18" FontFamily="Verdana" Foreground="#1e1e1e" Margin="0,15,0,15"/>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal"/>
-                            </StackPanel>
-                        </Border>
+                            </Border.BorderBrush>-->
+                            <ComboBox x:Name="StatusFilterBox"
+                                      Grid.Column="3"
+                                      Style="{StaticResource ComboBoxStyle}"
+                                      FontSize="18"
+                                      FontFamily="Verdana"
+                                      Foreground="#1e1e1e"
+                                      Background="White"
+                                      Padding="20"
+                                      BorderThickness="2"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="StatusFilterBox_Changed" Height="80" HorizontalAlignment="Left" Width="225">
+                                <ComboBox.Resources>
+                                    <Style TargetType="Path" x:Key="ArrowStyle">
+                                        <Setter Property="Fill" Value="#1e1e1e"/>
+                                    </Style>
+                                </ComboBox.Resources>
+                                <ComboBox.BorderBrush>
+                                    <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
+                                </ComboBox.BorderBrush>
+                                <ComboBox.Items>
+                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="All Status" IsSelected="True"/>
+                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Not Started"/>
+                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="In Progress"/>
+                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Completed"/>
+                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Overdue"/>
+                                </ComboBox.Items>
+                            </ComboBox>
+                        <!--</Border>-->
                     </Grid>
 
                     <!-- Audits Section -->
@@ -247,6 +540,7 @@
                             <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.1" Color="#000000"/>
                         </Border.Effect>
                         <StackPanel>
+
                             <!-- Audits Header -->
                             <Grid Margin="0,0,0,20">
                                 <TextBlock 
