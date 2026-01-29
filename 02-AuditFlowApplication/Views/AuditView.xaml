@@ -63,7 +63,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Top Navigation Bar -->
@@ -146,15 +146,16 @@
             </Border>
 
             <!-- Main Dashboard Content -->
-            <ScrollViewer Grid.Column="1" 
+            <ScrollViewer x:Name="AuditsViewer" Grid.Column="1" 
                           VerticalScrollBarVisibility="Auto"
                           Padding="30,20" Height="944" VerticalAlignment="Center">
                 <StackPanel Width="1589">
                     <!-- Dashboard Header -->
                     <TextBlock 
-                               FontSize="22" 
+                              FontSize="22" 
                                Margin="10,0,0,25"
-                               Foreground="#FF1E1E1E" FontFamily="Verdana" FontWeight="Bold" Width="1121" HorizontalAlignment="Left"><Run Text="Audit "/><Run Language="en-gb" Text="Scheduling"/></TextBlock>
+                               Foreground="#FF1E1E1E" 
+                        FontFamily="Verdana" FontWeight="Bold" Width="1121" HorizontalAlignment="Left" Text="Audit Scheduling"/>
 
                     <!-- Statistics Cards Row -->
                     <Grid Margin="0,0,0,40" Width="1452">
@@ -165,7 +166,7 @@
                             <ColumnDefinition  Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Total Audits Card -->
+                        <!-- Filter Button -->
                         <Border Grid.Column="0" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Height="80" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0" Width="100">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
@@ -176,7 +177,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Audits In Progress Card -->
+                        <!-- Search Audits -->
                         <Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="500" Grid.Column="1">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
@@ -196,7 +197,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Completed Audits Card -->
+                        <!-- Audit Types Filter -->
                         <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
@@ -213,7 +214,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Overdue Audits Card -->
+                        <!-- Status Filter -->
                         <Border Grid.Column="3" Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="227">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
@@ -231,55 +232,203 @@
                         </Border>
                     </Grid>
 
-                    <!-- Calendar Section -->
+                    <!-- Audits Section -->
                     <Border Background="White" 
-                            CornerRadius="10" 
+                            CornerRadius="15" 
                             Padding="25"
-                            Margin="0,0,0,25" BorderThickness="2,2,2,2" Width="1459" Height="383">
+                            Margin="0,0,0,25" 
+                            BorderThickness="2,2,2,2" 
+                            Width="1459" 
+                            Height="383">
                         <Border.BorderBrush>
                             <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                         </Border.BorderBrush>
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.1" Color="#000000"/>
                         </Border.Effect>
-
                         <StackPanel>
-                            <!-- Calendar Header -->
+                            <!-- Audits Header -->
                             <Grid Margin="0,0,0,20">
                                 <TextBlock 
-                                           FontSize="22" 
-                                           FontWeight="SemiBold"
-                                           Foreground="#FF1E1E1E"
-                                           VerticalAlignment="Center" FontFamily="Verdana" Margin="0,0,1141,0"><Run Text="Scheduled "/><Run Language="en-gb" Text="Audits"/></TextBlock>
-
-                                <StackPanel Orientation="Horizontal" 
-                                            HorizontalAlignment="Left" Margin="537,0,0,0" Width="868"/>
+                                    FontSize="22" 
+                                    FontWeight="SemiBold"
+                                    Foreground="#FF1E1E1E"
+                                    VerticalAlignment="Center" 
+                                    FontFamily="Verdana" 
+                                    Margin="0,0,1141,0" 
+                                    Text="Scheduled Audits"/>
                             </Grid>
 
-                            <!-- Calendar Grid -->
-                            <Grid Height="284">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="67"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="33"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="50"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="101"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="49"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" MinHeight="40"/>
-                                    <RowDefinition Height="Auto" MinHeight="40"/>
-                                    <RowDefinition Height="Auto" MinHeight="40"/>
-                                    <RowDefinition Height="Auto" MinHeight="40"/>
-                                    <RowDefinition Height="Auto" MinHeight="40"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Audit Name" FontFamily="Verdana" FontSize="16" Width="281" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Text="Type" FontFamily="Verdana" FontSize="16" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="2" Grid.Row="0" Text="Start Date" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="3" Grid.Row="0" Text="Due Date" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="4" Grid.Row="0" Text="Recurring" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                <TextBlock Grid.Column="5" Grid.Row="0" Text="Status" FontFamily="Verdana" FontSize="16" Width="171" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                            </Grid>
+                            <!-- Audit Display Grid -->
+                            <DataGrid x:Name="AuditsGrid" 
+                                      IsReadOnly="True"
+                                      HeadersVisibility="Column"
+                                      Height="284" 
+                                      RowHeight="45"
+                                      GridLinesVisibility="None"
+                                      BorderThickness="0"
+                                      Background="White"
+                                      CanUserAddRows="False"
+                                      CanUserDeleteRows="False"
+                                      AutoGenerateColumns="False"
+                                      SelectionMode="Single"
+                                      SelectionUnit="FullRow">
+
+                                <!-- Header Style -->
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#1e1e1e"/>
+                                        <Setter Property="FontFamily" Value="Verdana"/>
+                                        <Setter Property="FontSize" Value="14"/>
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Padding" Value="10,10,10,10"/>
+                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+
+                                <!-- Row Style -->
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                        <Setter Property="BorderBrush" Value="#F0F0F0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#F9F9F9"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+
+                                <!-- Cell Style -->
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Padding" Value="10,10"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="#1E1E1E"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.CellStyle>
+
+                                <DataGrid.Columns>
+                                    <!-- Audit Name -->
+                                    <DataGridTextColumn Header="Audit Name" 
+                                                        Binding="{Binding AuditName}" 
+                                                        Width="2.5*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10"/>
+                                                <Setter Property="FontFamily" Value="Verdana"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="Foreground" Value="#1E1E1E"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!-- Audit Type -->
+                                    <DataGridTextColumn Header="Type" 
+                                                        Binding="{Binding Type}" 
+                                                        Width="*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10"/>
+                                                <Setter Property="FontFamily" Value="Verdana"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="Foreground" Value="#1e1e1e"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!-- Start Date -->
+                                    <DataGridTextColumn Header="Start Date" 
+                                                        Binding="{Binding StartDate, StringFormat=dd-MM-yyyy}" 
+                                                        Width="1.5*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10"/>
+                                                <Setter Property="FontFamily" Value="Verdana"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="Foreground" Value="#1e1e1e"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!-- Due Date -->
+                                    <DataGridTextColumn Header="Due Date" 
+                                                        Binding="{Binding EndDate, StringFormat=dd-MM-yyyy}" 
+                                                        Width="1.5*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10"/>
+                                                <Setter Property="FontFamily" Value="Verdana"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="Foreground" Value="#1e1e1e"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!-- Recurring -->
+                                    <DataGridTextColumn Header="Recurring" 
+                                                        Binding="{Binding RecurrenceType}" 
+                                                        Width="1.2*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10"/>
+                                                <Setter Property="FontFamily" Value="Verdana"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="Foreground" Value="#1e1e1e"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!-- Status with Template for Badge -->
+                                    <DataGridTemplateColumn Header="Status" Width="1.2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border CornerRadius="20"
+                                                        Height="30"
+                                                        Width="120"
+                                                        Padding="5,5"
+                                                        HorizontalAlignment="Left">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Status}" Value="NotStarted">
+                                                                    <Setter Property="Background" Value="#424242"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="InProgress">
+                                                                    <Setter Property="Background" Value="#0070A8"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                                                    <Setter Property="Background" Value="#008015"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="Overdue">
+                                                                    <Setter Property="Background" Value="#BD0000"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock Text="{Binding Status}"
+                                                               FontFamily="Verdana"
+                                                               FontSize="12"
+                                                               FontWeight="Bold"
+                                                               Foreground="White"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </StackPanel>
                     </Border>
                 </StackPanel>

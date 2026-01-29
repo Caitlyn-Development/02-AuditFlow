@@ -126,8 +126,8 @@ Margin="5,0">
                     Background="White" 
                     BorderBrush="#E0E0E0"
                     BorderThickness="0,0,1,0"
-                    Padding="15,20" VerticalAlignment="Center" HorizontalAlignment="Center" Width="251" Height="953">
-                <StackPanel Height="539" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    Padding="15,20" VerticalAlignment="Top" HorizontalAlignment="Center" Width="251" Height="953">
+                <StackPanel Height="904" VerticalAlignment="Top" HorizontalAlignment="Center" Width="220">
                     <Button Content="Dashboard" 
 Style="{StaticResource MenuButtonStyle}"
 Click="DashboardButton_Click"
