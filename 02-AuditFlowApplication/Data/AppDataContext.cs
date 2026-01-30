@@ -27,7 +27,7 @@ namespace _02_AuditFlowApplication.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AuditTask>()
-                .HasOne(t => t.Audit)
+                .HasOne(t => t.AuditName)
                 .WithMany()
                 .HasForeignKey(t => t.AuditId)
                 .OnDelete(DeleteBehavior.Cascade);

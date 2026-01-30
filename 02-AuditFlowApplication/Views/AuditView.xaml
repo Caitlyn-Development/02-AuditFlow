@@ -9,7 +9,6 @@
         Background="#FFFFFF">
 
     <UserControl.Resources>
-
         <!-- Button Style -->
         <Style x:Key="MenuButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -430,72 +429,39 @@
                                 </Popup>
                             </Grid>
                         </Border>
-                        <!--<Border Style="{StaticResource StatCardStyle}" CornerRadius="15,15,15,15" BorderThickness="2,2,2,2" Padding="10,10,10,10" Margin="0,0,50,0" Height="80" VerticalAlignment="Center" Width="500" Grid.Column="1">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
-                            </Border.BorderBrush>
-                            <StackPanel>
-                                <Grid Margin="0,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" MinWidth="69"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <svgc:SvgViewbox Source="/Resources/Svg/magnifying-glass-solid-full.svg" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,3,0,10"/>
-                                    </StackPanel>
-                                    <TextBlock Text="Search Audits" Foreground="#1e1e1e" FontFamily="Verdana" FontSize="18" HorizontalAlignment="Left" Width="408" Grid.Column="1" Margin="15,21,0,21"/>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal"/>
-                            </StackPanel>
-                        </Border>-->
 
                         <!-- Audit Types Filter -->
-                        <Border Grid.Column="2" 
-                                Style="{StaticResource StatCardStyle}" 
-                                CornerRadius="15" 
-                                BorderThickness="2" 
-                                Padding="10" 
-                                Margin="0,0,50,0" 
-                                Height="80" 
-                                VerticalAlignment="Center" 
-                                Width="227">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
-                            </Border.BorderBrush>
-                            <ComboBox x:Name="TypeFilterBox"
-                                      FontSize="16"
+                        <ComboBox x:Name="TypeFilterBox"
+                                      Grid.Column="2"
+                                      Style="{StaticResource ComboBoxStyle}"
+                                      FontSize="18"
                                       FontFamily="Verdana"
                                       Foreground="#1e1e1e"
-                                      Background="Transparent"
-                                      BorderThickness="0"
+                                      Background="White"
+                                      Padding="20"
+                                      BorderThickness="2"
                                       VerticalAlignment="Center"
-                                      SelectionChanged="TypeFilterBox_Changed">
-                                <ComboBox.Items>
-                                    <ComboBoxItem Content="All Types" IsSelected="True"/>
-                                    <ComboBoxItem Content="Security"/>
-                                    <ComboBoxItem Content="Safety"/>
-                                    <ComboBoxItem Content="Quality"/>
-                                    <ComboBoxItem Content="Data Protection"/>
-                                    <ComboBoxItem Content="Financial"/>
-                                </ComboBox.Items>
-                            </ComboBox>
-                        </Border>
+                                      SelectionChanged="TypeFilterBox_Changed" Height="80" HorizontalAlignment="Left" Width="225">
+                            <ComboBox.Resources>
+                                <Style TargetType="Path" x:Key="ArrowStyle">
+                                    <Setter Property="Fill" Value="#1e1e1e"/>
+                                </Style>
+                            </ComboBox.Resources>
+                            <ComboBox.BorderBrush>
+                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
+                            </ComboBox.BorderBrush>
+                            <ComboBox.Items>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="All Types" IsSelected="True"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Security"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Safety"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Quality"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Data Protection"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Financial"/>
+                            </ComboBox.Items>
+                        </ComboBox>
 
                         <!-- Status Filter -->
-                        <!--<Border Grid.Column="3" 
-                                Style="{StaticResource StatCardStyle}" 
-                                CornerRadius="15" 
-                                BorderThickness="2" 
-                                Padding="0" 
-                                Margin="0,0,50,0" 
-                                Height="80" 
-                                VerticalAlignment="Center" 
-                                Width="227"
-                                Background="White">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
-                            </Border.BorderBrush>-->
-                            <ComboBox x:Name="StatusFilterBox"
+                        <ComboBox x:Name="StatusFilterBox"
                                       Grid.Column="3"
                                       Style="{StaticResource ComboBoxStyle}"
                                       FontSize="18"
@@ -506,23 +472,22 @@
                                       BorderThickness="2"
                                       VerticalAlignment="Center"
                                       SelectionChanged="StatusFilterBox_Changed" Height="80" HorizontalAlignment="Left" Width="225">
-                                <ComboBox.Resources>
-                                    <Style TargetType="Path" x:Key="ArrowStyle">
-                                        <Setter Property="Fill" Value="#1e1e1e"/>
-                                    </Style>
-                                </ComboBox.Resources>
-                                <ComboBox.BorderBrush>
-                                    <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
-                                </ComboBox.BorderBrush>
-                                <ComboBox.Items>
-                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="All Status" IsSelected="True"/>
-                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Not Started"/>
-                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="In Progress"/>
-                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Completed"/>
-                                    <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Overdue"/>
-                                </ComboBox.Items>
-                            </ComboBox>
-                        <!--</Border>-->
+                            <ComboBox.Resources>
+                                <Style TargetType="Path" x:Key="ArrowStyle">
+                                    <Setter Property="Fill" Value="#1e1e1e"/>
+                                </Style>
+                            </ComboBox.Resources>
+                            <ComboBox.BorderBrush>
+                                <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
+                            </ComboBox.BorderBrush>
+                            <ComboBox.Items>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="All Status" IsSelected="True"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Not Started"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="In Progress"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Completed"/>
+                                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Overdue"/>
+                            </ComboBox.Items>
+                        </ComboBox>
                     </Grid>
 
                     <!-- Audits Section -->
@@ -536,9 +501,6 @@
                         <Border.BorderBrush>
                             <SolidColorBrush Color="#FF1E1E1E" Opacity="0.2"/>
                         </Border.BorderBrush>
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.1" Color="#000000"/>
-                        </Border.Effect>
                         <StackPanel>
 
                             <!-- Audits Header -->

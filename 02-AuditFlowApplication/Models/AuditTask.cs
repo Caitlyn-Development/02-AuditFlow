@@ -13,7 +13,7 @@ namespace _02_AuditFlowApplication.Models
 
         [Required][ForeignKey("Audit")] public int AuditId { get; set; }
 
-        public virtual Audit Audit{ get; set; }
+        [Required][MaxLength(200)] public string AuditName{ get; set; }
 
         [Required][ForeignKey("AssignedToUser")] public int AssignedToUserId { get; set; }
 
@@ -31,6 +31,7 @@ namespace _02_AuditFlowApplication.Models
         NotStarted = 1,
         InProgress = 2,
         OnHold = 3,
-        Completed = 4
+        Completed = 4,
+        Overdue = 5
     }
 }
