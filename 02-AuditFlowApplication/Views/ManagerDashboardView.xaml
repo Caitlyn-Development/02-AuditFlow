@@ -156,6 +156,7 @@
                 <StackPanel>
                     <Button
                         Background="#E3F2FD"
+                        Click="DashboardButton_Click"
                         Content="Dashboard"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -164,6 +165,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
+                        Click="AuditsButton_Click"
                         Content="Audits"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -171,11 +173,13 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
+                        Click="TasksButton_Click"
                         Content="Tasks"
                         FontFamily="Verdana"
                         FontSize="16"
                         Foreground="#FF1E1E1E"
                         Style="{StaticResource MenuButtonStyle}" />
+
                     <Button
                         Content="Users"
                         FontFamily="Verdana"

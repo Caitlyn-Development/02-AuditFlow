@@ -151,9 +151,24 @@ namespace _02_AuditFlowApplication.Views
             PopulateCalendar();
         }
 
+        private void DashboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToManagerDash();
+        }
+
+        private void AuditsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToManagerAudits();
+        }
+
+        private void TasksButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToManagerTasks();
+        }
+
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.ManagerLogin();
+            NavigationHelper.Logout();
         }
     }
 }

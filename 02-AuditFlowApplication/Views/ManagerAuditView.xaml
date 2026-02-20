@@ -331,6 +331,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <!--  Filter Button  -->
@@ -592,6 +593,42 @@
                                 <ComboBoxItem Content="Overdue" Style="{StaticResource ComboBoxItemStyle}" />
                             </ComboBox.Items>
                         </ComboBox>
+
+                        <!--  Users Filter  -->
+                        <ComboBox
+                            x:Name="UsersFilterBox"
+                            Grid.Column="4"
+                            Width="225"
+                            Height="80"
+                            Padding="20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="White"
+                            BorderThickness="2"
+                            FontFamily="Verdana"
+                            FontSize="18"
+                            Foreground="#1e1e1e"
+                            SelectionChanged="StatusFilterBox_Changed"
+                            Style="{StaticResource ComboBoxStyle}">
+                            <ComboBox.Resources>
+                                <Style x:Key="ArrowStyle" TargetType="Path">
+                                    <Setter Property="Fill" Value="#1e1e1e" />
+                                </Style>
+                            </ComboBox.Resources>
+                            <ComboBox.BorderBrush>
+                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                            </ComboBox.BorderBrush>
+                            <ComboBox.Items>
+                                <ComboBoxItem
+                                    Content="All Users"
+                                    IsSelected="True"
+                                    Style="{StaticResource ComboBoxItemStyle}" />
+                                <ComboBoxItem Content="Not Started" Style="{StaticResource ComboBoxItemStyle}" />
+                                <ComboBoxItem Content="In Progress" Style="{StaticResource ComboBoxItemStyle}" />
+                                <ComboBoxItem Content="Completed" Style="{StaticResource ComboBoxItemStyle}" />
+                                <ComboBoxItem Content="Overdue" Style="{StaticResource ComboBoxItemStyle}" />
+                            </ComboBox.Items>
+                        </ComboBox>
                     </Grid>
 
                     <!--  Audits Section  -->
@@ -836,17 +873,90 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Row="0" Grid.Column="0">
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,15,0,0"
+                                    HorizontalAlignment="Left">
                                     <TextBlock
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Audit Name" />
-                                    <TextBox>
-                                        
-                                    </TextBox>
+                                    <TextBox Width="200px" Height="30px" />
                                 </StackPanel>
 
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="0,15,0,0">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="16"
+                                        Foreground="#1e1e1e"
+                                        Text="Type of Audit" />
+                                    <TextBox Width="200px" Height="30px" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Margin="0,15,0,0"
+                                    HorizontalAlignment="Left">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="16"
+                                        Foreground="#1e1e1e"
+                                        Text="Start Date" />
+                                    <TextBox Width="200px" Height="30px" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,15,0,0">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="16"
+                                        Foreground="#1e1e1e"
+                                        Text="Due Date" />
+                                    <TextBox Width="200px" Height="30px" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="5,15,5,15"
+                                    VerticalAlignment="Center">
+                                    <CheckBox
+                                        x:Name="RecurringCheckbox"
+                                        Width="147"
+                                        Height="16"
+                                        Margin="0,15,0,20"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        BorderBrush="#FF1E1E1E"
+                                        Content="Recurring Audit"
+                                        FontFamily="Verdana"
+                                        FontSize="10"
+                                        Foreground="#1e1e1e">
+                                        <CheckBox.LayoutTransform>
+                                            <ScaleTransform ScaleX="2" ScaleY="2" />
+                                        </CheckBox.LayoutTransform>
+                                    </CheckBox>
+                                    <Button
+                                        Width="200"
+                                        Height="40"
+                                        Margin="0,10,5,10"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Background="#FF5D3754"
+                                        Content="Save Audit"
+                                        FontFamily="Verdana"
+                                        FontSize="20"
+                                        FontWeight="Bold" />
+                                </StackPanel>
                             </Grid>
                         </StackPanel>
                     </Border>
