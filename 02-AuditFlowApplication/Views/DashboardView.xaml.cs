@@ -5,12 +5,15 @@ using System.Windows.Media;
 
 namespace _02_AuditFlowApplication.Views
 {
-    public partial class ManagerDashboard : UserControl
+    /// <summary>
+    /// Interaction logic for DashboardView.xaml
+    /// </summary>
+    public partial class DashboardView : UserControl
     {
         private DateTime currentMonth;
         private Dictionary<DateTime, List<string>> auditEvents;
 
-        public ManagerDashboard()
+        public DashboardView()
         {
             InitializeComponent();
             currentMonth = new DateTime(2026, 10, 1); // October 2026 as shown in wireframe
@@ -151,9 +154,24 @@ namespace _02_AuditFlowApplication.Views
             PopulateCalendar();
         }
 
+        private void DashboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToDashboard();
+        }
+
+        private void AuditsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToAudits();
+        }
+
+        private void TasksButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToTasks();
+        }
+
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.ManagerLogin();
+            NavigationHelper.Logout();
         }
     }
 }

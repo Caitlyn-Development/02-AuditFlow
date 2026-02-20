@@ -31,19 +31,19 @@ namespace _02_AuditFlowApplication.Helpers
 
             if (user == null)
             {
-                NavigateToView(new LoginWindow());
+                NavigateToView(new LoginView());
                 return;
             }
 
             if (user.Role == UserRole.Manager)
-                NavigateToView(new ManagerDashboard());
+                NavigateToView(new ManagerDashboardView());
             else
-                NavigateToView(new DashboardWindow());
+                NavigateToView(new DashboardView());
         }
 
         public static void NavigateToManagerDash()
         {
-            NavigateToView(new ManagerDashboard());
+            NavigateToView(new ManagerDashboardView());
         }
 
         public static void NavigateToAudits()
@@ -58,17 +58,17 @@ namespace _02_AuditFlowApplication.Helpers
 
         public static void Logout()
         {
-            NavigateToView(new LoginWindow());
+            NavigateToView(new LoginView());
         }
 
         public static void ShowLogin()
         {
-            NavigateToView(new LoginWindow());
+            NavigateToView(new LoginView());
         }
 
         public static void ManagerLogin()
         {
-            NavigateToView(new ManagerLoginWindow());
+            NavigateToView(new ManagerLoginView());
         }
     }
 }

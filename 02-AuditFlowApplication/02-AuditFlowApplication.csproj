@@ -15,13 +15,16 @@
     <None Remove="Resources\Svg\arrow-right-from-bracket-solid-full.svg" />
     <None Remove="Resources\Svg\arrow-up-from-bracket-solid-full.svg" />
     <None Remove="Resources\Svg\business-time-solid-full.svg" />
+    <None Remove="Resources\Svg\file-image-regular-full.svg" />
     <None Remove="Resources\Svg\file-lines-regular-full.svg" />
     <None Remove="Resources\Svg\file-pdf-regular-full.svg" />
+    <None Remove="Resources\Svg\file-regular-full.svg" />
     <None Remove="Resources\Svg\filter-solid-full.svg" />
     <None Remove="Resources\Svg\flag-regular-full.svg" />
     <None Remove="Resources\Svg\gear-solid-full.svg" />
     <None Remove="Resources\Svg\list-solid-full.svg" />
     <None Remove="Resources\Svg\magnifying-glass-solid-full.svg" />
+    <None Remove="Resources\Svg\xmark-solid-full.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\PNG\AuditFlow Logo.png" />
+    <Resource Include="Resources\PNG\AuditFlow Purple Logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\PNG\TealLogoImage.png" />
     <Resource Include="Resources\PNG\PurpleLogoImage.png" />
     <Resource Include="Resources\Svg\arrow-right-from-bracket-solid-full.svg">
@@ -47,10 +49,16 @@
     <Resource Include="Resources\Svg\business-time-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Svg\file-image-regular-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Svg\file-lines-regular-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Svg\file-pdf-regular-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Svg\file-regular-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Svg\filter-solid-full.svg">
@@ -63,6 +71,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Svg\square-check-regular-full.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Svg\xmark-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

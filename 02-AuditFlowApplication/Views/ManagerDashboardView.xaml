@@ -1,0 +1,804 @@
+﻿<UserControl
+    x:Class="_02_AuditFlowApplication.Views.ManagerDashboardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:_02_AuditFlowApplication"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:svgc="clr-namespace:SharpVectors.Converters;assembly=SharpVectors.Converters.Wpf"
+    Background="#FFFFFF"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <!--  Button Style  -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#333333" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="15,10" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0F0F0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  Card Style  -->
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="8"
+                        Opacity="0.1"
+                        ShadowDepth="2"
+                        Color="#000000" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Section Header Style  -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,20,0,15" />
+            <Setter Property="Foreground" Value="#333333" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Top Navigation Bar  -->
+        <Border
+            Height="120"
+            VerticalAlignment="Center"
+            Background="White"
+            BorderBrush="#E0E0E0"
+            BorderThickness="0,0,0,1">
+            <Grid Margin="0,0,0,9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Logo and Title  -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Image
+                        x:Name="Logo"
+                        Width="206"
+                        Height="86"
+                        Margin="250,0,0,0"
+                        Source="/Resources/PNG/AuditFlow Purple Logo.png" />
+                </StackPanel>
+
+                <!--  Right Side Icons  -->
+                <StackPanel
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="1092,0,0,0"
+                    Orientation="Horizontal">
+                    <Button
+                        Width="50"
+                        Height="50"
+                        Margin="5,0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                        <svgc:SvgViewbox Source="/Resources/Svg/gear-solid-full.svg" />
+                    </Button>
+                    <Button
+                        Width="50"
+                        Height="50"
+                        Margin="5,0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="●"
+                        Cursor="Hand"
+                        FontSize="20"
+                        Foreground="Black" />
+                    <Button
+                        x:Name="LogoutButton"
+                        Width="50"
+                        Height="50"
+                        Margin="5,0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                        <svgc:SvgViewbox Source="/Resources/Svg/arrow-right-from-bracket-solid-full.svg" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!--  Main Content Area  -->
+        <Grid
+            Grid.Row="1"
+            Height="944"
+            VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="251" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Left Sidebar Menu  -->
+            <Border
+                Grid.Column="0"
+                Height="944"
+                Padding="15,20"
+                VerticalAlignment="Center"
+                Background="White"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,0,1,0">
+                <StackPanel>
+                    <Button
+                        Background="#E3F2FD"
+                        Content="Dashboard"
+                        FontFamily="Verdana"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="#2196F3"
+                        Style="{StaticResource MenuButtonStyle}" />
+
+                    <Button
+                        Content="Audits"
+                        FontFamily="Verdana"
+                        FontSize="16"
+                        Foreground="#FF1E1E1E"
+                        Style="{StaticResource MenuButtonStyle}" />
+
+                    <Button
+                        Content="Tasks"
+                        FontFamily="Verdana"
+                        FontSize="16"
+                        Foreground="#FF1E1E1E"
+                        Style="{StaticResource MenuButtonStyle}" />
+                    <Button
+                        Content="Users"
+                        FontFamily="Verdana"
+                        FontSize="16"
+                        Foreground="#FF1E1E1E"
+                        Style="{StaticResource MenuButtonStyle}" />
+
+                    <Separator Margin="0,15" Background="#E0E0E0" />
+                </StackPanel>
+            </Border>
+
+            <!--  Main Dashboard Content  -->
+            <ScrollViewer
+                Grid.Column="1"
+                Height="944"
+                Padding="30,20"
+                VerticalAlignment="Center"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="1589">
+                    <!--  Dashboard Header  -->
+                    <TextBlock
+                        Width="1121"
+                        Margin="10,0,0,25"
+                        HorizontalAlignment="Left"
+                        FontFamily="Verdana"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="#FF1E1E1E"
+                        Text="Dashboard" />
+
+                    <!--  Statistics Cards Row  -->
+                    <Grid Width="1453" Margin="0,0,0,40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Name="TotalAudits" Width="Auto" />
+                            <ColumnDefinition Name="InProgressAudits" Width="Auto" />
+                            <ColumnDefinition Name="CompletedAudits" Width="Auto" />
+                            <ColumnDefinition Name="OverdueAudits" Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Total Audits Card  -->
+                        <Border
+                            Grid.Column="0"
+                            Width="227"
+                            Height="110"
+                            Margin="24,0,50,0"
+                            Padding="10,10,10,10"
+                            VerticalAlignment="Center"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="15,15,15,15"
+                            Style="{StaticResource StatCardStyle}">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                            </Border.BorderBrush>
+                            <StackPanel>
+                                <Grid Margin="0,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Name="CardTitle" Width="*" />
+                                        <ColumnDefinition Name="CardIcon" Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Width="139"
+                                        Padding="0,5,0,5"
+                                        HorizontalAlignment="Left"
+                                        FontFamily="Verdana"
+                                        FontSize="18"
+                                        Foreground="#FF1E1E1E"
+                                        Text="Total Audits" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="70,0,0,0"
+                                        VerticalAlignment="Top"
+                                        Background="#E3F2FD"
+                                        CornerRadius="4" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#FF1E1E1E"
+                                        Text="5" />
+                                </StackPanel>
+                                <TextBlock
+                                    Padding="0,5,0,5"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Total audits assigned to you"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Audits In Progress Card  -->
+                        <Border
+                            Grid.Column="1"
+                            Width="227"
+                            Height="110"
+                            Margin="0,0,50,0"
+                            Padding="10,10,10,10"
+                            VerticalAlignment="Center"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="15,15,15,15"
+                            Style="{StaticResource StatCardStyle}">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                            </Border.BorderBrush>
+                            <StackPanel>
+                                <Grid Margin="0,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Margin="0,0,36,0"
+                                        Padding="0,5,0,5"
+                                        FontFamily="Verdana"
+                                        FontSize="18"
+                                        Foreground="#FF1E1E1E"
+                                        Text="Audits In Progress" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="70,0,0,0"
+                                        VerticalAlignment="Top"
+                                        Background="#FFF3E0"
+                                        CornerRadius="4" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#FF1E1E1E"
+                                        Text="3" />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="0,5,0,0"
+                                    Padding="0,5,0,5"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Currently active audits"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Completed Audits Card  -->
+                        <Border
+                            Grid.Column="2"
+                            Width="227"
+                            Height="110"
+                            Margin="0,0,50,0"
+                            Padding="10,10,10,10"
+                            VerticalAlignment="Center"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="15,15,15,15"
+                            Style="{StaticResource StatCardStyle}">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                            </Border.BorderBrush>
+                            <StackPanel>
+                                <Grid Margin="0,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Margin="0,0,39,0"
+                                        Padding="0,5,0,5"
+                                        FontFamily="Verdana"
+                                        FontSize="18"
+                                        Foreground="#FF1E1E1E"
+                                        Text="Completed Audits" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="70,0,0,0"
+                                        VerticalAlignment="Top"
+                                        Background="#E8F5E9"
+                                        CornerRadius="4" />
+
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#FF1E1E1E"
+                                        Text="2" />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="0,5,0,0"
+                                    Padding="0,5,0,5"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Closed audits"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Overdue Audits Card  -->
+                        <Border
+                            Grid.Column="3"
+                            Width="227"
+                            Height="110"
+                            Margin="0,0,50,0"
+                            Padding="10,10,10,10"
+                            VerticalAlignment="Center"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="15,15,15,15"
+                            Style="{StaticResource StatCardStyle}">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                            </Border.BorderBrush>
+                            <StackPanel>
+                                <Grid Margin="0,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Margin="0,0,53,0"
+                                        Padding="0,5,0,5"
+                                        FontFamily="Verdana"
+                                        FontSize="18"
+                                        Foreground="#FF1E1E1E"
+                                        Text="Overdue Audits" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="70,0,0,0"
+                                        VerticalAlignment="Top"
+                                        Background="#FFEBEE"
+                                        CornerRadius="4" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        FontFamily="Verdana"
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#FF1E1E1E"
+                                        Text="0" />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="0,5,0,0"
+                                    Padding="0,5,0,5"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Audits past due date"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--  Calendar Section  -->
+                    <Border
+                        Width="1459"
+                        Margin="0,0,0,25"
+                        Padding="25"
+                        Background="White"
+                        BorderThickness="2,2,2,2"
+                        CornerRadius="10">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </Border.BorderBrush>
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="8"
+                                Opacity="0.1"
+                                ShadowDepth="2"
+                                Color="#000000" />
+                        </Border.Effect>
+
+                        <StackPanel>
+                            <!--  Calendar Header  -->
+                            <Grid Margin="0,0,0,20">
+                                <TextBlock
+                                    Margin="0,0,1287,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Verdana"
+                                    FontSize="22"
+                                    FontWeight="SemiBold"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Calendar" />
+
+                                <StackPanel
+                                    Width="891"
+                                    Margin="514,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        x:Name="PrevMonthButton"
+                                        Width="35"
+                                        Height="35"
+                                        Margin="0,0,10,0"
+                                        Background="#F5F5F5"
+                                        BorderThickness="2,2,2,2"
+                                        Content="◀"
+                                        Cursor="Hand">
+                                        <Button.BorderBrush>
+                                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                                        </Button.BorderBrush>
+                                    </Button>
+                                    <TextBlock
+                                        x:Name="CalendarMonthYear"
+                                        Margin="10,0"
+                                        VerticalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Foreground="#FF1E1E1E"
+                                        Text="October 2026" />
+                                    <Button
+                                        x:Name="NextMonthButton"
+                                        Width="35"
+                                        Height="35"
+                                        Margin="10,0,0,0"
+                                        Background="#F5F5F5"
+                                        BorderThickness="2,2,2,2"
+                                        Content="▶"
+                                        Cursor="Hand">
+                                        <Button.BorderBrush>
+                                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                                        </Button.BorderBrush>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                            <!--  Calendar Grid  -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Day Headers  -->
+                                <UniformGrid
+                                    Grid.Row="0"
+                                    Margin="0,0,0,10"
+                                    Columns="7"
+                                    Rows="1">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Mon" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Tue" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Wed" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Thur" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Fri" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Sat" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontFamily="Verdana"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#999999"
+                                        Text="Sun" />
+                                </UniformGrid>
+
+                                <!--  Calendar Days  -->
+                                <UniformGrid
+                                    x:Name="CalendarGrid"
+                                    Grid.Row="1"
+                                    Columns="7"
+                                    Rows="5">
+                                    <!--  Days will be populated programmatically  -->
+                                    <!--  Example structure for reference  -->
+                                    <Border
+                                        Height="80"
+                                        Margin="2"
+                                        Background="#F8F8F8"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1">
+                                        <StackPanel Margin="8">
+                                            <TextBlock
+                                                FontSize="14"
+                                                Foreground="#666"
+                                                Text="1" />
+                                        </StackPanel>
+                                    </Border>
+                                </UniformGrid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Upcoming Deadlines Section  -->
+                    <Border
+                        Width="1495"
+                        Margin="0,10,0,0"
+                        Padding="25"
+                        Background="White"
+                        BorderThickness="2,2,2,2"
+                        CornerRadius="8">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </Border.BorderBrush>
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="8"
+                                Opacity="0.1"
+                                ShadowDepth="2"
+                                Color="#000000" />
+                        </Border.Effect>
+
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,20"
+                                FontFamily="Verdana"
+                                FontSize="22"
+                                Foreground="#FF1E1E1E"
+                                Style="{StaticResource SectionHeaderStyle}"
+                                Text="Upcoming Deadlines" />
+
+                            <!--  Deadlines Table  -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Table Header  -->
+                                <Grid
+                                    Grid.Row="0"
+                                    Height="45"
+                                    Margin="0,0,0,10"
+                                    Background="#F8F9FA">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Foreground="#666666"
+                                        Text="Audit Name" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Foreground="#666666"
+                                        Text="Type of Audit" />
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Foreground="#666666"
+                                        Text="Due Date" />
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Foreground="#666666"
+                                        Text="Status" />
+                                </Grid>
+
+                                <!--  Sample Row 1  -->
+                                <Grid
+                                    Grid.Row="1"
+                                    Height="60"
+                                    Background="White">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="4"
+                                        BorderBrush="#F0F0F0"
+                                        BorderThickness="0,0,0,1" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Text="IT Systems Audit 2025" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#666666"
+                                        Text="IT" />
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#666666"
+                                        Text="22-10-2025" />
+                                    <Border
+                                        Grid.Column="3"
+                                        Margin="15,0"
+                                        Padding="12,6"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Background="#E3F2FD"
+                                        CornerRadius="12">
+                                        <TextBlock
+                                            FontSize="12"
+                                            FontWeight="SemiBold"
+                                            Foreground="#2196F3"
+                                            Text="In Progress" />
+                                    </Border>
+                                </Grid>
+
+                                <!--  Sample Row 2  -->
+                                <Grid
+                                    Grid.Row="2"
+                                    Height="60"
+                                    Background="White">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#333333"
+                                        Text="Supplier Risk Assessment" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#666666"
+                                        Text="Procurement" />
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="#666666"
+                                        Text="13-10-2025" />
+                                    <Border
+                                        Grid.Column="3"
+                                        Margin="15,0"
+                                        Padding="12,6"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Background="#F5F5F5"
+                                        CornerRadius="12">
+                                        <TextBlock
+                                            FontSize="12"
+                                            FontWeight="SemiBold"
+                                            Foreground="#666666"
+                                            Text="Not Started" />
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

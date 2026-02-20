@@ -1,0 +1,130 @@
+﻿<UserControl
+    x:Class="_02_AuditFlowApplication.Views.ManagerLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:_02_AuditFlowApplication.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="#FFFFFF"
+    mc:Ignorable="d">
+
+    <Grid Width="1920" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="1136" />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Width="776"
+            Height="1064"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image
+                Width="838"
+                Height="1074"
+                HorizontalAlignment="Center"
+                RenderTransformOrigin="0.496,0.496"
+                Source="/Resources/PNG/PurpleLogoImage.png" />
+        </StackPanel>
+        <StackPanel
+            Grid.Column="1"
+            Width="1152"
+            Height="1064"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <StackPanel Height="126">
+                <Button
+                    Height="46"
+                    Margin="0,50,50,50"
+                    Padding="0,10,0,10"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    Click="AuditorLoginButton_Click"
+                    Content="Switch to Auditor Login"
+                    FontFamily="Verdana"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="#FF1E1E1E" />
+            </StackPanel>
+            <Grid
+                Width="1148"
+                Height="639"
+                Margin="0,150,0,0">
+                <Border
+                    Height="480"
+                    Margin="50,0,50,0"
+                    Padding="30,30,30,30"
+                    VerticalAlignment="Center"
+                    Background="White"
+                    BorderThickness="2,2,2,2"
+                    CornerRadius="10">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                    </Border.BorderBrush>
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,5,0,10"
+                            HorizontalAlignment="Left"
+                            FontFamily="Verdana"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="#FF1E1E1E"
+                            Text="Log Into AuditFlow" />
+                        <TextBlock
+                            Margin="0,5,0,30"
+                            HorizontalAlignment="Left"
+                            FontFamily="Verdana"
+                            FontSize="18"
+                            FontWeight="Regular"
+                            Foreground="#FF1E1E1E"
+                            Text="Enter your account details below:" />
+                        <Label
+                            Content="Username:"
+                            FontFamily="Verdana"
+                            FontSize="18"
+                            Foreground="#FF1E1E1E" />
+                        <TextBox
+                            x:Name="UsernameTextBox"
+                            Margin="5,5,5,15"
+                            FontSize="14"
+                            TabIndex="0" />
+
+                        <Label
+                            Margin="0,10,0,0"
+                            Content="Password:"
+                            FontFamily="Verdana"
+                            FontSize="18"
+                            Foreground="#FF1E1E1E" />
+                        <PasswordBox
+                            x:Name="PasswordBox"
+                            Margin="5,5,5,25"
+                            FontSize="14"
+                            TabIndex="1" />
+
+                        <Button
+                            x:Name="LoginButton"
+                            Width="100"
+                            Height="40"
+                            Margin="5,20,5,5"
+                            Background="#FF5D3754"
+                            Click="LoginButton_Click"
+                            Content="Sign In"
+                            FontFamily="Verdana"
+                            FontSize="14"
+                            FontStyle="Italic"
+                            FontWeight="Bold"
+                            TabIndex="2" />
+
+                        <TextBlock
+                            Margin="0,15,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="11"
+                            Foreground="Gray"
+                            Text="Default credentials: admin / Admin123!"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

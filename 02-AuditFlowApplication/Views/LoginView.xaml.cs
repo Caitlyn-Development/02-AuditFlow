@@ -6,11 +6,11 @@ using System.Windows.Controls;
 
 namespace _02_AuditFlowApplication.Views
 {
-    public partial class ManagerLoginWindow : UserControl
+    public partial class LoginView : UserControl
     {
         private readonly AuthenticationService _authService;
 
-        public ManagerLoginWindow()
+        public LoginView()
         {
             InitializeComponent();
             _authService = new AuthenticationService();
@@ -32,17 +32,15 @@ namespace _02_AuditFlowApplication.Views
 
             if (user != null)
             {
-                if (user.Role != UserRole.Manager)
+                if (user.Role != UserRole.Auditor)
                 {
-                    MessageBox.Show("Auditors must use the Auditor Login", "Acess Denied",
+                    MessageBox.Show("Managers must use the Manager Login", "Acess Denied",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 Application.Current.Properties["CurrentUser"] = user;
-
                 NavigationHelper.NavigateToDashboard();
-
             }
             else
             {
@@ -51,9 +49,9 @@ namespace _02_AuditFlowApplication.Views
             }
         }
 
-        private void AuditorLoginButton_Click(object sender, RoutedEventArgs e)
+        private void ManagerLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.ShowLogin();
+            NavigationHelper.ManagerLogin();
         }
     }
 }
