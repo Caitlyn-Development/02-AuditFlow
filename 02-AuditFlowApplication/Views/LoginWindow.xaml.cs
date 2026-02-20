@@ -32,8 +32,14 @@ namespace _02_AuditFlowApplication.Views
 
             if (user != null)
             {
-                Application.Current.Properties["CurrentUser"] = user;
+                if (user.Role != UserRole.Auditor)
+                {
+                    MessageBox.Show("Managers must use the Manager Login", "Acess Denied",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
+                Application.Current.Properties["CurrentUser"] = user;
                 NavigationHelper.NavigateToDashboard();
             }
             else

@@ -1,4 +1,5 @@
-﻿using _02_AuditFlowApplication.Views;
+﻿using _02_AuditFlowApplication.Models;
+using _02_AuditFlowApplication.Views;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,7 +27,18 @@ namespace _02_AuditFlowApplication.Helpers
 
         public static void NavigateToDashboard()
         {
-            NavigateToView(new DashboardWindow());
+            var user = Application.Current.Properties["CurrentUser"] as User;
+
+            if (user == null)
+            {
+                NavigateToView(new LoginWindow());
+                return;
+            }
+
+            if (user.Role == UserRole.Manager)
+                NavigateToView(new ManagerDashboard());
+            else
+                NavigateToView(new DashboardWindow());
         }
 
         public static void NavigateToManagerDash()
