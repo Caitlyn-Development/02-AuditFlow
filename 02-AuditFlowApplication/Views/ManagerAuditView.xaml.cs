@@ -180,17 +180,22 @@ namespace _02_AuditFlowApplication.Views
 
         private void DashboardButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToDashboard();
+            NavigationHelper.NavigateToManagerDash();
         }
 
         private void AuditsButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToAudits();
+            NavigationHelper.NavigateToManagerAudits();
         }
 
         private void TasksButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.NavigateToTasks();
+            NavigationHelper.NavigateToManagerTasks();
+        }
+
+        private void UsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToManagerUsers();
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)

@@ -166,6 +166,11 @@ namespace _02_AuditFlowApplication.Views
             NavigationHelper.NavigateToManagerTasks();
         }
 
+        private void UsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.NavigateToManagerUsers();
+        }
+
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationHelper.Logout();

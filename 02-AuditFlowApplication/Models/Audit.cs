@@ -34,7 +34,8 @@ namespace _02_AuditFlowApplication.Models
         Safety = 2,
         Quality = 3,
         DataProtection = 4,
-        Financial = 5
+        Financial = 5,
+        Unknown = 6
     }
 
     public enum AuditStatus

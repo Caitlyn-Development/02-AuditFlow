@@ -66,6 +66,11 @@ namespace _02_AuditFlowApplication.Helpers
             NavigateToView(new ManagerTaskView());
         }
 
+        public static void NavigateToManagerUsers()
+        {
+            NavigateToView(new ManagerUserView());
+        }
+
         public static void Logout()
         {
             NavigateToView(new LoginView());

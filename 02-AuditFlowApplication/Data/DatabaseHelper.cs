@@ -105,11 +105,11 @@ namespace _02_AuditFlowApplication.Data
                 // Insert Users with BCrypt hashed passwords
                 string insertUsers = @"
                     INSERT INTO Users (Username, PasswordHash, FullName, Role, IsActive, CreatedDate) VALUES
-                    ('admin', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'John Administrator', 2, 1, '2025-01-01'),
-                    ('auditor1', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'Sarah Johnson', 1, 1, '2025-01-05'),
-                    ('auditor2', '$2a$11$XVH3qZJKtqhN9vXhXxJqXOYKZGGqYqH5xKZJKtqhN9vXhXxJqXO', 'Mike Williams', 1, 1, '2025-01-10'),
-                    ('manager1', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'Emma Davis', 2, 1, '2025-01-15'),
-                    ('auditor3', '$2a$11$XVH3qZJKtqhN9vXhXxJqXOYKZGGqYqH5xKZJKtqhN9vXhXxJqXO', 'David Brown', 1, 1, '2025-01-20')
+                    ('admin', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'John Administrator', 'Manager', 1, '2025-01-01'),
+                    ('auditor1', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'Sarah Johnson', 'Auditor', 1, '2025-01-05'),
+                    ('auditor2', '$2a$11$XVH3qZJKtqhN9vXhXxJqXOYKZGGqYqH5xKZJKtqhN9vXhXxJqXO', 'Mike Williams', 'Auditor', 1, '2025-01-10'),
+                    ('manager1', '$2a$11$nYGofFNqphGFPoTsAGOx5uxFvs4ICynYZcgsw45rOIyu9dqNVGXV2', 'Emma Davis', 'Manager', 1, '2025-01-15'),
+                    ('auditor3', '$2a$11$XVH3qZJKtqhN9vXhXxJqXOYKZGGqYqH5xKZJKtqhN9vXhXxJqXO', 'David Brown', 'Auditor', 1, '2025-01-20')
                 ";
 
                 // Insert Audits

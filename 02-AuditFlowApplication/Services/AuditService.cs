@@ -56,7 +56,7 @@ namespace _02_AuditFlowApplication.Services
                 "Quality" => AuditType.Quality,
                 "Financial" => AuditType.Financial,
                 "Procurement" => AuditType.Quality,
-                _ => AuditType.Security
+                _ => AuditType.Unknown
             };
         }
 

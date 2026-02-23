@@ -294,6 +294,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
+                        Click="UsersButton_Click"
                         Content="Users"
                         FontFamily="Verdana"
                         FontSize="16"

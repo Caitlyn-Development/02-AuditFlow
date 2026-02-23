@@ -23,6 +23,7 @@ namespace _02_AuditFlowApplication.Models
     public enum UserRole
     {
         Auditor = 1,
-        Manager = 2
+        Manager = 2,
+        Unknown = 3
     }
 } 

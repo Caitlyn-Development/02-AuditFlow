@@ -293,7 +293,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="TasksButton_Click"
+                        Click="UsersButton_Click"
                         Content="Users"
                         FontFamily="Verdana"
                         FontSize="16"

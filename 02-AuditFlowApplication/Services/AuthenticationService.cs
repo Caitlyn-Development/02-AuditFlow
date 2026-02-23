@@ -36,7 +36,7 @@ namespace _02_AuditFlowApplication.Services
                                 Username = reader.GetString(1),
                                 PasswordHash = reader.GetString(2),
                                 FullName = reader.GetString(3),
-                                Role = (UserRole)reader.GetInt32(4),
+                                Role = ParseUserRole(reader.GetString(4)),
                                 IsActive = reader.GetInt32(5) == 1,
                                 CreatedDate = DateTime.Parse(reader.GetString(6))
                             };
@@ -50,6 +50,16 @@ namespace _02_AuditFlowApplication.Services
             }
 
             return null;
+        }
+
+        private UserRole ParseUserRole(string role)
+        {
+            return role switch
+            {
+                "Manager" => UserRole.Manager,
+                "Auditor" => UserRole.Auditor,
+                _ => UserRole.Unknown,
+            };
         }
 
         public string HashPassword(string password)
