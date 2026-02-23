@@ -87,10 +87,23 @@ namespace _02_AuditFlowApplication.Data
                         FOREIGN KEY (ReviewedByUserId) REFERENCES Users(UserId)
                     )";
 
+                string createAuditLogTable = @"
+                   CREATE TABLE IF NOT EXISTS UserAuditLog (
+                      LogId INTEGER PRIMARY KEY AUTOINCREMENT,
+                      ChangedByUserId INTEGER NOT NULL,
+                      ChangedByUsername TEXT NOT NULL,
+                      AffectedUserId INTEGER NOT NULL,
+                      AffectedUsername TEXT NOT NULL,
+                      ChangeDescription TEXT NOT NULL,
+                      ChangeDate TEXT NOT NULL,
+                      FOREIGN KEY (ChangedByUserId) REFERENCES Users(UserId)
+                  )";
+
                 ExecuteNonQuery(connection, createUsersTable);
                 ExecuteNonQuery(connection, createAuditsTable);
                 ExecuteNonQuery(connection, createTasksTable);
                 ExecuteNonQuery(connection, createEvidenceTable);
+                ExecuteNonQuery(connection, createAuditLogTable);
 
                 connection.Close();
             }

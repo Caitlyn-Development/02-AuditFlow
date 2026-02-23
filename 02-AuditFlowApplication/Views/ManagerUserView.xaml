@@ -482,6 +482,7 @@
                                                         Height="18"
                                                         Background="Transparent"
                                                         BorderThickness="0"
+                                                        Click="EditUser_Click"
                                                         Tag="{Binding UserID}">
                                                         <Button.ToolTip>
                                                             <ToolTip
@@ -497,7 +498,7 @@
                                                         <svgc:SvgViewbox
                                                             Width="18"
                                                             Height="18"
-                                                            Source="/Resources/Svg/pen-to-square-solid-full.svg"/>
+                                                            Source="/Resources/Svg/pen-to-square-solid-full.svg" />
                                                     </Button>
 
                                                     <!--  Delete Button  -->
@@ -506,6 +507,7 @@
                                                         Height="18"
                                                         Background="Transparent"
                                                         BorderThickness="0"
+                                                        Click="DeleteUser_Click"
                                                         Tag="{Binding UserID}">
                                                         <Button.ToolTip>
                                                             <ToolTip
@@ -521,7 +523,7 @@
                                                         <svgc:SvgViewbox
                                                             Width="18"
                                                             Height="18"
-                                                            Source="/Resources/Svg/circle-xmark-solid-full.svg"/>
+                                                            Source="/Resources/Svg/circle-xmark-solid-full.svg" />
                                                     </Button>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -580,7 +582,13 @@
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Username" />
-                                    <TextBox Width="200px" Height="40" />
+                                    <TextBox
+                                        x:Name="UsernameBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -595,7 +603,13 @@
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Full Name" />
-                                    <TextBox Width="200px" Height="40" />
+                                    <TextBox
+                                        x:Name="FullNameBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -610,7 +624,16 @@
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Role" />
-                                    <TextBox Width="200px" Height="40" />
+                                    <ComboBox
+                                        x:Name="RoleComboBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14">
+                                        <ComboBoxItem Content="Auditor" />
+                                        <ComboBoxItem Content="Manager" />
+                                    </ComboBox>
                                 </StackPanel>
 
                                 <StackPanel
@@ -624,7 +647,13 @@
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Password" />
-                                    <TextBox Width="200px" Height="40" />
+                                    <PasswordBox
+                                        x:Name="PasswordBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -637,7 +666,13 @@
                                         FontSize="16"
                                         Foreground="#1e1e1e"
                                         Text="Confirm Password" />
-                                    <TextBox Width="200px" Height="40" />
+                                    <PasswordBox
+                                        x:Name="ConfirmPasswordBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -652,6 +687,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Background="#FF5D3754"
+                                        Click="SaveUser_Click"
                                         Content="Save User"
                                         FontFamily="Verdana"
                                         FontSize="20"
