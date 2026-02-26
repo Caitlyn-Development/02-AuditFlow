@@ -312,7 +312,7 @@
                 Padding="30,20"
                 VerticalAlignment="Center"
                 VerticalScrollBarVisibility="Auto">
-                <StackPanel Width="1589">
+                <StackPanel Width="1589" Height="1084">
                     <!--  Dashboard Header  -->
                     <TextBlock
                         Width="1121"
@@ -841,7 +841,7 @@
                     <!--  Create Audits Section  -->
                     <Border
                         Width="1459"
-                        Height="383"
+                        Height="462"
                         Margin="0,0,0,25"
                         Padding="25"
                         Background="White"
@@ -871,62 +871,90 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <StackPanel
                                     Grid.Row="0"
                                     Grid.Column="0"
-                                    Margin="0,15,0,0"
+                                    Margin="0,15,0,15"
                                     HorizontalAlignment="Left">
                                     <TextBlock
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Audit Name" />
-                                    <TextBox Width="200px" Height="30px" />
+                                        Text="Audit Name" Margin="0,0,0,10" />
+                                    <TextBox
+                                        x:Name="AuditNameBox"
+                                        Width="200px"
+                                        Height="30px" Margin="0,0,0,0" Padding="0,0,0,0" VerticalContentAlignment="Center" />
                                 </StackPanel>
 
+                                
                                 <StackPanel
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Margin="0,15,0,0">
+                                    Margin="0,15,0,15">
                                     <TextBlock
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Type of Audit" />
-                                    <TextBox Width="200px" Height="30px" />
+                                        Text="Audit Type" Margin="0,0,0,10" />
+                                    <ComboBox
+                                        x:Name="AuditTypeComboBox"
+                                        Width="200"
+                                        Height="30"
+                                        FontFamily="Verdana"
+                                        FontSize="14" Padding="0,0,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center">
+                                        <ComboBoxItem Content="Security" />
+                                        <ComboBoxItem Content="Safety" />
+                                        <ComboBoxItem Content="Quality" />
+                                        <ComboBoxItem Content="Data Protection" />
+                                        <ComboBoxItem Content="Financial" />
+                                        <ComboBoxItem Content="Unknown" />
+                                    </ComboBox>
                                 </StackPanel>
+
 
                                 <StackPanel
                                     Grid.Row="1"
                                     Grid.Column="0"
-                                    Margin="0,15,0,0"
+                                    Margin="0,15,0,15"
                                     HorizontalAlignment="Left">
                                     <TextBlock
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Start Date" />
-                                    <TextBox Width="200px" Height="30px" />
+                                        Text="Start Date" Margin="0,0,0,10" />
+                                    <DatePicker
+                                        x:Name="StartDatePicker"
+                                        Width="200"
+                                        Height="30"
+                                        FontFamily="Verdana"
+                                        FontSize="12" VerticalAlignment="Top" VerticalContentAlignment="Center" />
                                 </StackPanel>
 
                                 <StackPanel
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    Margin="0,15,0,0">
+                                    Margin="0,15,0,15">
                                     <TextBlock
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Due Date" />
-                                    <TextBox Width="200px" Height="30px" />
+                                        Text="End Date" Margin="0,0,0,10" />
+                                    <DatePicker
+                                        x:Name="EndDatePicker"
+                                        Width="200"
+                                        Height="30"
+                                        FontFamily="Verdana"
+                                        FontSize="12" VerticalContentAlignment="Center" />
                                 </StackPanel>
 
                                 <StackPanel
                                     Grid.Row="2"
                                     Grid.Column="0"
-                                    Margin="5,15,5,15"
+                                    Margin="0,15,0,15"
                                     VerticalAlignment="Center">
                                     <CheckBox
                                         x:Name="RecurringCheckbox"
@@ -937,14 +965,46 @@
                                         VerticalAlignment="Center"
                                         VerticalContentAlignment="Center"
                                         BorderBrush="#FF1E1E1E"
+                                        Checked="RecurringCheckbox_Checked"
                                         Content="Recurring Audit"
                                         FontFamily="Verdana"
                                         FontSize="10"
-                                        Foreground="#1e1e1e">
+                                        Foreground="#1e1e1e"
+                                        IsChecked="False"
+                                        Unchecked="RecurringCheckbox_Unchecked" Padding="0,0,0,0">
                                         <CheckBox.LayoutTransform>
-                                            <ScaleTransform ScaleX="2" ScaleY="2" />
+                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                                         </CheckBox.LayoutTransform>
                                     </CheckBox>
+                                </StackPanel>
+
+                                <StackPanel
+                                    x:Name="RecurrencePanel"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,15,15,15"
+                                    Visibility="Collapsed">
+                                    <TextBlock
+                                        Margin="5,0,0,0"
+                                        FontFamily="Verdana"
+                                        FontSize="16"
+                                        Foreground="#1e1e1e"
+                                        Text="Recurrence" />
+                                    <ComboBox
+                                        x:Name="RecurrenceComboBox"
+                                        Width="200"
+                                        Height="40"
+                                        Padding="8"
+                                        FontFamily="Verdana"
+                                        FontSize="14">
+                                        <ComboBoxItem Content="Weekly" />
+                                        <ComboBoxItem Content="Monthly" />
+                                        <ComboBoxItem Content="Quarterly" />
+                                        <ComboBoxItem Content="Annual" />
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="3" Grid.Column="0">
                                     <Button
                                         Width="200"
                                         Height="40"
@@ -952,6 +1012,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Background="#FF5D3754"
+                                        Click="SaveAudit_Click"
                                         Content="Save Audit"
                                         FontFamily="Verdana"
                                         FontSize="20"

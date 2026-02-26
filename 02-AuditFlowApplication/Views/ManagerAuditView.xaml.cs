@@ -178,6 +178,118 @@ namespace _02_AuditFlowApplication.Views
             });
         }
 
+        private void RecurringCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            RecurrencePanel.Visibility = Visibility.Visible;
+        }
+
+        private void RecurringCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            RecurrencePanel.Visibility = Visibility.Collapsed;
+            RecurrenceComboBox.SelectedIndex = -1;
+        }
+
+        private AuditType ParseAuditType(string type)
+        {
+            return type switch
+            {
+                "Security" => AuditType.Security,
+                "Safety" => AuditType.Safety,
+                "Quality" => AuditType.Quality,
+                "Data Protection" => AuditType.DataProtection,
+                "Financial" => AuditType.Financial,
+                _ => AuditType.Unknown
+            };
+        }
+
+        private RecurrenceFrequency? ParseRecurrenceFrequency(string frequency)
+        {
+            return frequency switch
+            {
+                "Weekly" => RecurrenceFrequency.Weekly,
+                "Monthly" => RecurrenceFrequency.Monthly,
+                "Quarterly" => RecurrenceFrequency.Quarterly,
+                "Annual" => RecurrenceFrequency.Annual,
+                _ => null
+            };
+        }
+
+        private void SaveAudit_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string auditName = AuditNameBox.Text.Trim();
+                string auditType = (AuditTypeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+                DateTime? startDate = StartDatePicker.SelectedDate;
+                DateTime? endDate = EndDatePicker.SelectedDate;
+                bool isRecurring = RecurringCheckbox.IsChecked == true;
+                string recurrence = (RecurrenceComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+                if (string.IsNullOrWhiteSpace(auditName) || auditType == null || startDate == null || endDate == null)
+                {
+                    MessageBox.Show("Audit Name, Type, Start Date and End Date are all required.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (endDate <= startDate)
+                {
+                    MessageBox.Show("End Date must be after Start Date.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (isRecurring && string.IsNullOrEmpty(recurrence))
+                {
+                    MessageBox.Show("Please select a recurrence frequency.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (_auditService.AuditNameExists(auditName))
+                {
+                    MessageBox.Show($"An audit with the name '{auditName}' already exists.", "Duplicate Audit",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var currentUser = Application.Current.Properties["CurrentUser"] as User;
+
+                var newAudit = new Audit
+                {
+                    AuditName = auditName,
+                    Type = ParseAuditType(auditType),
+                    StartDate = startDate.Value,
+                    EndDate = endDate.Value,
+                    IsRecurring = isRecurring,
+                    RecurrenceType = isRecurring ? ParseRecurrenceFrequency(recurrence) : null,
+                    Status = AuditStatus.NotStarted,
+                    CreatedByUserID = currentUser.UserID,
+                    CreatedDate = DateTime.Now
+                };
+
+                _auditService.CreateAudit(newAudit);
+                _auditService.LogAuditCreation(currentUser, newAudit);
+
+                MessageBox.Show($"Audit '{auditName}' created successfully.", "Success",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                AuditNameBox.Text = string.Empty;
+                AuditTypeComboBox.SelectedIndex = -1;
+                StartDatePicker.SelectedDate = null;
+                EndDatePicker.SelectedDate = null;
+                RecurringCheckbox.IsChecked = false;
+                RecurrenceComboBox.SelectedIndex = -1;
+
+                LoadAudits();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving audit: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void DashboardButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationHelper.NavigateToManagerDash();

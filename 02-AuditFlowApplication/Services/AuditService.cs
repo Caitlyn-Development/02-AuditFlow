@@ -95,5 +95,73 @@ namespace _02_AuditFlowApplication.Services
         }
 
         //create GetAuditsByUser
+
+        public bool AuditNameExists(string auditName)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT COUNT(*) FROM Audits WHERE AuditName = @auditName";
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@auditName", auditName);
+                    return Convert.ToInt32(command.ExecuteScalar()) > 0;
+                }
+            }
+        }
+
+        public void CreateAudit(Audit audit)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"INSERT INTO Audits 
+            (AuditName, AuditType, StartDate, EndDate, IsRecurring, RecurrenceFrequency, Status, CreatedByUserId, CreatedDate)
+            VALUES (@auditName, @auditType, @startDate, @endDate, @isRecurring, @recurrenceFrequency, @status, @createdByUserId, @createdDate)";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@auditName", audit.AuditName);
+                    command.Parameters.AddWithValue("@auditType", audit.Type.ToString());
+                    command.Parameters.AddWithValue("@startDate", audit.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@endDate", audit.EndDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@isRecurring", audit.IsRecurring ? 1 : 0);
+                    command.Parameters.AddWithValue("@recurrenceFrequency", audit.RecurrenceType.HasValue ? audit.RecurrenceType.ToString() : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@status", audit.Status.ToString());
+                    command.Parameters.AddWithValue("@createdByUserId", audit.CreatedByUserID);
+                    command.Parameters.AddWithValue("@createdDate", audit.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.ExecuteNonQuery();
+
+                    string getIdQuery = "SELECT last_insert_rowid()";
+                    using (SqliteCommand idCommand = new SqliteCommand(getIdQuery, connection))
+                    {
+                        audit.AuditId = Convert.ToInt32(idCommand.ExecuteScalar());
+                    }
+                }
+            }
+        }
+
+        public void LogAuditCreation(User createdBy, Audit audit)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"INSERT INTO AuditLog
+                    (CreatedByUserId, CreatedByUsername, AuditId, AuditName, ChangeDescription, ChangeDate)
+                    VALUES (@createdByUserId, @createdByUsername, @auditId, @auditName, @changeDescription, @changeDate)";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@createdByUserId", createdBy.UserID);
+                    command.Parameters.AddWithValue("@createdByUsername", createdBy.Username);
+                    command.Parameters.AddWithValue("@auditId", audit.AuditId);
+                    command.Parameters.AddWithValue("@auditName", audit.AuditName);
+                    command.Parameters.AddWithValue("@changeDescription", $"Audit '{audit.AuditName}' of type '{audit.Type}' created. Start: {audit.StartDate:dd/MM/yyyy}, End: {audit.EndDate:dd/MM/yyyy}. Recurring: {audit.IsRecurring}.");
+                    command.Parameters.AddWithValue("@changeDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
