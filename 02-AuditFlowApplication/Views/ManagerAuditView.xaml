@@ -80,33 +80,40 @@
                                 IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
+                                        <Border
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderBrush}"
+                                            BorderThickness="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderThickness}"
+                                            CornerRadius="8">
+                                            <Grid Background="Transparent">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                            <!--  Selected Item Display  -->
-                                            <ContentPresenter
-                                                Grid.Column="0"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Content="{TemplateBinding Content}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <!--  Selected Item Display  -->
+                                                <ContentPresenter
+                                                    Grid.Column="0"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Content="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItem}"
+                                                    ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItemTemplate}"
+                                                    ContentTemplateSelector="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=ItemTemplateSelector}" />
 
-                                            <!--  Dropdown Arrow  -->
-                                            <Path
-                                                Grid.Column="1"
-                                                Width="12"
-                                                Height="8"
-                                                Margin="0,0,20,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Data="M 0 0 L 4 4 L 8 0 Z"
-                                                Fill="#1E1E1E"
-                                                Stretch="Uniform" />
-                                        </Grid>
+                                                <!--  Dropdown Arrow  -->
+                                                <Path
+                                                    Grid.Column="1"
+                                                    Width="12"
+                                                    Height="8"
+                                                    Margin="0,0,20,0"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    Data="M 0 0 L 4 4 L 8 0 Z"
+                                                    Fill="#1E1E1E"
+                                                    Stretch="Uniform" />
+                                            </Grid>
+                                        </Border>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
@@ -536,7 +543,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="TypeFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -573,7 +580,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -609,7 +616,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -880,32 +887,40 @@
                                     Margin="0,15,0,15"
                                     HorizontalAlignment="Left">
                                     <TextBlock
+                                        Margin="0,0,0,10"
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Audit Name" Margin="0,0,0,10" />
+                                        Text="Audit Name" />
                                     <TextBox
                                         x:Name="AuditNameBox"
                                         Width="200px"
-                                        Height="30px" Margin="0,0,0,0" Padding="0,0,0,0" VerticalContentAlignment="Center" />
+                                        Height="30px"
+                                        Margin="0,0,0,0"
+                                        Padding="0,0,0,0"
+                                        VerticalContentAlignment="Center" />
                                 </StackPanel>
 
-                                
+
                                 <StackPanel
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Margin="0,15,0,15">
                                     <TextBlock
+                                        Margin="0,0,0,10"
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Audit Type" Margin="0,0,0,10" />
+                                        Text="Audit Type" />
                                     <ComboBox
                                         x:Name="AuditTypeComboBox"
                                         Width="200"
                                         Height="30"
+                                        Padding="0,0,0,0"
+                                        VerticalAlignment="Top"
+                                        VerticalContentAlignment="Center"
                                         FontFamily="Verdana"
-                                        FontSize="14" Padding="0,0,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center">
+                                        FontSize="14">
                                         <ComboBoxItem Content="Security" />
                                         <ComboBoxItem Content="Safety" />
                                         <ComboBoxItem Content="Quality" />
@@ -922,16 +937,19 @@
                                     Margin="0,15,0,15"
                                     HorizontalAlignment="Left">
                                     <TextBlock
+                                        Margin="0,0,0,10"
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="Start Date" Margin="0,0,0,10" />
+                                        Text="Start Date" />
                                     <DatePicker
                                         x:Name="StartDatePicker"
                                         Width="200"
                                         Height="30"
+                                        VerticalAlignment="Top"
+                                        VerticalContentAlignment="Center"
                                         FontFamily="Verdana"
-                                        FontSize="12" VerticalAlignment="Top" VerticalContentAlignment="Center" />
+                                        FontSize="12" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -939,16 +957,18 @@
                                     Grid.Column="1"
                                     Margin="0,15,0,15">
                                     <TextBlock
+                                        Margin="0,0,0,10"
                                         FontFamily="Verdana"
                                         FontSize="16"
                                         Foreground="#1e1e1e"
-                                        Text="End Date" Margin="0,0,0,10" />
+                                        Text="End Date" />
                                     <DatePicker
                                         x:Name="EndDatePicker"
                                         Width="200"
                                         Height="30"
+                                        VerticalContentAlignment="Center"
                                         FontFamily="Verdana"
-                                        FontSize="12" VerticalContentAlignment="Center" />
+                                        FontSize="12" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -961,6 +981,7 @@
                                         Width="147"
                                         Height="16"
                                         Margin="0,15,0,20"
+                                        Padding="0,0,0,0"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         VerticalContentAlignment="Center"
@@ -971,7 +992,7 @@
                                         FontSize="10"
                                         Foreground="#1e1e1e"
                                         IsChecked="False"
-                                        Unchecked="RecurringCheckbox_Unchecked" Padding="0,0,0,0">
+                                        Unchecked="RecurringCheckbox_Unchecked">
                                         <CheckBox.LayoutTransform>
                                             <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                                         </CheckBox.LayoutTransform>

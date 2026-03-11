@@ -80,33 +80,40 @@
                                 IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
+                                        <Border
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderBrush}"
+                                            BorderThickness="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderThickness}"
+                                            CornerRadius="8">
+                                            <Grid Background="Transparent">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                            <!--  Selected Item Display  -->
-                                            <ContentPresenter
-                                                Grid.Column="0"
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Content="{TemplateBinding Content}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <!--  Selected Item Display  -->
+                                                <ContentPresenter
+                                                    Grid.Column="0"
+                                                    Margin="20,0,0,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Content="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItem}"
+                                                    ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItemTemplate}"
+                                                    ContentTemplateSelector="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=ItemTemplateSelector}" />
 
-                                            <!--  Dropdown Arrow  -->
-                                            <Path
-                                                Grid.Column="1"
-                                                Width="12"
-                                                Height="8"
-                                                Margin="0,0,20,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Data="M 0 0 L 4 4 L 8 0 Z"
-                                                Fill="#1E1E1E"
-                                                Stretch="Uniform" />
-                                        </Grid>
+                                                <!--  Dropdown Arrow  -->
+                                                <Path
+                                                    Grid.Column="1"
+                                                    Width="12"
+                                                    Height="8"
+                                                    Margin="0,0,20,0"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    Data="M 0 0 L 4 4 L 8 0 Z"
+                                                    Fill="#1E1E1E"
+                                                    Stretch="Uniform" />
+                                            </Grid>
+                                        </Border>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
@@ -537,14 +544,14 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="AuditFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
                                 </Style>
                             </ComboBox.Resources>
                             <ComboBox.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                                <SolidColorBrush Opacity="0.2" Color="#FF883535" />
                             </ComboBox.BorderBrush>
                             <ComboBox.Items>
                                 <ComboBoxItem
@@ -569,7 +576,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -607,7 +614,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="UsersFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
+                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -656,6 +663,7 @@
                                 Height="284"
                                 AutoGenerateColumns="False"
                                 Background="White"
+                                BorderBrush="Black"
                                 BorderThickness="0"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="False"
