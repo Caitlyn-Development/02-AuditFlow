@@ -48,23 +48,30 @@ namespace _02_AuditFlowApplication.Views
 
         private void LoadUsers()
         {
-            var users = _allTasks
-                .Where(t => t.AssignedToUser != null)
-                .Select(t => t.AssignedToUser.FullName)
-                .Distinct()
-                .OrderBy(name => name)
+            var userService = new UserService();
+            var auditors = userService.GetAllUsers()
+                .Where(u => u.Role == UserRole.Auditor)
+                .OrderBy(u => u.FullName)
                 .ToList();
 
             UsersFilterBox.Items.Clear();
 
-            var allItem = new ComboBoxItem { Content = "All Users" };
-            UsersFilterBox.Items.Add(allItem);
-            UsersFilterBox.SelectedItem = allItem;
-
-            foreach (var user in users)
+            UsersFilterBox.Items.Add(new ComboBoxItem
             {
-                UsersFilterBox.Items.Add(new ComboBoxItem { Content = user });
+                Content = "All Users",
+                Style = (Style)FindResource("ComboBoxItemStyle")
+            });
+
+            foreach (var user in auditors)
+            {
+                UsersFilterBox.Items.Add(new ComboBoxItem
+                {
+                    Content = user.FullName,
+                    Style = (Style)FindResource("ComboBoxItemStyle")
+                });
             }
+
+            UsersFilterBox.SelectedIndex = 0;
         }
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
@@ -141,7 +148,7 @@ namespace _02_AuditFlowApplication.Views
             }
 
             if (!string.IsNullOrEmpty(_selectedUser))
-            { 
+            {
                 filteredTasks = filteredTasks.Where(a => a.AssignedToUser != null && a.AssignedToUser.FullName == _selectedUser);
             }
 

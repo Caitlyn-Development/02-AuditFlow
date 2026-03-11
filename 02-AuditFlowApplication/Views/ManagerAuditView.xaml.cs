@@ -25,12 +25,14 @@ namespace _02_AuditFlowApplication.Views
         private List<Audit> _allAudits;
         private AuditType? _selectedType = null;
         private readonly AuditStatus? _selectedStatus = null;
+        //private string? _selectedUser = null;
 
         public ManagerAuditView()
         {
             InitializeComponent();
             _auditService = new AuditService();
             LoadAudits();
+            //LoadUsers();
         }
 
         private void LoadAudits()
@@ -48,6 +50,34 @@ namespace _02_AuditFlowApplication.Views
                     MessageBoxImage.Error);
             }
         }
+
+        //private void LoadUsers()
+        //{
+        //    var userService = new UserService();
+        //    var auditors = userService.GetAllUsers()
+        //        .Where(u => u.Role == UserRole.Auditor)
+        //        .OrderBy(u => u.FullName)
+        //        .ToList();
+
+        //    UsersFilterBox.Items.Clear();
+
+        //    UsersFilterBox.Items.Add(new ComboBoxItem
+        //    {
+        //        Content = "All Users",
+        //        Style = (Style)FindResource("ComboBoxItemStyle")
+        //    });
+
+        //    foreach (var user in auditors)
+        //    {
+        //        UsersFilterBox.Items.Add(new ComboBoxItem
+        //        {
+        //            Content = user.FullName,
+        //            Style = (Style)FindResource("ComboBoxItemStyle")
+        //        });
+        //    }
+
+        //    UsersFilterBox.SelectedIndex = 0;
+        //}
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
@@ -102,6 +132,18 @@ namespace _02_AuditFlowApplication.Views
             ApplyFilters();
         }
 
+        //private void UsersFilterBox_Changed(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (UsersFilterBox.SelectedItem == null) return;
+
+        //    var selectedItem = (ComboBoxItem)UsersFilterBox.SelectedItem;
+        //    string selected = selectedItem.Content.ToString();
+
+        //    _selectedUser = selected == "All Users" ? null : selected;
+
+        //    ApplyFilters();
+        //}
+
         private void ApplyFilters()
         {
             if (_allAudits == null)
@@ -110,14 +152,13 @@ namespace _02_AuditFlowApplication.Views
             var filteredAudits = _allAudits.AsEnumerable();
 
             if (_selectedType.HasValue)
-            {
                 filteredAudits = filteredAudits.Where(a => a.Type == _selectedType.Value);
-            }
 
             if (_selectedStatus.HasValue)
-            {
                 filteredAudits = filteredAudits.Where(a => a.Status == _selectedStatus.Value);
-            }
+
+            //if (!string.IsNullOrEmpty(_selectedUser))
+            //    filteredAudits = filteredAudits.Where(a => a.CreatedBy != null && a.CreatedBy.FullName == _selectedUser);
 
             AuditsGrid.ItemsSource = filteredAudits.ToList();
         }

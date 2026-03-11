@@ -623,12 +623,6 @@
                             <ComboBox.BorderBrush>
                                 <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
                             </ComboBox.BorderBrush>
-                            <ComboBox.Items>
-                                <ComboBoxItem
-                                    Content="All Users"
-                                    IsSelected="True"
-                                    Style="{StaticResource ComboBoxItemStyle}" />
-                            </ComboBox.Items>
                         </ComboBox>
                     </Grid>
 

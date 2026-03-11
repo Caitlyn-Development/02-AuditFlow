@@ -601,7 +601,7 @@
                             </ComboBox.Items>
                         </ComboBox>
 
-                        <!--  Users Filter  -->
+                          <!--Users Filter  
                         <ComboBox
                             x:Name="UsersFilterBox"
                             Grid.Column="4"
@@ -615,7 +615,7 @@
                             FontFamily="Verdana"
                             FontSize="18"
                             Foreground="#1e1e1e"
-                            SelectionChanged="StatusFilterBox_Changed"
+                            SelectionChanged="UsersFilterBox_Changed"
                             Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
@@ -625,17 +625,7 @@
                             <ComboBox.BorderBrush>
                                 <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
                             </ComboBox.BorderBrush>
-                            <ComboBox.Items>
-                                <ComboBoxItem
-                                    Content="All Users"
-                                    IsSelected="True"
-                                    Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Not Started" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="In Progress" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Completed" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Overdue" Style="{StaticResource ComboBoxItemStyle}" />
-                            </ComboBox.Items>
-                        </ComboBox>
+                        </ComboBox>-->
                     </Grid>
 
                     <!--  Audits Section  -->
