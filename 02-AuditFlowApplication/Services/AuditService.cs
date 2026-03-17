@@ -94,7 +94,30 @@ namespace _02_AuditFlowApplication.Services
             return GetAllAudits().Where(a => a.Type == type).ToList();
         }
 
-        //create GetAuditsByUser
+        public void UpdateAuditStatus(int auditId, AuditStatus newStatus)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+
+                string statusString = newStatus switch
+                {
+                    AuditStatus.NotStarted => "Not Started",
+                    AuditStatus.InProgress => "In Progress",
+                    AuditStatus.Completed => "Completed",
+                    AuditStatus.Overdue => "Overdue",
+                    _ => "Not Started"
+                };
+
+                string query = "UPDATE Audits SET Status = @status WHERE AuditId = @auditId";
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@status", statusString);
+                    command.Parameters.AddWithValue("@auditId", auditId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
         public bool AuditNameExists(string auditName)
         {

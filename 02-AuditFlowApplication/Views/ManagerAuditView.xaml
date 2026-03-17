@@ -534,6 +534,7 @@
                             Grid.Column="2"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -543,7 +544,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="TypeFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -571,6 +572,7 @@
                             Grid.Column="3"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -580,7 +582,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -601,7 +603,7 @@
                             </ComboBox.Items>
                         </ComboBox>
 
-                          <!--Users Filter  
+                        <!--Users Filter
                         <ComboBox
                             x:Name="UsersFilterBox"
                             Grid.Column="4"
@@ -799,7 +801,9 @@
                                                     Height="30"
                                                     Padding="5,5"
                                                     HorizontalAlignment="Left"
-                                                    CornerRadius="20">
+                                                    CornerRadius="20"
+                                                    Cursor="Hand"
+                                                    MouseLeftButtonDown="StatusBorder_Click">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
@@ -808,6 +812,9 @@
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="InProgress">
                                                                     <Setter Property="Background" Value="#0070A8" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="OnHold">
+                                                                    <Setter Property="Background" Value="#E65100" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="Completed">
                                                                     <Setter Property="Background" Value="#008015" />

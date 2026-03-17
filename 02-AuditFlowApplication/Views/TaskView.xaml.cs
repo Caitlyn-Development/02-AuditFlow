@@ -2,11 +2,12 @@
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.Services;
 using Microsoft.Win32;
-using SharpVectors.Converters;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
 namespace _02_AuditFlowApplication.Views
 {
@@ -166,6 +167,129 @@ namespace _02_AuditFlowApplication.Views
             {
                 Dispatcher.Invoke(() => SearchPopup.IsOpen = false);
             });
+        }
+
+        private bool IsDescendantOf(DependencyObject element, DependencyObject parent)
+        {
+            while (element != null)
+            {
+                if (element == parent) return true;
+                element = VisualTreeHelper.GetParent(element);
+            }
+            return false;
+        }
+
+        private void StatusBorder_Click(object sender, MouseButtonEventArgs e)
+        {
+            var border = sender as Border;
+            var task = border?.DataContext as AuditTask;
+            if (task == null) return;
+
+            e.Handled = true;
+
+            var popup = new Popup
+            {
+                PlacementTarget = border,
+                Placement = PlacementMode.Bottom,
+                StaysOpen = true,
+                AllowsTransparency = true
+            };
+
+            var container = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(4)
+            };
+            container.Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 10,
+                Opacity = 0.2,
+                ShadowDepth = 2
+            };
+
+            // Close when clicking outside
+            MouseButtonEventHandler outsideClickHandler = null;
+            outsideClickHandler = (s, args) =>
+            {
+                var clickedElement = args.OriginalSource as DependencyObject;
+                if (!IsDescendantOf(clickedElement, container))
+                {
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                }
+            };
+
+            popup.Opened += (s, args) =>
+            {
+                Window.GetWindow(this).PreviewMouseDown += outsideClickHandler;
+            };
+
+            popup.Closed += (s, args) =>
+            {
+                Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+            };
+
+            var panel = new StackPanel();
+
+            var statuses = new[]
+            {
+        ("Not Started", AuditTaskStatus.NotStarted),
+        ("In Progress", AuditTaskStatus.InProgress),
+        ("On Hold", AuditTaskStatus.OnHold),
+        ("Completed", AuditTaskStatus.Completed),
+        ("Overdue", AuditTaskStatus.Overdue)
+    };
+
+            foreach (var (label, status) in statuses)
+            {
+                var capturedStatus = status;
+
+                var btn = new Button
+                {
+                    Content = label,
+                    FontFamily = new FontFamily("Verdana"),
+                    FontSize = 14,
+                    Padding = new Thickness(15, 8, 15, 8),
+                    BorderThickness = new Thickness(0),
+                    Cursor = Cursors.Hand,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                    Width = 150,
+                    IsEnabled = task.Status != status
+                };
+
+                btn.Click += (s, args) =>
+                {
+                    UpdateTaskStatus(task, capturedStatus);
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                };
+
+                panel.Children.Add(btn);
+            }
+
+            container.Child = panel;
+            popup.Child = container;
+            popup.IsOpen = true;
+        }
+
+        private void UpdateTaskStatus(AuditTask task, AuditTaskStatus newStatus)
+        {
+            try
+            {
+                _taskService.UpdateTaskStatus(task.TaskId, newStatus);
+                task.Status = newStatus;
+
+                TasksGrid.ItemsSource = null;
+                TasksGrid.ItemsSource = _allTasks;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating status: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #region Evidence Upload - Drag & Drop

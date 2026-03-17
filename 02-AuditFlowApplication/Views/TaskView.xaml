@@ -530,6 +530,7 @@
                             Grid.Column="2"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -539,7 +540,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="AuditFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -562,6 +563,7 @@
                             Grid.Column="3"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -571,7 +573,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -721,7 +723,6 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-
                                     <!--  Evidence Submitted  -->
                                     <DataGridTextColumn
                                         Width="1.2*"
@@ -746,18 +747,20 @@
                                                     Height="30"
                                                     Padding="5,5"
                                                     HorizontalAlignment="Left"
-                                                    CornerRadius="20">
+                                                    CornerRadius="20"
+                                                    Cursor="Hand"
+                                                    MouseLeftButtonDown="StatusBorder_Click">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Not Started">
+                                                                <DataTrigger Binding="{Binding Status}" Value="NotStarted">
                                                                     <Setter Property="Background" Value="#424242" />
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="In Progress">
+                                                                <DataTrigger Binding="{Binding Status}" Value="InProgress">
                                                                     <Setter Property="Background" Value="#0070A8" />
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="On Hold">
-                                                                    <Setter Property="Background" Value="#99237f" />
+                                                                <DataTrigger Binding="{Binding Status}" Value="OnHold">
+                                                                    <Setter Property="Background" Value="#E65100" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="Completed">
                                                                     <Setter Property="Background" Value="#008015" />

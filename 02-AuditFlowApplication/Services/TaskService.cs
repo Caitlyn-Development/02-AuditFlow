@@ -77,5 +77,31 @@ namespace _02_AuditFlowApplication.Services
         {
             return GetAllTasks().Where(a => a.Status == status).ToList();
         }
+
+        public void UpdateTaskStatus(int taskId, AuditTaskStatus newStatus)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+
+                string statusString = newStatus switch
+                {
+                    AuditTaskStatus.NotStarted => "Not Started",
+                    AuditTaskStatus.InProgress => "In Progress",
+                    AuditTaskStatus.OnHold => "On Hold",
+                    AuditTaskStatus.Completed => "Completed",
+                    AuditTaskStatus.Overdue => "Overdue",
+                    _ => "Not Started"
+                };
+
+                string query = "UPDATE Tasks SET Status = @status WHERE TaskId = @taskId";
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@status", statusString);
+                    command.Parameters.AddWithValue("@taskId", taskId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

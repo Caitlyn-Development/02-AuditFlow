@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -253,6 +254,128 @@ namespace _02_AuditFlowApplication.Views
                 "Annual" => RecurrenceFrequency.Annual,
                 _ => null
             };
+        }
+
+        private bool IsDescendantOf(DependencyObject element, DependencyObject parent)
+        {
+            while (element != null)
+            {
+                if (element == parent) return true;
+                element = VisualTreeHelper.GetParent(element);
+            }
+            return false;
+        }
+
+        private void StatusBorder_Click(object sender, MouseButtonEventArgs e)
+        {
+            var border = sender as Border;
+            var audit = border?.DataContext as Audit;
+            if (audit == null) return;
+
+            e.Handled = true;
+
+            var popup = new Popup
+            {
+                PlacementTarget = border,
+                Placement = PlacementMode.Bottom,
+                StaysOpen = true,
+                AllowsTransparency = true
+            };
+
+            var container = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(4)
+            };
+            container.Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 10,
+                Opacity = 0.2,
+                ShadowDepth = 2
+            };
+
+            // Close when clicking outside
+            MouseButtonEventHandler outsideClickHandler = null;
+            outsideClickHandler = (s, args) =>
+            {
+                var clickedElement = args.OriginalSource as DependencyObject;
+                if (!IsDescendantOf(clickedElement, container))
+                {
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                }
+            };
+
+            popup.Opened += (s, args) =>
+            {
+                Window.GetWindow(this).PreviewMouseDown += outsideClickHandler;
+            };
+
+            popup.Closed += (s, args) =>
+            {
+                Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+            };
+
+            var panel = new StackPanel();
+
+            var statuses = new[]
+            {
+        ("Not Started", AuditStatus.NotStarted),
+        ("In Progress", AuditStatus.InProgress),
+        ("Completed", AuditStatus.Completed),
+        ("Overdue", AuditStatus.Overdue)
+    };
+
+            foreach (var (label, status) in statuses)
+            {
+                var capturedStatus = status;
+
+                var btn = new Button
+                {
+                    Content = label,
+                    FontFamily = new FontFamily("Verdana"),
+                    FontSize = 14,
+                    Padding = new Thickness(15, 8, 15, 8),
+                    BorderThickness = new Thickness(0),
+                    Cursor = Cursors.Hand,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                    Width = 150,
+                    IsEnabled = audit.Status != status
+                };
+
+                btn.Click += (s, args) =>
+                {
+                    UpdateAuditStatus(audit, capturedStatus);
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                };
+
+                panel.Children.Add(btn);
+            }
+
+            container.Child = panel;
+            popup.Child = container;
+            popup.IsOpen = true;
+        }
+
+        private void UpdateAuditStatus(Audit audit, AuditStatus newStatus)
+        {
+            try
+            {
+                _auditService.UpdateAuditStatus(audit.AuditId, newStatus);
+                audit.Status = newStatus;
+
+                AuditsGrid.ItemsSource = null;
+                AuditsGrid.ItemsSource = _allAudits;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating status: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SaveAudit_Click(object sender, RoutedEventArgs e)
