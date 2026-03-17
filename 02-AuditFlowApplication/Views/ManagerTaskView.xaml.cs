@@ -13,6 +13,7 @@ namespace _02_AuditFlowApplication.Views
     public partial class ManagerTaskView : UserControl
     {
         private readonly TaskService _taskService;
+        private readonly AuditService _auditService;
         private List<AuditTask> _allTasks;
         private string? _selectedAudit = null;
         private string? _selectedUser = null;
@@ -26,8 +27,10 @@ namespace _02_AuditFlowApplication.Views
         {
             InitializeComponent();
             _taskService = new TaskService();
+            _auditService = new AuditService();
             LoadTasks();
             LoadUsers();
+            LoadAudits();
 
         }
         private void LoadTasks()
@@ -72,6 +75,34 @@ namespace _02_AuditFlowApplication.Views
             }
 
             UsersFilterBox.SelectedIndex = 0;
+        }
+
+        private void LoadAudits()
+        {
+            var audits = _auditService.GetAllAudits()
+                .Select(a => a.AuditName)
+                .Distinct()
+                .OrderBy(name => name)
+                .ToList();
+
+            AuditFilterBox.Items.Clear();
+
+            AuditFilterBox.Items.Add(new ComboBoxItem
+            {
+                Content = "All Audits",
+                Style = (Style)FindResource("ComboBoxItemStyle")
+            });
+
+            foreach (var audit in audits)
+            {
+                AuditFilterBox.Items.Add(new ComboBoxItem
+                {
+                    Content = audit,
+                    Style = (Style)FindResource("ComboBoxItemStyle")
+                });
+            }
+
+            AuditFilterBox.SelectedIndex = 0;
         }
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
