@@ -535,6 +535,7 @@
                             Grid.Column="2"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -544,7 +545,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="AuditFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -567,6 +568,7 @@
                             Grid.Column="3"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -576,7 +578,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />
@@ -605,6 +607,7 @@
                             Grid.Column="4"
                             Width="225"
                             Height="80"
+                            Margin="0,0,30,0"
                             Padding="20"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -614,7 +617,7 @@
                             FontSize="18"
                             Foreground="#1e1e1e"
                             SelectionChanged="UsersFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
+                            Style="{StaticResource ComboBoxStyle}">
                             <ComboBox.Resources>
                                 <Style x:Key="ArrowStyle" TargetType="Path">
                                     <Setter Property="Fill" Value="#1e1e1e" />

@@ -407,7 +407,7 @@ namespace _02_AuditFlowApplication.Views
             var grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(80) });
 
             // File icon
             var iconPath = GetIconForFileType(fileExtension);
@@ -437,8 +437,8 @@ namespace _02_AuditFlowApplication.Views
 
             var closeIcon = new SharpVectors.Converters.SvgViewbox
             {
-                Width = 30,
-                Height = 30,
+                Width = 16,
+                Height = 16,
                 Source = new Uri("/Resources/Svg/xmark-solid-full.svg", UriKind.Relative),
             };
 
@@ -451,6 +451,7 @@ namespace _02_AuditFlowApplication.Views
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
                 Cursor = System.Windows.Input.Cursors.Hand,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Tag = filePath
             };
 
