@@ -7,9 +7,8 @@ namespace _02_AuditFlowApplication.Helpers
 {
     public static class NavigationHelper
     {
-
-        private static ContentControl _contentControl;
-        private static UserControl _currentView;
+        private static ContentControl? _contentControl;
+        private static UserControl? _currentView;
 
         public static void Initialise(ContentControl contentControl)
         {
@@ -20,70 +19,70 @@ namespace _02_AuditFlowApplication.Helpers
         {
             if (_contentControl == null)
                 throw new InvalidOperationException("Navigation Helper not initialised");
-
             _currentView = newView;
             _contentControl.Content = newView;
         }
 
+        private static void NavigateSafely(Func<UserControl> viewFactory)
+        {
+            try
+            {
+                NavigateToView(viewFactory());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}\n\nInner: {ex.InnerException?.Message}",
+                    "Navigation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public static void NavigateToDashboard()
         {
-            var user = Application.Current.Properties["CurrentUser"] as User;
-
-            if (user == null)
+            if (Application.Current.Properties["CurrentUser"] is not User user)
             {
-                NavigateToView(new LoginView());
+                NavigateSafely(() => new LoginView());
                 return;
             }
 
-            if (user.Role == UserRole.Manager)
-                NavigateToView(new ManagerDashboardView());
-            else
-                NavigateToView(new DashboardView());
+            NavigateSafely(() => user.Role == UserRole.Manager
+                ? new ManagerDashboardView()
+                : (UserControl)new DashboardView());
         }
 
-        public static void NavigateToManagerDash()
+        public static void NavigateToManagerDash() => NavigateSafely(() => new ManagerDashboardView());
+        public static void NavigateToAudits() => NavigateSafely(() => new AuditView());
+        public static void NavigateToManagerAudits() => NavigateSafely(() => new ManagerAuditView());
+        public static void NavigateToTasks() => NavigateSafely(() => new TaskView());
+        public static void NavigateToManagerTasks() => NavigateSafely(() => new ManagerTaskView());
+        public static void NavigateToManagerUsers() => NavigateSafely(() => new ManagerUserView());
+        public static void Logout() => NavigateSafely(() => new LoginView());
+        public static void ShowLogin() => NavigateSafely(() => new LoginView());
+        public static void ManagerLogin() => NavigateSafely(() => new ManagerLoginView());
+
+        public static void WireAuditorNavigation(
+            Button? dashboardButton = null,
+            Button? auditsButton = null,
+            Button? tasksButton = null,
+            Button? logoutButton = null)
         {
-            NavigateToView(new ManagerDashboardView());
+            if (dashboardButton != null) dashboardButton.Click += (s, e) => NavigateToDashboard();
+            if (auditsButton != null) auditsButton.Click += (s, e) => NavigateToAudits();
+            if (tasksButton != null) tasksButton.Click += (s, e) => NavigateToTasks();
+            if (logoutButton != null) logoutButton.Click += (s, e) => Logout();
         }
 
-        public static void NavigateToAudits()
+        public static void WireManagerNavigation(
+            Button? dashboardButton = null,
+            Button? auditsButton = null,
+            Button? tasksButton = null,
+            Button? usersButton = null,
+            Button? logoutButton = null)
         {
-            NavigateToView(new AuditView());
-        }
-
-        public static void NavigateToManagerAudits()
-        {
-            NavigateToView(new ManagerAuditView());
-        }
-
-        public static void NavigateToTasks()
-        {
-            NavigateToView(new TaskView());
-        }
-
-        public static void NavigateToManagerTasks()
-        {
-            NavigateToView(new ManagerTaskView());
-        }
-
-        public static void NavigateToManagerUsers()
-        {
-            NavigateToView(new ManagerUserView());
-        }
-
-        public static void Logout()
-        {
-            NavigateToView(new LoginView());
-        }
-
-        public static void ShowLogin()
-        {
-            NavigateToView(new LoginView());
-        }
-
-        public static void ManagerLogin()
-        {
-            NavigateToView(new ManagerLoginView());
+            if (dashboardButton != null) dashboardButton.Click += (s, e) => NavigateToManagerDash();
+            if (auditsButton != null) auditsButton.Click += (s, e) => NavigateToManagerAudits();
+            if (tasksButton != null) tasksButton.Click += (s, e) => NavigateToManagerTasks();
+            if (usersButton != null) usersButton.Click += (s, e) => NavigateToManagerUsers();
+            if (logoutButton != null) logoutButton.Click += (s, e) => Logout();
         }
     }
 }

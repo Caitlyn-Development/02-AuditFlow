@@ -1,126 +1,69 @@
 ﻿using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.Models;
-using _02_AuditFlowApplication.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _02_AuditFlowApplication.Views
 {
-    /// <summary>
-    /// Interaction logic for ManagerAuditView.xaml
-    /// </summary>
     public partial class ManagerAuditView : UserControl
     {
-        private readonly AuditService _auditService;
-        private List<Audit> _allAudits;
-        private AuditType? _selectedType = null;
-        private readonly AuditStatus? _selectedStatus = null;
-        //private string? _selectedUser = null;
+        private readonly ManagerAuditViewModel _viewModel;
 
         public ManagerAuditView()
         {
             InitializeComponent();
-            _auditService = new AuditService();
+            _viewModel = new ManagerAuditViewModel();
+            DataContext = _viewModel;
             LoadAudits();
-            //LoadUsers();
+
+            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
         }
 
         private void LoadAudits()
         {
             try
             {
-                _allAudits = _auditService.GetAllAudits();
-                AuditsGrid.ItemsSource = _allAudits;
+                _viewModel.LoadAudits();
+                AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading audits: {ex.Message}",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        //private void LoadUsers()
-        //{
-        //    var userService = new UserService();
-        //    var auditors = userService.GetAllUsers()
-        //        .Where(u => u.Role == UserRole.Auditor)
-        //        .OrderBy(u => u.FullName)
-        //        .ToList();
-
-        //    UsersFilterBox.Items.Clear();
-
-        //    UsersFilterBox.Items.Add(new ComboBoxItem
-        //    {
-        //        Content = "All Users",
-        //        Style = (Style)FindResource("ComboBoxItemStyle")
-        //    });
-
-        //    foreach (var user in auditors)
-        //    {
-        //        UsersFilterBox.Items.Add(new ComboBoxItem
-        //        {
-        //            Content = user.FullName,
-        //            Style = (Style)FindResource("ComboBoxItemStyle")
-        //        });
-        //    }
-
-        //    UsersFilterBox.SelectedIndex = 0;
-        //}
-
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allAudits == null || StatusFilterBox.SelectedItem == null)
-                return;
+            if (_viewModel == null || StatusFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)StatusFilterBox.SelectedItem;
             string selectedStatus = selectedItem.Content.ToString();
 
-            List<Audit> filteredAudits;
-
-            switch (selectedStatus)
+            _viewModel.SelectedStatus = selectedStatus switch
             {
-                case "Not Started":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.NotStarted).ToList();
-                    break;
-                case "In Progress":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.InProgress).ToList();
-                    break;
-                case "Completed":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.Completed).ToList();
-                    break;
-                case "Overdue":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.Overdue).ToList();
-                    break;
-                default: // "All Status"
-                    filteredAudits = _allAudits;
-                    break;
-            }
+                "Not Started" => AuditStatus.NotStarted,
+                "In Progress" => AuditStatus.InProgress,
+                "Completed" => AuditStatus.Completed,
+                "Overdue" => AuditStatus.Overdue,
+                _ => null
+            };
 
-            AuditsGrid.ItemsSource = filteredAudits;
+            AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
         }
 
         private void TypeFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allAudits == null || TypeFilterBox.SelectedItem == null)
-                return;
+            if (_viewModel == null || TypeFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)TypeFilterBox.SelectedItem;
             string selectedType = selectedItem.Content.ToString();
 
-            _selectedType = selectedType switch
+            _viewModel.SelectedType = selectedType switch
             {
                 "Security" => AuditType.Security,
                 "Safety" => AuditType.Safety,
@@ -130,66 +73,34 @@ namespace _02_AuditFlowApplication.Views
                 _ => null
             };
 
-            ApplyFilters();
-        }
-
-        //private void UsersFilterBox_Changed(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (UsersFilterBox.SelectedItem == null) return;
-
-        //    var selectedItem = (ComboBoxItem)UsersFilterBox.SelectedItem;
-        //    string selected = selectedItem.Content.ToString();
-
-        //    _selectedUser = selected == "All Users" ? null : selected;
-
-        //    ApplyFilters();
-        //}
-
-        private void ApplyFilters()
-        {
-            if (_allAudits == null)
-                return;
-
-            var filteredAudits = _allAudits.AsEnumerable();
-
-            if (_selectedType.HasValue)
-                filteredAudits = filteredAudits.Where(a => a.Type == _selectedType.Value);
-
-            if (_selectedStatus.HasValue)
-                filteredAudits = filteredAudits.Where(a => a.Status == _selectedStatus.Value);
-
-            //if (!string.IsNullOrEmpty(_selectedUser))
-            //    filteredAudits = filteredAudits.Where(a => a.CreatedBy != null && a.CreatedBy.FullName == _selectedUser);
-
-            AuditsGrid.ItemsSource = filteredAudits.ToList();
+            AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = SearchTextBox.Text.Trim();
+            var suggestions = _viewModel.GetSearchSuggestions(searchText);
 
             if (string.IsNullOrEmpty(searchText))
             {
                 SearchPopup.IsOpen = false;
-                ApplyFilters(); // Show all audits (or filtered audits)
+                _viewModel.SearchText = string.Empty;
+                AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
                 return;
             }
 
-            // Search for audits matching the text
-            var searchResults = _allAudits
-                .Where(a => a.AuditName.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            if (searchResults.Any())
+            if (suggestions.Any())
             {
-                SearchResultsListBox.ItemsSource = searchResults;
+                SearchResultsListBox.ItemsSource = suggestions;
                 SearchPopup.IsOpen = true;
             }
             else
             {
-                // need to do pop saying no results found
                 SearchPopup.IsOpen = false;
             }
+
+            _viewModel.SearchText = searchText;
+            AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
         }
 
         private void SearchResultsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -197,9 +108,7 @@ namespace _02_AuditFlowApplication.Views
             if (SearchResultsListBox.SelectedItem is Audit selectedAudit)
             {
                 AuditsGrid.ItemsSource = new List<Audit> { selectedAudit };
-
                 SearchTextBox.Text = selectedAudit.AuditName;
-
                 SearchPopup.IsOpen = false;
             }
         }
@@ -207,9 +116,7 @@ namespace _02_AuditFlowApplication.Views
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(SearchTextBox.Text))
-            {
                 SearchTextBox_TextChanged(sender, null);
-            }
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -221,39 +128,12 @@ namespace _02_AuditFlowApplication.Views
         }
 
         private void RecurringCheckbox_Checked(object sender, RoutedEventArgs e)
-        {
-            RecurrencePanel.Visibility = Visibility.Visible;
-        }
+            => RecurrencePanel.Visibility = Visibility.Visible;
 
         private void RecurringCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
             RecurrencePanel.Visibility = Visibility.Collapsed;
             RecurrenceComboBox.SelectedIndex = -1;
-        }
-
-        private AuditType ParseAuditType(string type)
-        {
-            return type switch
-            {
-                "Security" => AuditType.Security,
-                "Safety" => AuditType.Safety,
-                "Quality" => AuditType.Quality,
-                "Data Protection" => AuditType.DataProtection,
-                "Financial" => AuditType.Financial,
-                _ => AuditType.Unknown
-            };
-        }
-
-        private RecurrenceFrequency? ParseRecurrenceFrequency(string frequency)
-        {
-            return frequency switch
-            {
-                "Weekly" => RecurrenceFrequency.Weekly,
-                "Monthly" => RecurrenceFrequency.Monthly,
-                "Quarterly" => RecurrenceFrequency.Quarterly,
-                "Annual" => RecurrenceFrequency.Annual,
-                _ => null
-            };
         }
 
         private bool IsDescendantOf(DependencyObject element, DependencyObject parent)
@@ -297,7 +177,6 @@ namespace _02_AuditFlowApplication.Views
                 ShadowDepth = 2
             };
 
-            // Close when clicking outside
             MouseButtonEventHandler outsideClickHandler = null;
             outsideClickHandler = (s, args) =>
             {
@@ -310,29 +189,24 @@ namespace _02_AuditFlowApplication.Views
             };
 
             popup.Opened += (s, args) =>
-            {
                 Window.GetWindow(this).PreviewMouseDown += outsideClickHandler;
-            };
 
             popup.Closed += (s, args) =>
-            {
                 Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
-            };
 
             var panel = new StackPanel();
 
             var statuses = new[]
             {
-        ("Not Started", AuditStatus.NotStarted),
-        ("In Progress", AuditStatus.InProgress),
-        ("Completed", AuditStatus.Completed),
-        ("Overdue", AuditStatus.Overdue)
-    };
+                ("Not Started", AuditStatus.NotStarted),
+                ("In Progress", AuditStatus.InProgress),
+                ("Completed", AuditStatus.Completed),
+                ("Overdue", AuditStatus.Overdue)
+            };
 
             foreach (var (label, status) in statuses)
             {
                 var capturedStatus = status;
-
                 var btn = new Button
                 {
                     Content = label,
@@ -348,7 +222,13 @@ namespace _02_AuditFlowApplication.Views
 
                 btn.Click += (s, args) =>
                 {
-                    UpdateAuditStatus(audit, capturedStatus);
+                    var (success, error) = _viewModel.UpdateAuditStatus(audit, capturedStatus);
+                    if (!success)
+                        MessageBox.Show($"Error updating status: {error}", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                        AuditsGrid.ItemsSource = _viewModel.FilteredAudits;
+
                     popup.IsOpen = false;
                     Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
                 };
@@ -359,23 +239,6 @@ namespace _02_AuditFlowApplication.Views
             container.Child = panel;
             popup.Child = container;
             popup.IsOpen = true;
-        }
-
-        private void UpdateAuditStatus(Audit audit, AuditStatus newStatus)
-        {
-            try
-            {
-                _auditService.UpdateAuditStatus(audit.AuditId, newStatus);
-                audit.Status = newStatus;
-
-                AuditsGrid.ItemsSource = null;
-                AuditsGrid.ItemsSource = _allAudits;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error updating status: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         private void SaveAudit_Click(object sender, RoutedEventArgs e)
@@ -389,51 +252,20 @@ namespace _02_AuditFlowApplication.Views
                 bool isRecurring = RecurringCheckbox.IsChecked == true;
                 string recurrence = (RecurrenceComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
 
-                if (string.IsNullOrWhiteSpace(auditName) || auditType == null || startDate == null || endDate == null)
-                {
-                    MessageBox.Show("Audit Name, Type, Start Date and End Date are all required.", "Validation Error",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (endDate <= startDate)
-                {
-                    MessageBox.Show("End Date must be after Start Date.", "Validation Error",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (isRecurring && string.IsNullOrEmpty(recurrence))
-                {
-                    MessageBox.Show("Please select a recurrence frequency.", "Validation Error",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                if (_auditService.AuditNameExists(auditName))
-                {
-                    MessageBox.Show($"An audit with the name '{auditName}' already exists.", "Duplicate Audit",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
                 var currentUser = Application.Current.Properties["CurrentUser"] as User;
 
-                var newAudit = new Audit
-                {
-                    AuditName = auditName,
-                    Type = ParseAuditType(auditType),
-                    StartDate = startDate.Value,
-                    EndDate = endDate.Value,
-                    IsRecurring = isRecurring,
-                    RecurrenceType = isRecurring ? ParseRecurrenceFrequency(recurrence) : null,
-                    Status = AuditStatus.NotStarted,
-                    CreatedByUserID = currentUser.UserID,
-                    CreatedDate = DateTime.Now
-                };
+                var (success, errorMessage) = _viewModel.SaveAudit(
+                    auditName, auditType, startDate, endDate,
+                    isRecurring, recurrence, currentUser.UserID);
 
-                _auditService.CreateAudit(newAudit);
-                _auditService.LogAuditCreation(currentUser, newAudit);
+                if (!success)
+                {
+                    MessageBox.Show(errorMessage, "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                _viewModel.LogAuditCreation(currentUser, auditName);
 
                 MessageBox.Show($"Audit '{auditName}' created successfully.", "Success",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -452,31 +284,6 @@ namespace _02_AuditFlowApplication.Views
                 MessageBox.Show($"Error saving audit: {ex.Message}", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void DashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerDash();
-        }
-
-        private void AuditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerAudits();
-        }
-
-        private void TasksButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerTasks();
-        }
-
-        private void UsersButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerUsers();
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.Logout();
         }
     }
 }

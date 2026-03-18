@@ -1,8 +1,7 @@
 ﻿using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.Models;
-using _02_AuditFlowApplication.Services;
+using _02_AuditFlowApplication.ViewModels;
 using Microsoft.Win32;
-using SharpVectors.Converters;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,53 +11,41 @@ namespace _02_AuditFlowApplication.Views
 {
     public partial class ManagerTaskView : UserControl
     {
-        private readonly TaskService _taskService;
-        private readonly AuditService _auditService;
-        private List<AuditTask> _allTasks;
-        private string? _selectedAudit = null;
-        private string? _selectedUser = null;
-        private readonly AuditTaskStatus? _selectedStatus = null;
-
+        private readonly ManagerTaskViewModel _viewModel;
         private List<string> _uploadedFiles = new List<string>();
         private readonly string[] _allowedExtensions = { ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-
 
         public ManagerTaskView()
         {
             InitializeComponent();
-            _taskService = new TaskService();
-            _auditService = new AuditService();
+            _viewModel = new ManagerTaskViewModel();
+            DataContext = _viewModel;
             LoadTasks();
             LoadUsers();
             LoadAudits();
 
+            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
         }
+
         private void LoadTasks()
         {
             try
             {
-                _allTasks = _taskService.GetAllTasks();
-                TasksGrid.ItemsSource = _allTasks;
+                _viewModel.LoadTasks();
+                TasksGrid.ItemsSource = _viewModel.FilteredTasks;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading tasks: {ex.Message}",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void LoadUsers()
         {
-            var userService = new UserService();
-            var auditors = userService.GetAllUsers()
-                .Where(u => u.Role == UserRole.Auditor)
-                .OrderBy(u => u.FullName)
-                .ToList();
+            var auditors = _viewModel.GetAuditors();
 
             UsersFilterBox.Items.Clear();
-
             UsersFilterBox.Items.Add(new ComboBoxItem
             {
                 Content = "All Users",
@@ -79,21 +66,16 @@ namespace _02_AuditFlowApplication.Views
 
         private void LoadAudits()
         {
-            var audits = _auditService.GetAllAudits()
-                .Select(a => a.AuditName)
-                .Distinct()
-                .OrderBy(name => name)
-                .ToList();
+            var auditNames = _viewModel.GetAuditNames();
 
             AuditFilterBox.Items.Clear();
-
             AuditFilterBox.Items.Add(new ComboBoxItem
             {
                 Content = "All Audits",
                 Style = (Style)FindResource("ComboBoxItemStyle")
             });
 
-            foreach (var audit in audits)
+            foreach (var audit in auditNames)
             {
                 AuditFilterBox.Items.Add(new ComboBoxItem
                 {
@@ -107,114 +89,65 @@ namespace _02_AuditFlowApplication.Views
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allTasks == null || StatusFilterBox.SelectedItem == null)
-                return;
+            if (_viewModel == null || StatusFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)StatusFilterBox.SelectedItem;
             string selectedStatus = selectedItem.Content.ToString();
 
-            List<AuditTask> filteredTasks;
-
-            switch (selectedStatus)
+            _viewModel.SelectedStatus = selectedStatus switch
             {
-                case "Not Started":
-                    filteredTasks = _allTasks.Where(a => a.Status == AuditTaskStatus.NotStarted).ToList();
-                    break;
-                case "In Progress":
-                    filteredTasks = _allTasks.Where(a => a.Status == AuditTaskStatus.InProgress).ToList();
-                    break;
-                case "On Hold":
-                    filteredTasks = _allTasks.Where(a => a.Status == AuditTaskStatus.OnHold).ToList();
-                    break;
-                case "Completed":
-                    filteredTasks = _allTasks.Where(a => a.Status == AuditTaskStatus.Completed).ToList();
-                    break;
-                case "Overdue":
-                    filteredTasks = _allTasks.Where(a => a.Status == AuditTaskStatus.Overdue).ToList();
-                    break;
-                default: // "All Status"
-                    filteredTasks = _allTasks;
-                    break;
-            }
+                "Not Started" => AuditTaskStatus.NotStarted,
+                "In Progress" => AuditTaskStatus.InProgress,
+                "On Hold" => AuditTaskStatus.OnHold,
+                "Completed" => AuditTaskStatus.Completed,
+                "Overdue" => AuditTaskStatus.Overdue,
+                _ => null
+            };
 
-            TasksGrid.ItemsSource = filteredTasks;
+            TasksGrid.ItemsSource = _viewModel.FilteredTasks;
         }
 
         private void AuditFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allTasks == null || AuditFilterBox.SelectedItem == null)
-                return;
+            if (_viewModel == null || AuditFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)AuditFilterBox.SelectedItem;
             string selectedAudit = selectedItem.Content.ToString();
 
-            _selectedAudit = selectedAudit == "All Audits" ? null : selectedAudit;
-
-            ApplyFilters();
+            _viewModel.SelectedAudit = selectedAudit == "All Audits" ? null : selectedAudit;
+            TasksGrid.ItemsSource = _viewModel.FilteredTasks;
         }
 
         private void UsersFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allTasks == null || UsersFilterBox.SelectedItem == null)
-                return;
+            if (_viewModel == null || UsersFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)UsersFilterBox.SelectedItem;
             string selectedUser = selectedItem.Content.ToString();
 
-            _selectedUser = selectedUser == "All Users" ? null : selectedUser;
-
-            ApplyFilters();
-        }
-
-        private void ApplyFilters()
-        {
-            if (_allTasks == null)
-                return;
-
-            var filteredTasks = _allTasks.AsEnumerable();
-
-            if (!string.IsNullOrEmpty(_selectedAudit))
-            {
-                filteredTasks = filteredTasks.Where(a => a.AuditName == _selectedAudit);
-            }
-
-            if (!string.IsNullOrEmpty(_selectedUser))
-            {
-                filteredTasks = filteredTasks.Where(a => a.AssignedToUser != null && a.AssignedToUser.FullName == _selectedUser);
-            }
-
-            if (_selectedStatus.HasValue)
-            {
-                filteredTasks = filteredTasks.Where(a => a.Status == _selectedStatus.Value);
-            }
-
-            TasksGrid.ItemsSource = filteredTasks.ToList();
+            _viewModel.SelectedUser = selectedUser == "All Users" ? null : selectedUser;
+            TasksGrid.ItemsSource = _viewModel.FilteredTasks;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = SearchTextBox.Text.Trim();
+            var suggestions = _viewModel.GetSearchSuggestions(searchText);
 
             if (string.IsNullOrEmpty(searchText))
             {
                 SearchPopup.IsOpen = false;
-                ApplyFilters(); // Show all audits (or filtered audits)
+                TasksGrid.ItemsSource = _viewModel.FilteredTasks;
                 return;
             }
 
-            // Search for audits matching the text
-            var searchResults = _allTasks
-                .Where(a => a.TaskName.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            if (searchResults.Any())
+            if (suggestions.Any())
             {
-                SearchResultsListBox.ItemsSource = searchResults;
+                SearchResultsListBox.ItemsSource = suggestions;
                 SearchPopup.IsOpen = true;
             }
             else
             {
-                // need to do pop saying no results found
                 SearchPopup.IsOpen = false;
             }
         }
@@ -224,9 +157,7 @@ namespace _02_AuditFlowApplication.Views
             if (SearchResultsListBox.SelectedItem is AuditTask selectedTask)
             {
                 TasksGrid.ItemsSource = new List<AuditTask> { selectedTask };
-
                 SearchTextBox.Text = selectedTask.TaskName;
-
                 SearchPopup.IsOpen = false;
             }
         }
@@ -234,9 +165,7 @@ namespace _02_AuditFlowApplication.Views
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(SearchTextBox.Text))
-            {
                 SearchTextBox_TextChanged(sender, null);
-            }
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -247,36 +176,135 @@ namespace _02_AuditFlowApplication.Views
             });
         }
 
-        #region Evidence Upload - Drag & Drop
+        private void StatusBorder_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var border = sender as Border;
+            var task = border?.DataContext as AuditTask;
+            if (task == null) return;
+
+            e.Handled = true;
+
+            var popup = new System.Windows.Controls.Primitives.Popup
+            {
+                PlacementTarget = border,
+                Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom,
+                StaysOpen = true,
+                AllowsTransparency = true
+            };
+
+            var container = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(4)
+            };
+            container.Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 10,
+                Opacity = 0.2,
+                ShadowDepth = 2
+            };
+
+            System.Windows.Input.MouseButtonEventHandler outsideClickHandler = null;
+            outsideClickHandler = (s, args) =>
+            {
+                var clickedElement = args.OriginalSource as DependencyObject;
+                if (!IsDescendantOf(clickedElement, container))
+                {
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                }
+            };
+
+            popup.Opened += (s, args) =>
+                Window.GetWindow(this).PreviewMouseDown += outsideClickHandler;
+
+            popup.Closed += (s, args) =>
+                Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+
+            var panel = new StackPanel();
+
+            var statuses = new[]
+            {
+                ("Not Started", AuditTaskStatus.NotStarted),
+                ("In Progress", AuditTaskStatus.InProgress),
+                ("On Hold", AuditTaskStatus.OnHold),
+                ("Completed", AuditTaskStatus.Completed),
+                ("Overdue", AuditTaskStatus.Overdue)
+            };
+
+            foreach (var (label, status) in statuses)
+            {
+                var capturedStatus = status;
+                var btn = new Button
+                {
+                    Content = label,
+                    FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                    FontSize = 14,
+                    Padding = new Thickness(15, 8, 15, 8),
+                    BorderThickness = new Thickness(0),
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                    Width = 150,
+                    IsEnabled = task.Status != status
+                };
+
+                btn.Click += (s, args) =>
+                {
+                    var (success, error) = _viewModel.UpdateTaskStatus(task, capturedStatus);
+                    if (!success)
+                        MessageBox.Show($"Error updating status: {error}", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                        TasksGrid.ItemsSource = _viewModel.FilteredTasks;
+
+                    popup.IsOpen = false;
+                    Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;
+                };
+
+                panel.Children.Add(btn);
+            }
+
+            container.Child = panel;
+            popup.Child = container;
+            popup.IsOpen = true;
+        }
+
+        private bool IsDescendantOf(DependencyObject element, DependencyObject parent)
+        {
+            while (element != null)
+            {
+                if (element == parent) return true;
+                element = System.Windows.Media.VisualTreeHelper.GetParent(element);
+            }
+            return false;
+        }
+
+        #region Evidence Upload
 
         private void DropZone_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                if (files.Any(file => IsValidFileType(file)))
+                if (files.Any(file => _viewModel.IsValidFileType(file, _allowedExtensions)))
                 {
                     e.Effects = DragDropEffects.Copy;
                     DropZoneBorder.Background = new SolidColorBrush(Color.FromArgb(26, 0, 59, 73));
                 }
                 else
-                {
                     e.Effects = DragDropEffects.None;
-                }
             }
             else
-            {
                 e.Effects = DragDropEffects.None;
-            }
 
             e.Handled = true;
         }
 
         private void DropZone_DragLeave(object sender, DragEventArgs e)
-        {
-            DropZoneBorder.Background = Brushes.Transparent;
-        }
+            => DropZoneBorder.Background = Brushes.Transparent;
 
         private void DropZone_Drop(object sender, DragEventArgs e)
         {
@@ -285,18 +313,13 @@ namespace _02_AuditFlowApplication.Views
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
                 foreach (var file in files)
                 {
-                    if (IsValidFileType(file))
-                    {
+                    if (_viewModel.IsValidFileType(file, _allowedExtensions))
                         AddFileToList(file);
-                    }
                     else
-                    {
-                        MessageBox.Show($"File type not supported: {Path.GetFileName(file)}\n\nSupported types: PDF, Word (.doc, .docx), Images (.jpg, .png, .gif, .bmp)",
+                        MessageBox.Show($"File type not supported: {Path.GetFileName(file)}",
                             "Invalid File Type", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
                 }
             }
         }
@@ -306,26 +329,13 @@ namespace _02_AuditFlowApplication.Views
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "Supported Files (*.pdf;*.doc;*.docx;*.jpg;*.jpeg;*.png;*.gif;*.bmp)|*.pdf;*.doc;*.docx;*.jpg;*.jpeg;*.png;*.gif;*.bmp|" +
-                         "PDF Files (*.pdf)|*.pdf|" +
-                         "Word Documents (*.doc;*.docx)|*.doc;*.docx|" +
-                         "Images (*.jpg;*.jpeg;*.png;*.gif;*.bmp)|*.jpg;*.jpeg;*.png;*.gif;*.bmp",
+                Filter = "Supported Files (*.pdf;*.doc;*.docx;*.jpg;*.jpeg;*.png;*.gif;*.bmp)|*.pdf;*.doc;*.docx;*.jpg;*.jpeg;*.png;*.gif;*.bmp",
                 Title = "Select Evidence Files"
             };
 
             if (openFileDialog.ShowDialog() == true)
-            {
                 foreach (var file in openFileDialog.FileNames)
-                {
                     AddFileToList(file);
-                }
-            }
-        }
-
-        private bool IsValidFileType(string filePath)
-        {
-            var extension = Path.GetExtension(filePath).ToLower();
-            return _allowedExtensions.Contains(extension);
         }
 
         private void AddFileToList(string filePath)
@@ -339,7 +349,6 @@ namespace _02_AuditFlowApplication.Views
 
             _uploadedFiles.Add(filePath);
             DisplayUploadedFile(filePath);
-
             SubmitEvidenceButton.IsEnabled = _uploadedFiles.Count > 0;
         }
 
@@ -348,10 +357,10 @@ namespace _02_AuditFlowApplication.Views
             var fileName = Path.GetFileName(filePath);
             var fileExtension = Path.GetExtension(filePath).ToLower();
 
+            var outerGrid = new Grid { Width = 580, Height = 70 };
+
             var fileBorder = new Border
             {
-                Width = 580,
-                Height = 70,
                 Margin = new Thickness(0, 0, 0, 10),
                 Padding = new Thickness(10),
                 BorderThickness = new Thickness(2),
@@ -359,12 +368,10 @@ namespace _02_AuditFlowApplication.Views
                 BorderBrush = new SolidColorBrush(Color.FromArgb(51, 30, 30, 30))
             };
 
-            var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
+            var innerGrid = new Grid();
+            innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
+            innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-            // File icon
             var iconPath = GetIconForFileType(fileExtension);
             var icon = new SharpVectors.Converters.SvgViewbox
             {
@@ -375,46 +382,45 @@ namespace _02_AuditFlowApplication.Views
                 VerticalAlignment = VerticalAlignment.Center
             };
             Grid.SetColumn(icon, 0);
-            grid.Children.Add(icon);
+            innerGrid.Children.Add(icon);
 
-            // File name
             var fileNameText = new TextBlock
             {
                 Text = fileName,
-                FontFamily = new FontFamily("Verdana"),
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
                 FontSize = 14,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(10, 0, 0, 0),
                 TextTrimming = TextTrimming.CharacterEllipsis
             };
             Grid.SetColumn(fileNameText, 1);
-            grid.Children.Add(fileNameText);
+            innerGrid.Children.Add(fileNameText);
 
-            var closeIcon = new SharpVectors.Converters.SvgViewbox
-            {
-                Width = 30,
-                Height = 30,
-                Source = new Uri("/Resources/Svg/xmark-solid-full.svg", UriKind.Relative),
-            };
+            fileBorder.Child = innerGrid;
 
-            // Remove button
             var removeButton = new Button
             {
-                Content = closeIcon,
-                Width = 30,
-                Height = 30,
-                Background = Brushes.Transparent,
+                Width = 24,
+                Height = 24,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = new SolidColorBrush(Color.FromRgb(220, 220, 220)),
                 BorderThickness = new Thickness(0),
                 Cursor = System.Windows.Input.Cursors.Hand,
-                Tag = filePath
+                Tag = filePath,
+                Content = "✕",
+                FontSize = 12,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromRgb(30, 30, 30))
             };
 
             removeButton.Click += RemoveFile_Click;
-            Grid.SetColumn(removeButton, 2);
-            grid.Children.Add(removeButton);
 
-            fileBorder.Child = grid;
-            UploadedFilesPanel.Children.Add(fileBorder);
+            outerGrid.Children.Add(fileBorder);
+            outerGrid.Children.Add(removeButton);
+
+            UploadedFilesPanel.Children.Add(outerGrid);
         }
 
         private string GetIconForFileType(string extension)
@@ -435,8 +441,8 @@ namespace _02_AuditFlowApplication.Views
 
             _uploadedFiles.Remove(filePath);
 
-            var fileBorder = (button.Parent as Grid)?.Parent as Border;
-            UploadedFilesPanel.Children.Remove(fileBorder);
+            var outerGrid = button.Parent as Grid;
+            UploadedFilesPanel.Children.Remove(outerGrid);
 
             SubmitEvidenceButton.IsEnabled = _uploadedFiles.Count > 0;
         }
@@ -457,72 +463,35 @@ namespace _02_AuditFlowApplication.Views
                 return;
             }
 
-            try
+            var selectedItem = TaskSelectionComboBox.SelectedItem as ComboBoxItem;
+            var selectedTask = selectedItem?.Tag as AuditTask;
+
+            if (selectedTask == null)
             {
-                var selectedItem = TaskSelectionComboBox.SelectedItem as ComboBoxItem;
-                var selectedTask = selectedItem?.Tag as AuditTask;
+                MessageBox.Show("Error retrieving selected task.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-                if (selectedTask == null)
-                {
-                    MessageBox.Show("Error retrieving selected task.",
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+            var (success, error) = _viewModel.SubmitEvidence(selectedTask, _uploadedFiles);
 
-                // Create evidence folder if it doesn't exist
-                string evidencePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Evidence", selectedTask.TaskId.ToString());
-                Directory.CreateDirectory(evidencePath);
-
-                // Copy files to evidence folder
-                foreach (var file in _uploadedFiles)
-                {
-                    string fileName = Path.GetFileName(file);
-                    string destPath = Path.Combine(evidencePath, fileName);
-                    File.Copy(file, destPath, true);
-                }
-
+            if (success)
+            {
                 MessageBox.Show($"Successfully uploaded {_uploadedFiles.Count} file(s) for task: {selectedTask.TaskName}",
                     "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Clear the uploaded files list and UI
                 _uploadedFiles.Clear();
                 UploadedFilesPanel.Children.Clear();
                 SubmitEvidenceButton.IsEnabled = false;
                 TaskSelectionComboBox.SelectedIndex = 0;
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Error submitting evidence: {ex.Message}",
+                MessageBox.Show($"Error submitting evidence: {error}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         #endregion
-
-
-        private void DashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerDash();
-        }
-
-        private void AuditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerAudits();
-        }
-
-        private void TasksButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerTasks();
-        }
-
-        private void UsersButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerUsers();
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.Logout();
-        }
     }
 }

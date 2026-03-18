@@ -1,4 +1,5 @@
 ﻿using _02_AuditFlowApplication.Helpers;
+using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -7,56 +8,35 @@ namespace _02_AuditFlowApplication.Views
 {
     public partial class ManagerDashboardView : UserControl
     {
-        private DateTime currentMonth;
-        private Dictionary<DateTime, List<string>> auditEvents;
+        private readonly ManagerDashboardViewModel _viewModel;
 
         public ManagerDashboardView()
         {
             InitializeComponent();
-            currentMonth = new DateTime(2026, 10, 1); // October 2026 as shown in wireframe
-            InitializeAuditEvents();
+            _viewModel = new ManagerDashboardViewModel();
+            DataContext = _viewModel;
             PopulateCalendar();
 
-            // Wire up calendar navigation buttons
             PrevMonthButton.Click += PrevMonthButton_Click;
             NextMonthButton.Click += NextMonthButton_Click;
-        }
 
-        private void InitializeAuditEvents()
-        {
-            // Initialize sample audit events to match wireframe
-            auditEvents = new Dictionary<DateTime, List<string>>
-            {
-                { new DateTime(2026, 10, 2), new List<string> { "Risk Compliance" } },
-                { new DateTime(2026, 10, 13), new List<string> { "Supplier Assess" } },
-                { new DateTime(2026, 10, 22), new List<string> { "IT Systems Audit" } }
-            };
+            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
+
+
         }
 
         private void PopulateCalendar()
         {
             CalendarGrid.Children.Clear();
+            CalendarMonthYear.Text = _viewModel.CalendarMonthYear;
 
-            // Update month/year display
-            CalendarMonthYear.Text = currentMonth.ToString("MMMM yyyy");
-
-            // Get first day of month
-            DateTime firstDayOfMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
-
-            // Find what day of week the 1st falls on (Monday = 1, Sunday = 7)
-            int startDayOfWeek = ((int)firstDayOfMonth.DayOfWeek == 0) ? 7 : (int)firstDayOfMonth.DayOfWeek;
-
-            // Get days in current month
-            int daysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
-
-            // Get days in previous month
-            DateTime prevMonth = currentMonth.AddMonths(-1);
-            int daysInPrevMonth = DateTime.DaysInMonth(prevMonth.Year, prevMonth.Month);
+            int startDayOfWeek = _viewModel.GetStartDayOfWeek();
+            int daysInMonth = _viewModel.GetDaysInMonth();
+            int daysInPrevMonth = _viewModel.GetDaysInPreviousMonth();
 
             int dayCounter = 1;
             int nextMonthDayCounter = 1;
 
-            // Create 5 weeks (35 cells)
             for (int i = 0; i < 35; i++)
             {
                 Border dayCell = new Border
@@ -78,10 +58,8 @@ namespace _02_AuditFlowApplication.Views
                     Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#666666"))
                 };
 
-                // Determine if this cell is for previous month, current month, or next month
                 if (i < startDayOfWeek - 1)
                 {
-                    // Previous month days
                     dayCell.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8F8F8"));
                     int prevMonthDay = daysInPrevMonth - (startDayOfWeek - 2 - i);
                     dayNumber.Text = prevMonthDay.ToString();
@@ -89,44 +67,38 @@ namespace _02_AuditFlowApplication.Views
                 }
                 else if (dayCounter <= daysInMonth)
                 {
-                    // Current month days
                     dayCell.Background = Brushes.White;
                     dayNumber.Text = dayCounter.ToString();
 
-                    // Check if this date has any audit events
-                    DateTime currentDate = new DateTime(currentMonth.Year, currentMonth.Month, dayCounter);
+                    DateTime currentDate = new DateTime(_viewModel.CurrentMonth.Year, _viewModel.CurrentMonth.Month, dayCounter);
 
-                    if (auditEvents.ContainsKey(currentDate))
+                    foreach (var eventName in _viewModel.GetEventsOnDate(currentDate))
                     {
-                        foreach (string eventName in auditEvents[currentDate])
+                        Border eventBadge = new Border
                         {
-                            Border eventBadge = new Border
-                            {
-                                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C4DFF")),
-                                CornerRadius = new CornerRadius(10),
-                                Margin = new Thickness(0, 4, 0, 0),
-                                HorizontalAlignment = HorizontalAlignment.Left
-                            };
+                            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C4DFF")),
+                            CornerRadius = new CornerRadius(10),
+                            Margin = new Thickness(0, 4, 0, 0),
+                            HorizontalAlignment = HorizontalAlignment.Left
+                        };
 
-                            TextBlock eventText = new TextBlock
-                            {
-                                Text = eventName,
-                                FontSize = 9,
-                                FontWeight = FontWeights.SemiBold,
-                                Foreground = Brushes.White,
-                                TextWrapping = TextWrapping.Wrap
-                            };
+                        TextBlock eventText = new TextBlock
+                        {
+                            Text = eventName,
+                            FontSize = 9,
+                            FontWeight = FontWeights.SemiBold,
+                            Foreground = Brushes.White,
+                            TextWrapping = TextWrapping.Wrap
+                        };
 
-                            eventBadge.Child = eventText;
-                            cellContent.Children.Add(eventBadge);
-                        }
+                        eventBadge.Child = eventText;
+                        cellContent.Children.Add(eventBadge);
                     }
 
                     dayCounter++;
                 }
                 else
                 {
-                    // Next month days
                     dayCell.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8F8F8"));
                     dayNumber.Text = nextMonthDayCounter.ToString();
                     dayNumber.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CCCCCC"));
@@ -141,39 +113,14 @@ namespace _02_AuditFlowApplication.Views
 
         private void PrevMonthButton_Click(object sender, RoutedEventArgs e)
         {
-            currentMonth = currentMonth.AddMonths(-1);
+            _viewModel.GoToPreviousMonth();
             PopulateCalendar();
         }
 
         private void NextMonthButton_Click(object sender, RoutedEventArgs e)
         {
-            currentMonth = currentMonth.AddMonths(1);
+            _viewModel.GoToNextMonth();
             PopulateCalendar();
-        }
-
-        private void DashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerDash();
-        }
-
-        private void AuditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerAudits();
-        }
-
-        private void TasksButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerTasks();
-        }
-
-        private void UsersButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToManagerUsers();
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.Logout();
         }
     }
 }

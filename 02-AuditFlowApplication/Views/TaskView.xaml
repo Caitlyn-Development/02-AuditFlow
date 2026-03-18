@@ -245,7 +245,6 @@
                         Margin="5,0"
                         Background="Transparent"
                         BorderThickness="0"
-                        Click="LogoutButton_Click"
                         Cursor="Hand">
                         <svgc:SvgViewbox Source="/Resources/Svg/arrow-right-from-bracket-solid-full.svg" />
                     </Button>
@@ -279,8 +278,8 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top">
                     <Button
+                        x:Name="DashboardButton"
                         Background="#E3F2FD"
-                        Click="DashboardButton_Click"
                         Content="Dashboard"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -289,7 +288,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="AuditsButton_Click"
+                        x:Name="AuditsButton"
                         Content="Audits"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -297,7 +296,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="TasksButton_Click"
+                        x:Name="TasksButton"
                         Content="Tasks"
                         FontFamily="Verdana"
                         FontSize="16"

@@ -1,6 +1,7 @@
 ﻿using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.Services;
+using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,75 +10,61 @@ namespace _02_AuditFlowApplication.Views
     public partial class AuditView : UserControl
     {
         private readonly AuditService _auditService;
-        private List<Audit> _allAudits;
-        private AuditType? _selectedType = null;
-        private readonly AuditStatus? _selectedStatus = null;
+        private readonly AuditViewModel _auditViewModel;
 
         public AuditView()
         {
             InitializeComponent();
             _auditService = new AuditService();
+            _auditViewModel = new AuditViewModel();
+            DataContext = _auditViewModel;
             LoadAudits();
-            
+
+            NavigationHelper.WireAuditorNavigation(DashboardButton, AuditsButton, TasksButton, LogoutButton);
         }
 
         private void LoadAudits()
         {
             try
             {
-                _allAudits = _auditService.GetAllAudits();
-                AuditsGrid.ItemsSource = _allAudits;
+                var audits = _auditService.GetAllAudits();
+                _auditViewModel.LoadAudits(audits);
+                AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading audits: {ex.Message}",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allAudits == null || StatusFilterBox.SelectedItem == null)
-                return;
+            if (_auditViewModel == null || StatusFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)StatusFilterBox.SelectedItem;
             string selectedStatus = selectedItem.Content.ToString();
 
-            List<Audit> filteredAudits;
-
-            switch (selectedStatus)
+            _auditViewModel.SelectedStatus = selectedStatus switch
             {
-                case "Not Started":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.NotStarted).ToList();
-                    break;
-                case "In Progress":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.InProgress).ToList();
-                    break;
-                case "Completed":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.Completed).ToList();
-                    break;
-                case "Overdue":
-                    filteredAudits = _allAudits.Where(a => a.Status == AuditStatus.Overdue).ToList();
-                    break;
-                default: // "All Status"
-                    filteredAudits = _allAudits;
-                    break;
-            }
+                "Not Started" => AuditStatus.NotStarted,
+                "In Progress" => AuditStatus.InProgress,
+                "Completed" => AuditStatus.Completed,
+                "Overdue" => AuditStatus.Overdue,
+                _ => null
+            };
 
-            AuditsGrid.ItemsSource = filteredAudits;
+            AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
         }
 
         private void TypeFilterBox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (_allAudits == null || TypeFilterBox.SelectedItem == null)
-                return;
+            if (_auditViewModel == null || TypeFilterBox.SelectedItem == null) return;
 
             var selectedItem = (ComboBoxItem)TypeFilterBox.SelectedItem;
             string selectedType = selectedItem.Content.ToString();
 
-            _selectedType = selectedType switch
+            _auditViewModel.SelectedType = selectedType switch
             {
                 "Security" => AuditType.Security,
                 "Safety" => AuditType.Safety,
@@ -87,55 +74,34 @@ namespace _02_AuditFlowApplication.Views
                 _ => null
             };
 
-            ApplyFilters();
-        }
-
-        private void ApplyFilters()
-        {
-            if (_allAudits == null)
-                return;
-
-            var filteredAudits = _allAudits.AsEnumerable();
-
-            if (_selectedType.HasValue)
-            {
-                filteredAudits = filteredAudits.Where(a => a.Type == _selectedType.Value);
-            }
-
-            if (_selectedStatus.HasValue)
-            {
-                filteredAudits = filteredAudits.Where(a => a.Status == _selectedStatus.Value);
-            }
-
-            AuditsGrid.ItemsSource = filteredAudits.ToList();
+            AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = SearchTextBox.Text.Trim();
+            var suggestions = _auditViewModel.GetSearchSuggestions(searchText);
 
             if (string.IsNullOrEmpty(searchText))
             {
                 SearchPopup.IsOpen = false;
-                ApplyFilters(); // Show all audits (or filtered audits)
+                _auditViewModel.SearchText = string.Empty;
+                AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
                 return;
             }
 
-            // Search for audits matching the text
-            var searchResults = _allAudits
-                .Where(a => a.AuditName.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            if (searchResults.Any())
+            if (suggestions.Any())
             {
-                SearchResultsListBox.ItemsSource = searchResults;
+                SearchResultsListBox.ItemsSource = suggestions;
                 SearchPopup.IsOpen = true;
             }
             else
             {
-                // need to do pop saying no results found
                 SearchPopup.IsOpen = false;
             }
+
+            _auditViewModel.SearchText = searchText;
+            AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
         }
 
         private void SearchResultsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -143,9 +109,7 @@ namespace _02_AuditFlowApplication.Views
             if (SearchResultsListBox.SelectedItem is Audit selectedAudit)
             {
                 AuditsGrid.ItemsSource = new List<Audit> { selectedAudit };
-
                 SearchTextBox.Text = selectedAudit.AuditName;
-
                 SearchPopup.IsOpen = false;
             }
         }
@@ -153,37 +117,15 @@ namespace _02_AuditFlowApplication.Views
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(SearchTextBox.Text))
-            {
                 SearchTextBox_TextChanged(sender, null);
-            }
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            System.Threading.Tasks.Task.Delay(200).ContinueWith(_ =>
+            using Task _ = Task.Delay(200).ContinueWith(_ =>
             {
                 Dispatcher.Invoke(() => SearchPopup.IsOpen = false);
             });
-        }
-
-        private void DashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToDashboard();
-        }
-
-        private void AuditsButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToAudits();
-        }
-
-        private void TasksButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.NavigateToTasks();
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.Logout();
         }
     }
 }

@@ -155,8 +155,8 @@
                 BorderThickness="0,0,1,0">
                 <StackPanel>
                     <Button
+                        x:Name="DashboardButton"
                         Background="#E3F2FD"
-                        Click="DashboardButton_Click"
                         Content="Dashboard"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -165,7 +165,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="AuditsButton_Click"
+                        x:Name="AuditsButton"
                         Content="Audits"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -173,7 +173,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="TasksButton_Click"
+                        x:Name="TasksButton"
                         Content="Tasks"
                         FontFamily="Verdana"
                         FontSize="16"
@@ -181,7 +181,7 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        Click="UsersButton_Click"
+                        x:Name="UsersButton"
                         Content="Users"
                         FontFamily="Verdana"
                         FontSize="16"

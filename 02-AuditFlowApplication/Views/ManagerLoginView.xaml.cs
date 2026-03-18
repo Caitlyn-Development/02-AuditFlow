@@ -1,6 +1,5 @@
 ﻿using _02_AuditFlowApplication.Helpers;
-using _02_AuditFlowApplication.Models;
-using _02_AuditFlowApplication.Services;
+using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,46 +7,37 @@ namespace _02_AuditFlowApplication.Views
 {
     public partial class ManagerLoginView : UserControl
     {
-        private readonly AuthenticationService _authService;
+        private readonly ManagerLoginViewModel _viewModel;
 
         public ManagerLoginView()
         {
             InitializeComponent();
-            _authService = new AuthenticationService();
+            _viewModel = new ManagerLoginViewModel();
+            DataContext = _viewModel;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string password = PasswordBox.Password;
+            var (success, user, errorMessage) = _viewModel.Login(
+                UsernameTextBox.Text,
+                PasswordBox.Password);
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (success)
             {
-                MessageBox.Show("Please enter username and password.", "Login Failed",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            User user = _authService.AuthenticateUser(username, password);
-
-            if (user != null)
-            {
-                if (user.Role != UserRole.Manager)
-                {
-                    MessageBox.Show("Auditors must use the Auditor Login", "Acess Denied",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
                 Application.Current.Properties["CurrentUser"] = user;
-
                 NavigationHelper.NavigateToDashboard();
-
             }
             else
             {
-                MessageBox.Show("Invalid username or password.", "Login Failed",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                var image = errorMessage.Contains("Auditor")
+                    ? MessageBoxImage.Warning
+                    : MessageBoxImage.Error;
+
+                var title = errorMessage.Contains("Auditor")
+                    ? "Access Denied"
+                    : "Login Failed";
+
+                MessageBox.Show(errorMessage, title, MessageBoxButton.OK, image);
             }
         }
 
