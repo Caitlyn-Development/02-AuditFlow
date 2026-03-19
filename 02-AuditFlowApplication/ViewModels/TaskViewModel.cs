@@ -50,9 +50,11 @@ namespace _02_AuditFlowApplication.ViewModels
             _taskService = new TaskService();
         }
 
-        public void LoadTasks()
+        public void LoadTasks(int userId)
         {
-            _allTasks = _taskService.GetAllTasks();
+            _allTasks = _taskService.GetAllTasks()
+                .Where(t => t.AssignedToUserId == userId)
+                .ToList();
             FilteredTasks = _allTasks;
         }
 

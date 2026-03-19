@@ -31,7 +31,14 @@ namespace _02_AuditFlowApplication.Views
         {
             try
             {
-                _viewModel.LoadTasks();
+                var currentUser = Application.Current.Properties["CurrentUser"] as User;
+                if (currentUser == null)
+                {
+                    MessageBox.Show("No user logged in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                _viewModel.LoadTasks(currentUser.UserID);
                 TasksGrid.ItemsSource = _viewModel.FilteredTasks;
             }
             catch (Exception ex)

@@ -27,8 +27,29 @@ namespace _02_AuditFlowApplication.Views
         {
             try
             {
-                var audits = _auditService.GetAllAudits();
-                _auditViewModel.LoadAudits(audits);
+                var currentUser = Application.Current.Properties["CurrentUser"] as User;
+                if (currentUser == null)
+                {
+                    MessageBox.Show("No user logged in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var taskService = new TaskService();
+                var userTasks = taskService.GetAllTasks()
+                    .Where(t => t.AssignedToUserId == currentUser.UserID)
+                    .ToList();
+
+                var assignedAuditIds = userTasks
+                    .Select(t => t.AuditId)
+                    .Distinct()
+                    .ToHashSet();
+
+                var allAudits = _auditService.GetAllAudits();
+                var assignedAudits = allAudits
+                    .Where(a => assignedAuditIds.Contains(a.AuditId))
+                    .ToList();
+
+                _auditViewModel.LoadAudits(assignedAudits);
                 AuditsGrid.ItemsSource = _auditViewModel.FilteredAudits;
             }
             catch (Exception ex)
