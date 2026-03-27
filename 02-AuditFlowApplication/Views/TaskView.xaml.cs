@@ -40,12 +40,35 @@ namespace _02_AuditFlowApplication.Views
 
                 _viewModel.LoadTasks(currentUser.UserID);
                 TasksGrid.ItemsSource = _viewModel.FilteredTasks;
+                LoadTaskSelectionComboBox();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading tasks: {ex.Message}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void LoadTaskSelectionComboBox()
+        {
+            TaskSelectionComboBox.Items.Clear();
+
+            TaskSelectionComboBox.Items.Add(new ComboBoxItem
+            {
+                Content = "Select a Task..",
+                IsSelected = true
+            });
+
+            foreach (var task in _viewModel.FilteredTasks)
+            {
+                TaskSelectionComboBox.Items.Add(new ComboBoxItem
+                {
+                    Content = task.TaskName,
+                    Tag = task
+                });
+            }
+
+            TaskSelectionComboBox.SelectedIndex = 0;
         }
 
         private void StatusFilterBox_Changed(object sender, SelectionChangedEventArgs e)
@@ -427,7 +450,14 @@ namespace _02_AuditFlowApplication.Views
                 return;
             }
 
-            var (success, error) = _viewModel.SubmitEvidence(selectedTask, _uploadedFiles);
+            var currentUser = Application.Current.Properties["CurrentUser"] as User;
+            if (currentUser == null)
+            {
+                MessageBox.Show("No user logged in.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var (success, error) = _viewModel.SubmitEvidence(selectedTask, _uploadedFiles, currentUser.UserID);
 
             if (success)
             {

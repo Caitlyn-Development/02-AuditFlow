@@ -13,23 +13,13 @@ namespace _02_AuditFlowApplication.Services
             using (SqliteConnection connection = DatabaseHelper.GetConnection())
             {
                 connection.Open();
-                string query = @"
-                    SELECT 
-                        t.TaskId, 
-                        t.TaskName, 
-                        t.Description, 
-                        t.AuditId, 
-                        t.AssignedToUserId, 
-                        t.DueDate, 
-                        t.Status, 
-                        t.CreatedDate,
-                        a.AuditName,
-                        u.FullName,
-                        (SELECT COUNT(*) FROM Evidence WHERE TaskId = t.TaskId) as EvidenceCount
-                    FROM Tasks t
-                    INNER JOIN Audits a ON t.AuditId = a.AuditId
-                    INNER JOIN Users u ON t.AssignedToUserId = u.UserId
-                    ORDER BY t.DueDate";
+                string query = @"SELECT t.TaskId, t.TaskName, t.Description, t.AuditId, t.AssignedToUserId, t.DueDate, t.Status, t.CreatedDate,a.AuditName,u.FullName,
+                COUNT(CASE WHEN e.Status = 'Approved' THEN 1 END) as EvidenceCount
+                FROM Tasks t
+                INNER JOIN Audits a ON t.AuditId = a.AuditId
+                INNER JOIN Users u ON t.AssignedToUserId = u.UserId
+                LEFT JOIN Evidence e ON e.TaskId = t.TaskId
+                GROUP BY t.TaskId, t.TaskName, t.Description, t.AuditId,t.AssignedToUserId, t.DueDate, t.Status, t.CreatedDate, a.AuditName, u.FullName ORDER BY t.DueDate";
 
                 using (SqliteCommand command = new SqliteCommand(query, connection))
                 using (SqliteDataReader reader = command.ExecuteReader())
@@ -51,7 +41,8 @@ namespace _02_AuditFlowApplication.Services
                             {
                                 UserID = reader.GetInt32(4),
                                 FullName = reader.GetString(9)
-                            }
+                            },
+                            EvidenceCount = reader.GetInt32(10)
                         });
                     }
                 }

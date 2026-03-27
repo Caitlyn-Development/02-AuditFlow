@@ -725,7 +725,7 @@
                                     <!--  Evidence Submitted  -->
                                     <DataGridTextColumn
                                         Width="1.2*"
-                                        Binding="{Binding RecurrenceType}"
+                                        Binding="{Binding EvidenceCountDisplay}"
                                         Header="Evidence Submitted">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
@@ -777,7 +777,7 @@
                                                         FontSize="12"
                                                         FontWeight="Bold"
                                                         Foreground="White"
-                                                        Text="{Binding Status}" />
+                                                        Text="{Binding StatusDisplay}" />
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -848,8 +848,10 @@
                                     x:Name="TaskSelectionComboBox"
                                     Grid.Row="0"
                                     Width="280"
+                                    Height="40"
                                     Margin="0,40,0,60"
-                                    HorizontalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
                                     BorderBrush="#FF1E1E1E"
                                     BorderThickness="2,2,2,2"
                                     FontFamily="Verdana"

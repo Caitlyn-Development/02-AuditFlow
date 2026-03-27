@@ -21,9 +21,19 @@ namespace _02_AuditFlowApplication.Models
 
         [Required] public AuditStatus Status { get; set; } = AuditStatus.NotStarted;
 
-        [ForeignKey("CreatedBy")] public int CreatedByUserID  { get; set; }
+        [NotMapped]
+        public string StatusDisplay => Status switch
+        {
+            AuditStatus.NotStarted => "Not Started",
+            AuditStatus.InProgress => "In Progress",
+            AuditStatus.Completed => "Completed",
+            AuditStatus.Overdue => "Overdue",
+            _ => "Unknown"
+        };
 
-        public virtual User CreatedBy {  get; set; }
+        [ForeignKey("CreatedBy")] public int CreatedByUserID { get; set; }
+
+        public virtual User CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }

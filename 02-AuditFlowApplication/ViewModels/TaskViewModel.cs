@@ -98,18 +98,33 @@ namespace _02_AuditFlowApplication.ViewModels
             }
         }
 
-        public (bool Success, string ErrorMessage) SubmitEvidence(AuditTask task, List<string> uploadedFiles)
+        public (bool Success, string ErrorMessage) SubmitEvidence(AuditTask task, List<string> uploadedFiles, int submittedByUserId)
         {
             try
             {
                 string evidencePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Evidence", task.TaskId.ToString());
                 Directory.CreateDirectory(evidencePath);
 
+                var evidenceService = new EvidenceService();
+
                 foreach (var file in uploadedFiles)
                 {
                     string fileName = Path.GetFileName(file);
                     string destPath = Path.Combine(evidencePath, fileName);
                     File.Copy(file, destPath, true);
+
+                    var fileInfo = new FileInfo(file);
+
+                    evidenceService.SubmitEvidence(new Evidence
+                    {
+                        TaskId = task.TaskId,
+                        FileName = fileName,
+                        FilePath = destPath,
+                        FileSize = fileInfo.Length,
+                        SubmittedByUserId = submittedByUserId,
+                        SubmittedDate = DateTime.Now,
+                        Status = EvidenceStatus.PendingReview
+                    });
                 }
 
                 return (true, null);

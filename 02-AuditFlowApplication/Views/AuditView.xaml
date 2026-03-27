@@ -791,7 +791,7 @@
                                                         FontSize="12"
                                                         FontWeight="Bold"
                                                         Foreground="White"
-                                                        Text="{Binding Status}" />
+                                                        Text="{Binding StatusDisplay}" />
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

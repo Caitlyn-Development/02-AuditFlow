@@ -656,7 +656,7 @@
 
                             <DataGrid
                                 x:Name="TasksGrid"
-                                Height="284"
+                                Height="300"
                                 AutoGenerateColumns="False"
                                 Background="White"
                                 BorderBrush="Black"
@@ -713,7 +713,7 @@
                                 <DataGrid.Columns>
                                     <!--  Task Name  -->
                                     <DataGridTextColumn
-                                        Width="2.5*"
+                                        Width="1.5*"
                                         Binding="{Binding TaskName}"
                                         Header="Task Name">
                                         <DataGridTextColumn.ElementStyle>
@@ -728,7 +728,7 @@
 
                                     <!--  Audit Name  -->
                                     <DataGridTextColumn
-                                        Width="*"
+                                        Width="1.5*"
                                         Binding="{Binding AuditName}"
                                         Header="Audit Name">
                                         <DataGridTextColumn.ElementStyle>
@@ -743,7 +743,7 @@
 
                                     <!--  Due Date  -->
                                     <DataGridTextColumn
-                                        Width="1.5*"
+                                        Width="1.2*"
                                         Binding="{Binding DueDate, StringFormat=dd-MM-yyyy}"
                                         Header="Due Date">
                                         <DataGridTextColumn.ElementStyle>
@@ -760,7 +760,7 @@
                                     <!--  Evidence Submitted  -->
                                     <DataGridTextColumn
                                         Width="1.2*"
-                                        Binding="{Binding RecurrenceType}"
+                                        Binding="{Binding EvidenceCountDisplay}"
                                         Header="Evidence Submitted">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
@@ -785,13 +785,13 @@
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Not Started">
+                                                                <DataTrigger Binding="{Binding Status}" Value="NotStarted">
                                                                     <Setter Property="Background" Value="#424242" />
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="In Progress">
+                                                                <DataTrigger Binding="{Binding Status}" Value="InProgress">
                                                                     <Setter Property="Background" Value="#0070A8" />
                                                                 </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="On Hold">
+                                                                <DataTrigger Binding="{Binding Status}" Value="OnHold">
                                                                     <Setter Property="Background" Value="#99237f" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="Completed">
@@ -810,7 +810,7 @@
                                                         FontSize="12"
                                                         FontWeight="Bold"
                                                         Foreground="White"
-                                                        Text="{Binding Status}" />
+                                                        Text="{Binding StatusDisplay}" />
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -820,12 +820,10 @@
                         </StackPanel>
                     </Border>
 
-                    <!--  Evidence Section  -->
+                    <!--  Evidence Review Section  -->
                     <Border
                         Width="1444"
-                        Height="768"
                         MinWidth="1459"
-                        MinHeight="1004"
                         Margin="0,20,0,25"
                         Padding="25"
                         Background="White"
@@ -844,152 +842,207 @@
                         <StackPanel>
                             <Grid Margin="0,0,0,20">
                                 <TextBlock
-                                    Margin="0,0,1141,0"
+                                    Margin="0,0,916,0"
                                     VerticalAlignment="Center"
                                     FontFamily="Verdana"
                                     FontSize="22"
                                     FontWeight="SemiBold"
-                                    Foreground="#FF1E1E1E"><Run Language="en-gb" Text="Upload Evidence" /></TextBlock>
+                                    Foreground="#FF1E1E1E"
+                                    Text="Submitted Evidence - Pending Review" />
+                            </Grid>
+                            <ScrollViewer Height="550" VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="PendingEvidencePanel" />
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Reviewed Section  -->
+                    <Border
+                        Width="1444"
+                        MinWidth="1459"
+                        Margin="0,20,0,25"
+                        Padding="25"
+                        Background="White"
+                        BorderThickness="2,2,2,2"
+                        CornerRadius="10">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </Border.BorderBrush>
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="8"
+                                Opacity="0.1"
+                                ShadowDepth="2"
+                                Color="#000000" />
+                        </Border.Effect>
+                        <StackPanel>
+                            <Grid Margin="0,0,0,20">
+                                <TextBlock
+                                    Margin="0,0,916,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Verdana"
+                                    FontSize="22"
+                                    FontWeight="SemiBold"
+                                    Foreground="#FF1E1E1E"
+                                    Text="Reviewed Evidence" />
                                 <StackPanel
                                     Width="868"
                                     Margin="537,0,0,0"
                                     HorizontalAlignment="Left"
                                     Orientation="Horizontal" />
                             </Grid>
-                            <Grid Height="904" HorizontalAlignment="Left">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" MinHeight="150" />
-                                    <RowDefinition Height="630" />
-                                    <RowDefinition Height="Auto" MinHeight="0" />
-                                    <RowDefinition Height="Auto" MinHeight="0" />
-                                </Grid.RowDefinitions>
-                                <TextBlock
-                                    Grid.Row="0"
-                                    Width="281"
-                                    Height="27"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    FontFamily="Verdana"
-                                    FontSize="18"
-                                    Text="Select Task" />
-                                <ComboBox
-                                    x:Name="TaskSelectionComboBox"
-                                    Grid.Row="0"
-                                    Width="280"
-                                    Margin="0,40,0,60"
-                                    HorizontalAlignment="Center"
-                                    BorderBrush="#FF1E1E1E"
-                                    BorderThickness="2,2,2,2"
-                                    FontFamily="Verdana"
-                                    FontSize="16"
-                                    Foreground="#FF1E1E1E"
-                                    Text="Select Task">
-                                    <ComboBox.Background>
-                                        <LinearGradientBrush EndPoint="0,1">
-                                            <GradientStop Color="#FFF0F0F0" />
-                                            <GradientStop Offset="1" Color="White" />
-                                        </LinearGradientBrush>
-                                    </ComboBox.Background>
-                                </ComboBox>
+                            <DataGrid
+                                x:Name="ReviewedEvidenceGrid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                Background="White"
+                                BorderThickness="0"
+                                CanUserAddRows="False"
+                                CanUserDeleteRows="False"
+                                GridLinesVisibility="None"
+                                HeadersVisibility="Column"
+                                IsReadOnly="True"
+                                RowHeight="45"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow">
 
-                                <!--  Evidence Submission Box with Drag & Drop  -->
-                                <Border
-                                    x:Name="DropZoneBorder"
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Width="600"
-                                    Height="400"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    AllowDrop="True"
-                                    BorderThickness="2"
-                                    CornerRadius="15,15,15,15"
-                                    DragEnter="DropZone_DragEnter"
-                                    DragLeave="DropZone_DragLeave"
-                                    Drop="DropZone_Drop"
-                                    MouseLeftButtonDown="DropZone_Click">
-                                    <Border.BorderBrush>
-                                        <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                                    </Border.BorderBrush>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Background" Value="Transparent" />
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background">
-                                                        <Setter.Value>
-                                                            <SolidColorBrush Opacity="0.05" Color="#FF003B49" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter Property="Cursor" Value="Hand" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <StackPanel>
-                                        <TextBlock
-                                            Width="356"
-                                            Margin="0,20,0,10"
-                                            Padding="10,10,10,10"
-                                            HorizontalAlignment="Center"
-                                            FontFamily="Verdana"
-                                            FontSize="22"
-                                            Text="Drag and drop files here. Supports: PDF, Word and Images."
-                                            TextAlignment="Center"
-                                            TextWrapping="Wrap" />
-                                        <svgc:SvgViewbox
-                                            Width="180"
-                                            Height="180"
-                                            Source="/Resources/Svg/arrow-up-from-bracket-solid-full.svg" />
-                                        <TextBlock
-                                            Margin="0,10,0,0"
-                                            HorizontalAlignment="Center"
-                                            FontFamily="Verdana"
-                                            FontSize="14"
-                                            Foreground="Gray"
-                                            Text="or click to browse"
-                                            TextAlignment="Center" />
-                                    </StackPanel>
-                                </Border>
+                                <!--  Header Style  -->
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="#1e1e1e" />
+                                        <Setter Property="FontFamily" Value="Verdana" />
+                                        <Setter Property="FontSize" Value="14" />
+                                        <Setter Property="FontStyle" Value="Italic" />
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="Padding" Value="10,10,10,10" />
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                        <Setter Property="BorderBrush" Value="#E0E0E0" />
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
 
-                                <!--  Uploaded Files Display Area  -->
-                                <ScrollViewer
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Width="600"
-                                    Height="150"
-                                    Margin="0,440,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    VerticalScrollBarVisibility="Auto">
-                                    <StackPanel x:Name="UploadedFilesPanel" />
-                                </ScrollViewer>
+                                <!--  Row Style  -->
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="White" />
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                        <Setter Property="BorderBrush" Value="#F0F0F0" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#F9F9F9" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
 
-                                <!--  Submit Evidence Button  -->
-                                <Button
-                                    x:Name="SubmitEvidenceButton"
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    Width="200"
-                                    Height="40"
-                                    Margin="5,10,5,10"
-                                    Background="#FF003B49"
-                                    Click="SubmitEvidence_Click"
-                                    Content="Submit Evidence"
-                                    FontFamily="Verdana"
-                                    FontSize="16"
-                                    FontWeight="Bold"
-                                    IsEnabled="False">
-                                    <Button.BorderBrush>
-                                        <SolidColorBrush Opacity="0.8" Color="#FF1E1E1E" />
-                                    </Button.BorderBrush>
-                                </Button>
-                            </Grid>
+                                <!--  Cell Style  -->
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Padding" Value="10,10" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="Foreground" Value="#1E1E1E" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.CellStyle>
+
+                                <DataGrid.Columns>
+                                    <!--  Task Name  -->
+                                    <DataGridTextColumn
+                                        Width="1.5*"
+                                        Binding="{Binding Task.TaskName}"
+                                        Header="Task Name">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1E1E1E" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!--  Audit Name  -->
+                                    <DataGridTextColumn
+                                        Width="1.5*"
+                                        Binding="{Binding Task.AuditName}"
+                                        Header="Audit Name">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1e1e1e" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!--  Submiited by  -->
+                                    <DataGridTextColumn
+                                        Width="1.2*"
+                                        Binding="{Binding SubmittedBy.FullName}"
+                                        Header="Submitted By">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1e1e1e" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!--  Due Date  -->
+                                    <DataGridTextColumn
+                                        Width="1*"
+                                        Binding="{Binding ReviewedDate, StringFormat=dd-MM-yyyy}"
+                                        Header="Reviewed Date">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1e1e1e" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!--  Decision  -->
+                                    <DataGridTextColumn
+                                        Width="0.8*"
+                                        Binding="{Binding Status}"
+                                        Header="Decision">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1e1e1e" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <!--  Notes  -->
+                                    <DataGridTextColumn
+                                        Width="1.5*"
+                                        Binding="{Binding RejectionReason}"
+                                        Header="Notes">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Padding" Value="10,10" />
+                                                <Setter Property="FontFamily" Value="Verdana" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Foreground" Value="#1e1e1e" />
+                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </StackPanel>
                     </Border>
                 </StackPanel>

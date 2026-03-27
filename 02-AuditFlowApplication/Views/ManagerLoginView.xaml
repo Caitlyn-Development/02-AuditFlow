@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:_02_AuditFlowApplication.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="#FFFFFF"
+    KeyboardNavigation.TabNavigation="Cycle"
     mc:Ignorable="d">
 
     <Grid Width="1920" HorizontalAlignment="Center">
@@ -13,38 +14,52 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" MinWidth="1136" />
         </Grid.ColumnDefinitions>
+
+        <!--  Logo Panel  -->
         <StackPanel
             Width="776"
             Height="1064"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+            VerticalAlignment="Center"
+            AutomationProperties.Name="AuditFlow manager branding panel">
             <Image
                 Width="838"
                 Height="1074"
                 HorizontalAlignment="Center"
+                AutomationProperties.HelpText="AuditFlow manager application logo"
+                AutomationProperties.Name="AuditFlow manager logo"
                 RenderTransformOrigin="0.496,0.496"
                 Source="/Resources/PNG/PurpleLogoImage.png" />
         </StackPanel>
+
+        <!--  Manager Login Panel  -->
         <StackPanel
             Grid.Column="1"
             Width="1152"
             Height="1064"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+            VerticalAlignment="Center"
+            AutomationProperties.Name="Manager login panel">
+
             <StackPanel Height="126">
                 <Button
                     Height="46"
                     Margin="0,50,50,50"
                     Padding="0,10,0,10"
                     HorizontalAlignment="Right"
+                    AutomationProperties.HelpText="Click to navigate to the auditor login page"
+                    AutomationProperties.Name="Switch to Auditor Login"
                     Background="Transparent"
                     Click="AuditorLoginButton_Click"
                     Content="Switch to Auditor Login"
                     FontFamily="Verdana"
                     FontSize="18"
                     FontWeight="Bold"
-                    Foreground="#FF1E1E1E" />
+                    Foreground="#FF1E1E1E"
+                    KeyboardNavigation.IsTabStop="True"
+                    TabIndex="3" />
             </StackPanel>
+
             <Grid
                 Width="1148"
                 Height="639"
@@ -54,6 +69,7 @@
                     Margin="50,0,50,0"
                     Padding="30,30,30,30"
                     VerticalAlignment="Center"
+                    AutomationProperties.Name="Manager login form"
                     Background="White"
                     BorderThickness="2,2,2,2"
                     CornerRadius="10">
@@ -64,40 +80,56 @@
                         <TextBlock
                             Margin="0,5,0,10"
                             HorizontalAlignment="Left"
+                            AutomationProperties.Name="Log Into AuditFlow manager heading"
                             FontFamily="Verdana"
                             FontSize="20"
                             FontWeight="Bold"
                             Foreground="#FF1E1E1E"
                             Text="Log Into AuditFlow" />
+
                         <TextBlock
                             Margin="0,5,0,30"
                             HorizontalAlignment="Left"
+                            AutomationProperties.Name="Enter your manager account details below"
                             FontFamily="Verdana"
                             FontSize="18"
                             FontWeight="Regular"
                             Foreground="#FF1E1E1E"
                             Text="Enter your account details below:" />
+
                         <Label
+                            AutomationProperties.Name="Username label"
                             Content="Username:"
                             FontFamily="Verdana"
                             FontSize="18"
-                            Foreground="#FF1E1E1E" />
+                            Foreground="#FF1E1E1E"
+                            Target="{Binding ElementName=UsernameTextBox}" />
+
                         <TextBox
                             x:Name="UsernameTextBox"
                             Margin="5,5,5,15"
+                            AutomationProperties.HelpText="Enter your manager username"
+                            AutomationProperties.Name="Username"
                             FontSize="14"
+                            KeyboardNavigation.IsTabStop="True"
                             TabIndex="0" />
 
                         <Label
                             Margin="0,10,0,0"
+                            AutomationProperties.Name="Password label"
                             Content="Password:"
                             FontFamily="Verdana"
                             FontSize="18"
-                            Foreground="#FF1E1E1E" />
+                            Foreground="#FF1E1E1E"
+                            Target="{Binding ElementName=PasswordBox}" />
+
                         <PasswordBox
                             x:Name="PasswordBox"
                             Margin="5,5,5,25"
+                            AutomationProperties.HelpText="Enter your manager password"
+                            AutomationProperties.Name="Password"
                             FontSize="14"
+                            KeyboardNavigation.IsTabStop="True"
                             TabIndex="1" />
 
                         <Button
@@ -105,6 +137,8 @@
                             Width="100"
                             Height="40"
                             Margin="5,20,5,5"
+                            AutomationProperties.HelpText="Click or press Enter to sign in as manager"
+                            AutomationProperties.Name="Sign In"
                             Background="#FF5D3754"
                             Click="LoginButton_Click"
                             Content="Sign In"
@@ -112,11 +146,14 @@
                             FontSize="14"
                             FontStyle="Italic"
                             FontWeight="Bold"
+                            IsDefault="True"
+                            KeyboardNavigation.IsTabStop="True"
                             TabIndex="2" />
 
                         <TextBlock
                             Margin="0,15,0,0"
                             HorizontalAlignment="Center"
+                            AutomationProperties.Name="Default manager credentials hint"
                             FontSize="11"
                             Foreground="Gray"
                             Text="Default credentials: admin / Admin123!"
