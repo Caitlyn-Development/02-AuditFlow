@@ -73,6 +73,11 @@ namespace _02_AuditFlowApplication.ViewModels
             FilteredTasks = _allTasks;
         }
 
+        public AuditTask GetTaskById(int taskId)
+        {
+            return _allTasks?.FirstOrDefault(t => t.TaskId == taskId);
+        }
+
         public List<User> GetAuditors()
         {
             return _userService.GetAllUsers()

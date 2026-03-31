@@ -186,5 +186,41 @@ namespace _02_AuditFlowApplication.Services
             }
         }
 
+        public void UpdateAudit(Audit audit)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"UPDATE Audits 
+                         SET AuditName = @auditName,
+                             StartDate = @startDate,
+                             EndDate = @endDate
+                         WHERE AuditId = @auditId";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@auditName", audit.AuditName);
+                    command.Parameters.AddWithValue("@startDate", audit.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@endDate", audit.EndDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@auditId", audit.AuditId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteAudit(int auditId)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "DELETE FROM Audits WHERE AuditId = @auditId";
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@auditId", auditId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

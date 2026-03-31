@@ -6,128 +6,176 @@
     xmlns:local="clr-namespace:_02_AuditFlowApplication"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+    xmlns:views="clr-namespace:_02_AuditFlowApplication.Views"
     Background="#FFFFFF"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <!--  Button Style  -->
-        <Style x:Key="MenuButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#333333" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="15,10" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Margin" Value="0,2" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            Padding="{TemplateBinding Padding}"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#F0F0F0" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <!--  Card Style  -->
-        <Style x:Key="StatCardStyle" TargetType="Border">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="20" />
-            <Setter Property="Margin" Value="10,0" />
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect
-                        BlurRadius="8"
-                        Opacity="0.1"
-                        ShadowDepth="2"
-                        Color="#000000" />
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <views:ManagerLayout
+            x:Name="Layout"
+            Grid.Row="0"
+            Grid.RowSpan="2" />
 
-        <!--  Section Header Style  -->
-        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,20,0,15" />
-            <Setter Property="Foreground" Value="#333333" />
-        </Style>
+        <ScrollViewer
+            x:Name="AuditsViewer"
+            Grid.Row="1"
+            Height="944"
+            Margin="251,120,0,0"
+            Padding="30,20"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel Width="1589" Height="1084">
+                <!--  Dashboard Header  -->
+                <TextBlock
+                    Width="1121"
+                    Margin="10,0,0,25"
+                    HorizontalAlignment="Left"
+                    FontFamily="Verdana"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="#FF1E1E1E"
+                    Text="Audit Scheduling" />
 
-        <!--  Combo Box Style  -->
-        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
+                <!--  Statistics Cards Row  -->
+                <Grid Width="1452" Margin="0,0,0,40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Filter Button  -->
+                    <Border
+                        Grid.Column="0"
+                        Width="100"
+                        Height="80"
+                        Margin="0,0,30,0"
+                        Padding="10,10,10,10"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        BorderThickness="2,2,2,2"
+                        CornerRadius="15,15,15,15"
+                        Style="{StaticResource StatCardStyle}">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </Border.BorderBrush>
+                        <StackPanel>
+                            <svgc:SvgViewbox
+                                Width="40"
+                                Height="40"
+                                Margin="0,10,0,10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Svg/filter-solid-full.svg" />
+                            <StackPanel Orientation="Horizontal" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Search Audits  -->
+                    <Border
+                        Grid.Column="1"
+                        Width="500"
+                        Height="80"
+                        Margin="0,0,50,0"
+                        Padding="15,0,15,0"
+                        VerticalAlignment="Center"
+                        Background="White"
+                        BorderThickness="2"
+                        CornerRadius="15">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="8"
+                                Opacity="0.1"
+                                ShadowDepth="2"
+                                Color="#000000" />
+                        </Border.Effect>
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </Border.BorderBrush>
+
                         <Grid>
-                            <ToggleButton
-                                x:Name="ToggleButton"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="#1e1e1e"
-                                BorderThickness="2"
-                                ClickMode="Press"
-                                Focusable="False"
-                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderBrush}"
-                                            BorderThickness="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=BorderThickness}"
-                                            CornerRadius="8">
-                                            <Grid Background="Transparent">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                                                <!--  Selected Item Display  -->
-                                                <ContentPresenter
-                                                    Grid.Column="0"
-                                                    Margin="20,0,0,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Content="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItem}"
-                                                    ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItemTemplate}"
-                                                    ContentTemplateSelector="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=ItemTemplateSelector}" />
+                            <!--  Search Icon  -->
+                            <svgc:SvgViewbox
+                                Grid.Column="0"
+                                Width="30"
+                                Height="30"
+                                Margin="0,0,15,0"
+                                VerticalAlignment="Center"
+                                Source="/Resources/Svg/magnifying-glass-solid-full.svg" />
 
-                                                <!--  Dropdown Arrow  -->
-                                                <Path
-                                                    Grid.Column="1"
-                                                    Width="12"
-                                                    Height="8"
-                                                    Margin="0,0,20,0"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Center"
-                                                    Data="M 0 0 L 4 4 L 8 0 Z"
-                                                    Fill="#1E1E1E"
-                                                    Stretch="Uniform" />
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
+                            <!--  Search TextBox  -->
+                            <TextBox
+                                x:Name="SearchTextBox"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontFamily="Verdana"
+                                FontSize="18"
+                                Foreground="#1E1E1E"
+                                GotFocus="SearchTextBox_GotFocus"
+                                LostFocus="SearchTextBox_LostFocus"
+                                TextChanged="SearchTextBox_TextChanged">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Grid>
+                                                        <!--  Placeholder Text  -->
+                                                        <TextBlock
+                                                            x:Name="PlaceholderText"
+                                                            VerticalAlignment="Center"
+                                                            FontFamily="Verdana"
+                                                            FontSize="18"
+                                                            Foreground="#999999"
+                                                            IsHitTestVisible="False"
+                                                            Text="Search Audits">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
 
-                            <!--  Dropdown Popup  -->
+                                                        <!--  Actual TextBox  -->
+                                                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <!--  Search Suggestions Popup  -->
                             <Popup
-                                x:Name="Popup"
+                                x:Name="SearchPopup"
+                                Grid.Column="1"
+                                Width="470"
                                 AllowsTransparency="True"
-                                Focusable="False"
-                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                IsOpen="False"
                                 Placement="Bottom"
-                                PopupAnimation="Slide">
+                                PlacementTarget="{Binding ElementName=SearchTextBox}"
+                                StaysOpen="False">
                                 <Border
-                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="300"
                                     Margin="0,4,0,0"
                                     Background="White"
                                     BorderBrush="#E0E0E0"
@@ -140,906 +188,597 @@
                                             ShadowDepth="2"
                                             Color="#000000" />
                                     </Border.Effect>
-                                    <ScrollViewer Margin="0,4">
-                                        <StackPanel IsItemsHost="True" />
-                                    </ScrollViewer>
+                                    <ListBox
+                                        x:Name="SearchResultsListBox"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        SelectionChanged="SearchResultsListBox_SelectionChanged">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Padding" Value="15,12" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ListBoxItem">
+                                                            <Border
+                                                                Padding="{TemplateBinding Padding}"
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderThickness="0">
+                                                                <ContentPresenter />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="#F5F5F5" />
+                                                                </Trigger>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="Background" Value="#E3F2FD" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontFamily="Verdana"
+                                                        FontSize="16"
+                                                        FontWeight="SemiBold"
+                                                        Foreground="#1E1E1E"
+                                                        Text="{Binding AuditName}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
                                 </Border>
                             </Popup>
                         </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                    </Border>
 
-        <!--  Combo Box Item Style  -->
-        <Style x:Key="ComboBoxItemStyle" TargetType="ComboBoxItem">
-            <Setter Property="FontFamily" Value="Verdana" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="#1E1E1E" />
-            <Setter Property="Padding" Value="20,12" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBoxItem">
-                        <Border
-                            Padding="{TemplateBinding Padding}"
-                            Background="{TemplateBinding Background}"
-                            BorderThickness="0">
-                            <ContentPresenter />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#F5F5F5" />
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#E3F2FD" />
-                                <Setter Property="Foreground" Value="#2196F3" />
-                                <Setter Property="FontWeight" Value="SemiBold" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <!--  Top Navigation Bar  -->
-        <Border
-            Height="120"
-            VerticalAlignment="Center"
-            Background="White"
-            BorderBrush="#E0E0E0"
-            BorderThickness="0,0,0,1">
-            <Grid Margin="0,0,0,9">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <!--  Logo and Title  -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Image
-                        x:Name="Logo"
-                        Width="206"
-                        Height="86"
-                        Margin="250,0,0,0"
-                        Source="/Resources/PNG/AuditFlow Purple Logo.png" />
-                </StackPanel>
-
-                <!--  Right Side Icons  -->
-                <StackPanel
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    Margin="1092,0,0,0"
-                    Orientation="Horizontal">
-                    <Button
-                        Width="50"
-                        Height="50"
-                        Margin="5,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Cursor="Hand">
-                        <svgc:SvgViewbox Source="/Resources/Svg/gear-solid-full.svg" />
-                    </Button>
-                    <Button
-                        Width="50"
-                        Height="50"
-                        Margin="5,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Content="●"
-                        Cursor="Hand"
-                        FontSize="20"
-                        Foreground="Black" />
-                    <Button
-                        x:Name="LogoutButton"
-                        Width="50"
-                        Height="50"
-                        Margin="5,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Cursor="Hand">
-                        <svgc:SvgViewbox Source="/Resources/Svg/arrow-right-from-bracket-solid-full.svg" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!--  Main Content Area  -->
-        <Grid
-            Grid.Row="1"
-            Height="944"
-            VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="251" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <!--  Left Sidebar Menu  -->
-            <Border
-                Grid.Column="0"
-                Height="944"
-                Padding="15,20"
-                VerticalAlignment="Center"
-                Background="White"
-                BorderBrush="#E0E0E0"
-                BorderThickness="0,0,1,0">
-                <StackPanel>
-                    <Button
-                        x:Name="DashboardButton"
-                        Background="#E3F2FD"
-                        Content="Dashboard"
-                        FontFamily="Verdana"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Foreground="#2196F3"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
-                        x:Name="AuditsButton"
-                        Content="Audits"
-                        FontFamily="Verdana"
-                        FontSize="16"
-                        Foreground="#FF1E1E1E"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
-                        x:Name="TasksButton"
-                        Content="Tasks"
-                        FontFamily="Verdana"
-                        FontSize="16"
-                        Foreground="#FF1E1E1E"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
-                        x:Name="UsersButton"
-                        Content="Users"
-                        FontFamily="Verdana"
-                        FontSize="16"
-                        Foreground="#FF1E1E1E"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Separator Margin="0,15" Background="#E0E0E0" />
-                </StackPanel>
-            </Border>
-
-            <!--  Main Dashboard Content  -->
-            <ScrollViewer
-                x:Name="AuditsViewer"
-                Grid.Column="1"
-                Height="944"
-                Padding="30,20"
-                VerticalAlignment="Center"
-                VerticalScrollBarVisibility="Auto">
-                <StackPanel Width="1589" Height="1084">
-                    <!--  Dashboard Header  -->
-                    <TextBlock
-                        Width="1121"
-                        Margin="10,0,0,25"
+                    <!--  Audit Types Filter  -->
+                    <ComboBox
+                        x:Name="TypeFilterBox"
+                        Grid.Column="2"
+                        Width="225"
+                        Height="80"
+                        Margin="0,0,30,0"
+                        Padding="20"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Background="White"
+                        BorderThickness="2"
                         FontFamily="Verdana"
-                        FontSize="22"
-                        FontWeight="Bold"
-                        Foreground="#FF1E1E1E"
-                        Text="Audit Scheduling" />
+                        FontSize="18"
+                        Foreground="#1e1e1e"
+                        SelectionChanged="TypeFilterBox_Changed"
+                        Style="{StaticResource DefaultComboBoxStyle}">
+                        <ComboBox.Resources>
+                            <Style x:Key="ArrowStyle" TargetType="Path">
+                                <Setter Property="Fill" Value="#1e1e1e" />
+                            </Style>
+                        </ComboBox.Resources>
+                        <ComboBox.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </ComboBox.BorderBrush>
+                        <ComboBox.Items>
+                            <ComboBoxItem
+                                Content="All Types"
+                                IsSelected="True"
+                                Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Security" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Safety" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Quality" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Data Protection" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Financial" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                        </ComboBox.Items>
+                    </ComboBox>
 
-                    <!--  Statistics Cards Row  -->
-                    <Grid Width="1452" Margin="0,0,0,40">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <!--  Status Filter  -->
+                    <ComboBox
+                        x:Name="StatusFilterBox"
+                        Grid.Column="3"
+                        Width="225"
+                        Height="80"
+                        Margin="0,0,30,0"
+                        Padding="20"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Background="White"
+                        BorderThickness="2"
+                        FontFamily="Verdana"
+                        FontSize="18"
+                        Foreground="#1e1e1e"
+                        SelectionChanged="StatusFilterBox_Changed"
+                        Style="{StaticResource DefaultComboBoxStyle}">
+                        <ComboBox.Resources>
+                            <Style x:Key="ArrowStyle" TargetType="Path">
+                                <Setter Property="Fill" Value="#1e1e1e" />
+                            </Style>
+                        </ComboBox.Resources>
+                        <ComboBox.BorderBrush>
+                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                        </ComboBox.BorderBrush>
+                        <ComboBox.Items>
+                            <ComboBoxItem
+                                Content="All Status"
+                                IsSelected="True"
+                                Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Not Started" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="In Progress" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Completed" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Overdue" Style="{StaticResource DefaultComboBoxItemStyle}" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </Grid>
 
-                        <!--  Filter Button  -->
-                        <Border
-                            Grid.Column="0"
-                            Width="100"
-                            Height="80"
-                            Margin="0,0,30,0"
-                            Padding="10,10,10,10"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            BorderThickness="2,2,2,2"
-                            CornerRadius="15,15,15,15"
-                            Style="{StaticResource StatCardStyle}">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                            </Border.BorderBrush>
-                            <StackPanel>
-                                <svgc:SvgViewbox
-                                    Width="40"
-                                    Height="40"
-                                    Margin="0,10,0,10"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Source="/Resources/Svg/filter-solid-full.svg" />
-                                <StackPanel Orientation="Horizontal" />
-                            </StackPanel>
-                        </Border>
+                <!--  Audits Section  -->
+                <Border
+                    Width="1459"
+                    Height="383"
+                    Margin="0,0,0,25"
+                    Padding="25"
+                    Background="White"
+                    BorderThickness="2,2,2,2"
+                    CornerRadius="15">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                    </Border.BorderBrush>
+                    <StackPanel>
 
-                        <!--  Search Audits  -->
-                        <Border
-                            Grid.Column="1"
-                            Width="500"
-                            Height="80"
-                            Margin="0,0,50,0"
-                            Padding="15,0,15,0"
-                            VerticalAlignment="Center"
+                        <!--  Audits Header  -->
+                        <Grid Margin="0,0,0,20">
+                            <TextBlock
+                                Margin="0,0,1141,0"
+                                VerticalAlignment="Center"
+                                FontFamily="Verdana"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                Foreground="#FF1E1E1E"
+                                Text="Scheduled Audits" />
+                        </Grid>
+
+                        <!--  Audit Display Grid  -->
+                        <DataGrid
+                            x:Name="AuditsGrid"
+                            Height="284"
+                            AutoGenerateColumns="False"
                             Background="White"
-                            BorderThickness="2"
-                            CornerRadius="15">
-                            <Border.Effect>
-                                <DropShadowEffect
-                                    BlurRadius="8"
-                                    Opacity="0.1"
-                                    ShadowDepth="2"
-                                    Color="#000000" />
-                            </Border.Effect>
-                            <Border.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                            </Border.BorderBrush>
+                            BorderThickness="0"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            GridLinesVisibility="None"
+                            HeadersVisibility="Column"
+                            IsReadOnly="True"
+                            RowHeight="45"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                            <!--  Header Style  -->
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="#1e1e1e" />
+                                    <Setter Property="FontFamily" Value="Verdana" />
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="FontStyle" Value="Italic" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="Padding" Value="10,10,10,10" />
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="BorderBrush" Value="#E0E0E0" />
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
 
-                                <!--  Search Icon  -->
-                                <svgc:SvgViewbox
-                                    Grid.Column="0"
-                                    Width="30"
-                                    Height="30"
-                                    Margin="0,0,15,0"
-                                    VerticalAlignment="Center"
-                                    Source="/Resources/Svg/magnifying-glass-solid-full.svg" />
+                            <!--  Row Style  -->
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="BorderBrush" Value="#F0F0F0" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#F9F9F9" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
 
-                                <!--  Search TextBox  -->
-                                <TextBox
-                                    x:Name="SearchTextBox"
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    FontFamily="Verdana"
-                                    FontSize="18"
-                                    Foreground="#1E1E1E"
-                                    GotFocus="SearchTextBox_GotFocus"
-                                    LostFocus="SearchTextBox_LostFocus"
-                                    TextChanged="SearchTextBox_TextChanged">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="TextBox">
-                                                        <Grid>
-                                                            <!--  Placeholder Text  -->
-                                                            <TextBlock
-                                                                x:Name="PlaceholderText"
-                                                                VerticalAlignment="Center"
-                                                                FontFamily="Verdana"
-                                                                FontSize="18"
-                                                                Foreground="#999999"
-                                                                IsHitTestVisible="False"
-                                                                Text="Search Audits">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
-                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
+                            <!--  Cell Style  -->
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Padding" Value="10,10" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Foreground" Value="#1E1E1E" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
 
-                                                            <!--  Actual TextBox  -->
-                                                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
-                                                        </Grid>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
+                            <DataGrid.Columns>
+                                <!--  Audit Name  -->
+                                <DataGridTextColumn
+                                    Width="2.5*"
+                                    Binding="{Binding AuditName}"
+                                    Header="Audit Name">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="10,10" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#1E1E1E" />
                                         </Style>
-                                    </TextBox.Style>
-                                </TextBox>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
 
-                                <!--  Search Suggestions Popup  -->
-                                <Popup
-                                    x:Name="SearchPopup"
-                                    Grid.Column="1"
-                                    Width="470"
-                                    AllowsTransparency="True"
-                                    IsOpen="False"
-                                    Placement="Bottom"
-                                    PlacementTarget="{Binding ElementName=SearchTextBox}"
-                                    StaysOpen="False">
-                                    <Border
-                                        MaxHeight="300"
-                                        Margin="0,4,0,0"
-                                        Background="White"
-                                        BorderBrush="#E0E0E0"
-                                        BorderThickness="1"
-                                        CornerRadius="8">
-                                        <Border.Effect>
-                                            <DropShadowEffect
-                                                BlurRadius="10"
-                                                Opacity="0.2"
-                                                ShadowDepth="2"
-                                                Color="#000000" />
-                                        </Border.Effect>
-                                        <ListBox
-                                            x:Name="SearchResultsListBox"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            SelectionChanged="SearchResultsListBox_SelectionChanged">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="ListBoxItem">
-                                                    <Setter Property="Padding" Value="15,12" />
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ListBoxItem">
-                                                                <Border
-                                                                    Padding="{TemplateBinding Padding}"
-                                                                    Background="{TemplateBinding Background}"
-                                                                    BorderThickness="0">
-                                                                    <ContentPresenter />
-                                                                </Border>
-                                                                <ControlTemplate.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="#F5F5F5" />
-                                                                    </Trigger>
-                                                                    <Trigger Property="IsSelected" Value="True">
-                                                                        <Setter Property="Background" Value="#E3F2FD" />
-                                                                    </Trigger>
-                                                                </ControlTemplate.Triggers>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel>
-                                                        <TextBlock
+                                <!--  Audit Type  -->
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Type}"
+                                    Header="Type">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="10,10" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#1e1e1e" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <!--  Start Date  -->
+                                <DataGridTextColumn
+                                    Width="1.5*"
+                                    Binding="{Binding StartDate, StringFormat=dd-MM-yyyy}"
+                                    Header="Start Date">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="10,10" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#1e1e1e" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <!--  Due Date  -->
+                                <DataGridTextColumn
+                                    Width="1.5*"
+                                    Binding="{Binding EndDate, StringFormat=dd-MM-yyyy}"
+                                    Header="Due Date">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="10,10" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#1e1e1e" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <!--  Recurring  -->
+                                <DataGridTextColumn
+                                    Width="1.2*"
+                                    Binding="{Binding RecurrenceType}"
+                                    Header="Recurring">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="10,10" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#1e1e1e" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <!--  Status with Template for Badge  -->
+                                <DataGridTemplateColumn Width="1.2*" Header="Status">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Width="120"
+                                                Height="30"
+                                                Padding="5,5"
+                                                HorizontalAlignment="Left"
+                                                CornerRadius="20"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="StatusBorder_Click">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="NotStarted">
+                                                                <Setter Property="Background" Value="#424242" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="InProgress">
+                                                                <Setter Property="Background" Value="#0070A8" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="OnHold">
+                                                                <Setter Property="Background" Value="#E65100" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Completed">
+                                                                <Setter Property="Background" Value="#008015" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Overdue">
+                                                                <Setter Property="Background" Value="#BD0000" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontFamily="Verdana"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Foreground="White"
+                                                    Text="{Binding StatusDisplay}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <!--  Actions  -->
+                                <DataGridTemplateColumn Width="Auto" Header="Actions">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <!--  Edit Button  -->
+                                                <Button
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="5,0"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Click="EditAudit_Click"
+                                                    Tag="{Binding AuditId}">
+                                                    <Button.ToolTip>
+                                                        <ToolTip
+                                                            Content="Edit Audit"
                                                             FontFamily="Verdana"
-                                                            FontSize="16"
-                                                            FontWeight="SemiBold"
-                                                            Foreground="#1E1E1E"
-                                                            Text="{Binding AuditName}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </Border>
-                                </Popup>
-                            </Grid>
-                        </Border>
+                                                            FontSize="12" />
+                                                    </Button.ToolTip>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <ContentPresenter />
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                    <svgc:SvgViewbox
+                                                        Width="18"
+                                                        Height="18"
+                                                        Source="/Resources/Svg/pen-to-square-solid-full.svg" />
+                                                </Button>
 
-                        <!--  Audit Types Filter  -->
-                        <ComboBox
-                            x:Name="TypeFilterBox"
-                            Grid.Column="2"
-                            Width="225"
-                            Height="80"
-                            Margin="0,0,30,0"
-                            Padding="20"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Background="White"
-                            BorderThickness="2"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Foreground="#1e1e1e"
-                            SelectionChanged="TypeFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
-                            <ComboBox.Resources>
-                                <Style x:Key="ArrowStyle" TargetType="Path">
-                                    <Setter Property="Fill" Value="#1e1e1e" />
-                                </Style>
-                            </ComboBox.Resources>
-                            <ComboBox.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                            </ComboBox.BorderBrush>
-                            <ComboBox.Items>
-                                <ComboBoxItem
-                                    Content="All Types"
-                                    IsSelected="True"
-                                    Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Security" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Safety" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Quality" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Data Protection" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Financial" Style="{StaticResource ComboBoxItemStyle}" />
-                            </ComboBox.Items>
-                        </ComboBox>
+                                                <!--  Delete Button  -->
+                                                <Button
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="5,0"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Click="DeleteAudit_Click"
+                                                    Tag="{Binding AuditId}">
+                                                    <Button.ToolTip>
+                                                        <ToolTip
+                                                            Content="Delete Audit"
+                                                            FontFamily="Verdana"
+                                                            FontSize="12" />
+                                                    </Button.ToolTip>
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <ContentPresenter />
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                    <svgc:SvgViewbox
+                                                        Width="18"
+                                                        Height="18"
+                                                        Source="/Resources/Svg/circle-xmark-solid-full.svg" />
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
 
-                        <!--  Status Filter  -->
-                        <ComboBox
-                            x:Name="StatusFilterBox"
-                            Grid.Column="3"
-                            Width="225"
-                            Height="80"
-                            Margin="0,0,30,0"
-                            Padding="20"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Background="White"
-                            BorderThickness="2"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Foreground="#1e1e1e"
-                            SelectionChanged="StatusFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}">
-                            <ComboBox.Resources>
-                                <Style x:Key="ArrowStyle" TargetType="Path">
-                                    <Setter Property="Fill" Value="#1e1e1e" />
-                                </Style>
-                            </ComboBox.Resources>
-                            <ComboBox.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                            </ComboBox.BorderBrush>
-                            <ComboBox.Items>
-                                <ComboBoxItem
-                                    Content="All Status"
-                                    IsSelected="True"
-                                    Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Not Started" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="In Progress" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Completed" Style="{StaticResource ComboBoxItemStyle}" />
-                                <ComboBoxItem Content="Overdue" Style="{StaticResource ComboBoxItemStyle}" />
-                            </ComboBox.Items>
-                        </ComboBox>
+                <!--  Create Audits Section  -->
+                <Border
+                    Width="1459"
+                    Height="462"
+                    Margin="0,0,0,25"
+                    Padding="25"
+                    Background="White"
+                    BorderThickness="2,2,2,2"
+                    CornerRadius="15">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
+                    </Border.BorderBrush>
+                    <StackPanel>
+                        <!--  Audits Header  -->
+                        <Grid Margin="0,0,0,20">
+                            <TextBlock
+                                Margin="0,0,1141,0"
+                                VerticalAlignment="Center"
+                                FontFamily="Verdana"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                Foreground="#FF1E1E1E"
+                                Text="Create New Audit" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <!--Users Filter
-                        <ComboBox
-                            x:Name="UsersFilterBox"
-                            Grid.Column="4"
-                            Width="225"
-                            Height="80"
-                            Padding="20"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Background="White"
-                            BorderThickness="2"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Foreground="#1e1e1e"
-                            SelectionChanged="UsersFilterBox_Changed"
-                            Style="{StaticResource ComboBoxStyle}" Margin="0,0,30,0">
-                            <ComboBox.Resources>
-                                <Style x:Key="ArrowStyle" TargetType="Path">
-                                    <Setter Property="Fill" Value="#1e1e1e" />
-                                </Style>
-                            </ComboBox.Resources>
-                            <ComboBox.BorderBrush>
-                                <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                            </ComboBox.BorderBrush>
-                        </ComboBox>-->
-                    </Grid>
-
-                    <!--  Audits Section  -->
-                    <Border
-                        Width="1459"
-                        Height="383"
-                        Margin="0,0,0,25"
-                        Padding="25"
-                        Background="White"
-                        BorderThickness="2,2,2,2"
-                        CornerRadius="15">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                        </Border.BorderBrush>
-                        <StackPanel>
-
-                            <!--  Audits Header  -->
-                            <Grid Margin="0,0,0,20">
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,15,0,15"
+                                HorizontalAlignment="Left">
                                 <TextBlock
-                                    Margin="0,0,1141,0"
-                                    VerticalAlignment="Center"
+                                    Margin="0,0,0,10"
                                     FontFamily="Verdana"
-                                    FontSize="22"
-                                    FontWeight="SemiBold"
-                                    Foreground="#FF1E1E1E"
-                                    Text="Scheduled Audits" />
-                            </Grid>
+                                    FontSize="16"
+                                    Foreground="#1e1e1e"
+                                    Text="Audit Name" />
+                                <TextBox
+                                    x:Name="AuditNameBox"
+                                    Width="200px"
+                                    Height="30px"
+                                    Margin="0,0,0,0"
+                                    Padding="0,0,0,0"
+                                    VerticalContentAlignment="Center" />
+                            </StackPanel>
 
-                            <!--  Audit Display Grid  -->
-                            <DataGrid
-                                x:Name="AuditsGrid"
-                                Height="284"
-                                AutoGenerateColumns="False"
-                                Background="White"
-                                BorderThickness="0"
-                                CanUserAddRows="False"
-                                CanUserDeleteRows="False"
-                                GridLinesVisibility="None"
-                                HeadersVisibility="Column"
-                                IsReadOnly="True"
-                                RowHeight="45"
-                                SelectionMode="Single"
-                                SelectionUnit="FullRow">
 
-                                <!--  Header Style  -->
-                                <DataGrid.ColumnHeaderStyle>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Foreground" Value="#1e1e1e" />
-                                        <Setter Property="FontFamily" Value="Verdana" />
-                                        <Setter Property="FontSize" Value="14" />
-                                        <Setter Property="FontStyle" Value="Italic" />
-                                        <Setter Property="FontWeight" Value="Bold" />
-                                        <Setter Property="Padding" Value="10,10,10,10" />
-                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                        <Setter Property="BorderBrush" Value="#E0E0E0" />
-                                    </Style>
-                                </DataGrid.ColumnHeaderStyle>
-
-                                <!--  Row Style  -->
-                                <DataGrid.RowStyle>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="Background" Value="White" />
-                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                        <Setter Property="BorderBrush" Value="#F0F0F0" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#F9F9F9" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGrid.RowStyle>
-
-                                <!--  Cell Style  -->
-                                <DataGrid.CellStyle>
-                                    <Style TargetType="DataGridCell">
-                                        <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="Padding" Value="10,10" />
-                                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Background" Value="Transparent" />
-                                                <Setter Property="Foreground" Value="#1E1E1E" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGrid.CellStyle>
-
-                                <DataGrid.Columns>
-                                    <!--  Audit Name  -->
-                                    <DataGridTextColumn
-                                        Width="2.5*"
-                                        Binding="{Binding AuditName}"
-                                        Header="Audit Name">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Padding" Value="10,10" />
-                                                <Setter Property="FontFamily" Value="Verdana" />
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="Foreground" Value="#1E1E1E" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <!--  Audit Type  -->
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        Binding="{Binding Type}"
-                                        Header="Type">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Padding" Value="10,10" />
-                                                <Setter Property="FontFamily" Value="Verdana" />
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="Foreground" Value="#1e1e1e" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <!--  Start Date  -->
-                                    <DataGridTextColumn
-                                        Width="1.5*"
-                                        Binding="{Binding StartDate, StringFormat=dd-MM-yyyy}"
-                                        Header="Start Date">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Padding" Value="10,10" />
-                                                <Setter Property="FontFamily" Value="Verdana" />
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="Foreground" Value="#1e1e1e" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <!--  Due Date  -->
-                                    <DataGridTextColumn
-                                        Width="1.5*"
-                                        Binding="{Binding EndDate, StringFormat=dd-MM-yyyy}"
-                                        Header="Due Date">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Padding" Value="10,10" />
-                                                <Setter Property="FontFamily" Value="Verdana" />
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="Foreground" Value="#1e1e1e" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <!--  Recurring  -->
-                                    <DataGridTextColumn
-                                        Width="1.2*"
-                                        Binding="{Binding RecurrenceType}"
-                                        Header="Recurring">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Padding" Value="10,10" />
-                                                <Setter Property="FontFamily" Value="Verdana" />
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="Foreground" Value="#1e1e1e" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <!--  Status with Template for Badge  -->
-                                    <DataGridTemplateColumn Width="1.2*" Header="Status">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border
-                                                    Width="120"
-                                                    Height="30"
-                                                    Padding="5,5"
-                                                    HorizontalAlignment="Left"
-                                                    CornerRadius="20"
-                                                    Cursor="Hand"
-                                                    MouseLeftButtonDown="StatusBorder_Click">
-                                                    <Border.Style>
-                                                        <Style TargetType="Border">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Status}" Value="NotStarted">
-                                                                    <Setter Property="Background" Value="#424242" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="InProgress">
-                                                                    <Setter Property="Background" Value="#0070A8" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="OnHold">
-                                                                    <Setter Property="Background" Value="#E65100" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Completed">
-                                                                    <Setter Property="Background" Value="#008015" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Overdue">
-                                                                    <Setter Property="Background" Value="#BD0000" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <TextBlock
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        FontFamily="Verdana"
-                                                        FontSize="12"
-                                                        FontWeight="Bold"
-                                                        Foreground="White"
-                                                        Text="{Binding StatusDisplay}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                    </Border>
-
-                    <!--  Create Audits Section  -->
-                    <Border
-                        Width="1459"
-                        Height="462"
-                        Margin="0,0,0,25"
-                        Padding="25"
-                        Background="White"
-                        BorderThickness="2,2,2,2"
-                        CornerRadius="15">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
-                        </Border.BorderBrush>
-                        <StackPanel>
-                            <!--  Audits Header  -->
-                            <Grid Margin="0,0,0,20">
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,15,0,15">
                                 <TextBlock
-                                    Margin="0,0,1141,0"
-                                    VerticalAlignment="Center"
+                                    Margin="0,0,0,10"
                                     FontFamily="Verdana"
-                                    FontSize="22"
-                                    FontWeight="SemiBold"
-                                    Foreground="#FF1E1E1E"
-                                    Text="Create New Audit" />
-                            </Grid>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <StackPanel
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    Margin="0,15,0,15"
-                                    HorizontalAlignment="Left">
-                                    <TextBlock
-                                        Margin="0,0,0,10"
-                                        FontFamily="Verdana"
-                                        FontSize="16"
-                                        Foreground="#1e1e1e"
-                                        Text="Audit Name" />
-                                    <TextBox
-                                        x:Name="AuditNameBox"
-                                        Width="200px"
-                                        Height="30px"
-                                        Margin="0,0,0,0"
-                                        Padding="0,0,0,0"
-                                        VerticalContentAlignment="Center" />
-                                </StackPanel>
+                                    FontSize="16"
+                                    Foreground="#1e1e1e"
+                                    Text="Audit Type" />
+                                <ComboBox
+                                    x:Name="AuditTypeComboBox"
+                                    Width="200"
+                                    Height="30"
+                                    Padding="0,0,0,0"
+                                    VerticalAlignment="Top"
+                                    VerticalContentAlignment="Center"
+                                    FontFamily="Verdana"
+                                    FontSize="14">
+                                    <ComboBoxItem Content="Security" />
+                                    <ComboBoxItem Content="Safety" />
+                                    <ComboBoxItem Content="Quality" />
+                                    <ComboBoxItem Content="Data Protection" />
+                                    <ComboBoxItem Content="Financial" />
+                                    <ComboBoxItem Content="Unknown" />
+                                </ComboBox>
+                            </StackPanel>
 
 
-                                <StackPanel
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    Margin="0,15,0,15">
-                                    <TextBlock
-                                        Margin="0,0,0,10"
-                                        FontFamily="Verdana"
-                                        FontSize="16"
-                                        Foreground="#1e1e1e"
-                                        Text="Audit Type" />
-                                    <ComboBox
-                                        x:Name="AuditTypeComboBox"
-                                        Width="200"
-                                        Height="30"
-                                        Padding="0,0,0,0"
-                                        VerticalAlignment="Top"
-                                        VerticalContentAlignment="Center"
-                                        FontFamily="Verdana"
-                                        FontSize="14">
-                                        <ComboBoxItem Content="Security" />
-                                        <ComboBoxItem Content="Safety" />
-                                        <ComboBoxItem Content="Quality" />
-                                        <ComboBoxItem Content="Data Protection" />
-                                        <ComboBoxItem Content="Financial" />
-                                        <ComboBoxItem Content="Unknown" />
-                                    </ComboBox>
-                                </StackPanel>
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="0,15,0,15"
+                                HorizontalAlignment="Left">
+                                <TextBlock
+                                    Margin="0,0,0,10"
+                                    FontFamily="Verdana"
+                                    FontSize="16"
+                                    Foreground="#1e1e1e"
+                                    Text="Start Date" />
+                                <DatePicker
+                                    x:Name="StartDatePicker"
+                                    Width="200"
+                                    Height="30"
+                                    VerticalAlignment="Top"
+                                    VerticalContentAlignment="Center"
+                                    FontFamily="Verdana"
+                                    FontSize="12" />
+                            </StackPanel>
 
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,15,0,15">
+                                <TextBlock
+                                    Margin="0,0,0,10"
+                                    FontFamily="Verdana"
+                                    FontSize="16"
+                                    Foreground="#1e1e1e"
+                                    Text="End Date" />
+                                <DatePicker
+                                    x:Name="EndDatePicker"
+                                    Width="200"
+                                    Height="30"
+                                    VerticalContentAlignment="Center"
+                                    FontFamily="Verdana"
+                                    FontSize="12" />
+                            </StackPanel>
 
-                                <StackPanel
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Margin="0,15,0,15"
-                                    HorizontalAlignment="Left">
-                                    <TextBlock
-                                        Margin="0,0,0,10"
-                                        FontFamily="Verdana"
-                                        FontSize="16"
-                                        Foreground="#1e1e1e"
-                                        Text="Start Date" />
-                                    <DatePicker
-                                        x:Name="StartDatePicker"
-                                        Width="200"
-                                        Height="30"
-                                        VerticalAlignment="Top"
-                                        VerticalContentAlignment="Center"
-                                        FontFamily="Verdana"
-                                        FontSize="12" />
-                                </StackPanel>
+                            <StackPanel
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="0,15,0,15"
+                                VerticalAlignment="Center">
+                                <CheckBox
+                                    x:Name="RecurringCheckbox"
+                                    Width="147"
+                                    Height="16"
+                                    Margin="0,15,0,20"
+                                    Padding="0,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    BorderBrush="#FF1E1E1E"
+                                    Checked="RecurringCheckbox_Checked"
+                                    Content="Recurring Audit"
+                                    FontFamily="Verdana"
+                                    FontSize="10"
+                                    Foreground="#1e1e1e"
+                                    IsChecked="False"
+                                    Unchecked="RecurringCheckbox_Unchecked">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
+                            </StackPanel>
 
-                                <StackPanel
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Margin="0,15,0,15">
-                                    <TextBlock
-                                        Margin="0,0,0,10"
-                                        FontFamily="Verdana"
-                                        FontSize="16"
-                                        Foreground="#1e1e1e"
-                                        Text="End Date" />
-                                    <DatePicker
-                                        x:Name="EndDatePicker"
-                                        Width="200"
-                                        Height="30"
-                                        VerticalContentAlignment="Center"
-                                        FontFamily="Verdana"
-                                        FontSize="12" />
-                                </StackPanel>
+                            <StackPanel
+                                x:Name="RecurrencePanel"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,15,15,15"
+                                Visibility="Collapsed">
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    FontFamily="Verdana"
+                                    FontSize="16"
+                                    Foreground="#1e1e1e"
+                                    Text="Recurrence" />
+                                <ComboBox
+                                    x:Name="RecurrenceComboBox"
+                                    Width="200"
+                                    Height="40"
+                                    Padding="8"
+                                    FontFamily="Verdana"
+                                    FontSize="14">
+                                    <ComboBoxItem Content="Weekly" />
+                                    <ComboBoxItem Content="Monthly" />
+                                    <ComboBoxItem Content="Quarterly" />
+                                    <ComboBoxItem Content="Annual" />
+                                </ComboBox>
+                            </StackPanel>
 
-                                <StackPanel
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    Margin="0,15,0,15"
-                                    VerticalAlignment="Center">
-                                    <CheckBox
-                                        x:Name="RecurringCheckbox"
-                                        Width="147"
-                                        Height="16"
-                                        Margin="0,15,0,20"
-                                        Padding="0,0,0,0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        VerticalContentAlignment="Center"
-                                        BorderBrush="#FF1E1E1E"
-                                        Checked="RecurringCheckbox_Checked"
-                                        Content="Recurring Audit"
-                                        FontFamily="Verdana"
-                                        FontSize="10"
-                                        Foreground="#1e1e1e"
-                                        IsChecked="False"
-                                        Unchecked="RecurringCheckbox_Unchecked">
-                                        <CheckBox.LayoutTransform>
-                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                                        </CheckBox.LayoutTransform>
-                                    </CheckBox>
-                                </StackPanel>
-
-                                <StackPanel
-                                    x:Name="RecurrencePanel"
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    Margin="0,15,15,15"
-                                    Visibility="Collapsed">
-                                    <TextBlock
-                                        Margin="5,0,0,0"
-                                        FontFamily="Verdana"
-                                        FontSize="16"
-                                        Foreground="#1e1e1e"
-                                        Text="Recurrence" />
-                                    <ComboBox
-                                        x:Name="RecurrenceComboBox"
-                                        Width="200"
-                                        Height="40"
-                                        Padding="8"
-                                        FontFamily="Verdana"
-                                        FontSize="14">
-                                        <ComboBoxItem Content="Weekly" />
-                                        <ComboBoxItem Content="Monthly" />
-                                        <ComboBoxItem Content="Quarterly" />
-                                        <ComboBoxItem Content="Annual" />
-                                    </ComboBox>
-                                </StackPanel>
-
-                                <StackPanel Grid.Row="3" Grid.Column="0">
-                                    <Button
-                                        Width="200"
-                                        Height="40"
-                                        Margin="0,10,5,10"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Bottom"
-                                        Background="#FF5D3754"
-                                        Click="SaveAudit_Click"
-                                        Content="Save Audit"
-                                        FontFamily="Verdana"
-                                        FontSize="20"
-                                        FontWeight="Bold" />
-                                </StackPanel>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+                            <StackPanel Grid.Row="3" Grid.Column="0">
+                                <Button
+                                    Width="200"
+                                    Margin="0,10,5,10"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Click="SaveAudit_Click"
+                                    Content="Save Audit"
+                                    Style="{StaticResource DefaultManagerStyle}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

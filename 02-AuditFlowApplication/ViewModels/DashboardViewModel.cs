@@ -9,6 +9,26 @@ namespace _02_AuditFlowApplication.ViewModels
         private DateTime _currentMonth;
         private Dictionary<DateTime, List<string>> _auditEvents;
         private string _calendarMonthYear;
+        private List<CalendarCell> _calendarCells;
+
+        public class CalendarCell
+        {
+            public string DayNumber { get; set; }
+            public bool IsCurrentMonth { get; set; }
+            public bool IsOtherMonth { get; set; }
+            public List<string> Events { get; set; } = new List<string>();
+            public DateTime? Date { get; set; }
+        }
+
+        public List<CalendarCell> CalendarCells
+        {
+            get => _calendarCells;
+            set
+            {
+                _calendarCells = value;
+                OnPropertyChanged(nameof(CalendarCells));
+            }
+        }
 
         public string CalendarMonthYear
         {
@@ -54,32 +74,80 @@ namespace _02_AuditFlowApplication.ViewModels
             {
                 var audits = _auditService.GetAllAudits();
                 var events = new Dictionary<DateTime, List<string>>();
-
                 foreach (var audit in audits)
                 {
                     var date = audit.StartDate.Date;
                     if (!events.ContainsKey(date))
                         events[date] = new List<string>();
-
                     events[date].Add(audit.AuditName);
                 }
-
                 AuditEvents = events;
             }
             catch
             {
                 AuditEvents = new Dictionary<DateTime, List<string>>();
             }
+            finally
+            {
+                BuildCalendar();
+            }
+        }
+
+        public void BuildCalendar()
+        {
+            var cells = new List<CalendarCell>();
+            int startDayOfWeek = GetStartDayOfWeek();
+            int daysInMonth = GetDaysInMonth();
+            int daysInPrevMonth = GetDaysInPreviousMonth();
+            int dayCounter = 1;
+            int nextMonthDayCounter = 1;
+
+            for (int i = 0; i < 35; i++)
+            {
+                if (i < startDayOfWeek - 1)
+                {
+                    cells.Add(new CalendarCell
+                    {
+                        DayNumber = (daysInPrevMonth - (startDayOfWeek - 2 - i)).ToString(),
+                        IsOtherMonth = true
+                    });
+                }
+                else if (dayCounter <= daysInMonth)
+                {
+                    var date = new DateTime(CurrentMonth.Year, CurrentMonth.Month, dayCounter);
+                    cells.Add(new CalendarCell
+                    {
+                        DayNumber = dayCounter.ToString(),
+                        IsCurrentMonth = true,
+                        Date = date,
+                        Events = GetEventsOnDate(date)
+                    });
+                    dayCounter++;
+                }
+                else
+                {
+                    cells.Add(new CalendarCell
+                    {
+                        DayNumber = nextMonthDayCounter.ToString(),
+                        IsOtherMonth = true
+                    });
+                    nextMonthDayCounter++;
+                }
+            }
+
+            CalendarCells = cells;
         }
 
         public void GoToPreviousMonth()
         {
             CurrentMonth = CurrentMonth.AddMonths(-1);
+            BuildCalendar();
         }
 
         public void GoToNextMonth()
         {
             CurrentMonth = CurrentMonth.AddMonths(1);
+            BuildCalendar();
         }
 
         public bool HasEventsOnDate(DateTime date)

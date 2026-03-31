@@ -1,5 +1,4 @@
-﻿using _02_AuditFlowApplication.Helpers;
-using _02_AuditFlowApplication.ViewModels;
+﻿using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,13 +14,18 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new ManagerDashboardViewModel();
             DataContext = _viewModel;
-            PopulateCalendar();
+            Layout.SetActiveButton("Dashboard");
+
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(ManagerDashboardViewModel.CalendarCells))
+                    PopulateCalendar();
+            };
 
             PrevMonthButton.Click += PrevMonthButton_Click;
             NextMonthButton.Click += NextMonthButton_Click;
 
-            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
-
+            PopulateCalendar();
 
         }
 

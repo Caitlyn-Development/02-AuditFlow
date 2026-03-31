@@ -179,5 +179,10 @@ namespace _02_AuditFlowApplication.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public Audit GetAuditById(int auditId)
+        {
+            return _allAudits?.FirstOrDefault(a => a.AuditId == auditId);
+        }
     }
 }

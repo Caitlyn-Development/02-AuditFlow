@@ -43,20 +43,15 @@
 
             <StackPanel Height="126">
                 <Button
-                    Height="46"
                     Margin="0,50,50,50"
                     Padding="0,10,0,10"
                     HorizontalAlignment="Right"
                     AutomationProperties.HelpText="Click to navigate to the auditor login page"
                     AutomationProperties.Name="Switch to Auditor Login"
-                    Background="Transparent"
                     Click="AuditorLoginButton_Click"
                     Content="Switch to Auditor Login"
-                    FontFamily="Verdana"
-                    FontSize="18"
-                    FontWeight="Bold"
-                    Foreground="#FF1E1E1E"
                     KeyboardNavigation.IsTabStop="True"
+                    Style="{StaticResource DefaultTextStyle}"
                     TabIndex="3" />
             </StackPanel>
 
@@ -134,25 +129,20 @@
 
                         <Button
                             x:Name="LoginButton"
-                            Width="100"
-                            Height="40"
                             Margin="5,20,5,5"
                             AutomationProperties.HelpText="Click or press Enter to sign in as manager"
                             AutomationProperties.Name="Sign In"
-                            Background="#FF5D3754"
                             Click="LoginButton_Click"
                             Content="Sign In"
-                            FontFamily="Verdana"
-                            FontSize="14"
-                            FontStyle="Italic"
-                            FontWeight="Bold"
                             IsDefault="True"
                             KeyboardNavigation.IsTabStop="True"
+                            Style="{StaticResource DefaultManagerStyle}"
                             TabIndex="2" />
 
                         <TextBlock
                             Margin="0,15,0,0"
                             HorizontalAlignment="Center"
+                            AutomationProperties.HelpText="Default credentials: admin / Admin123!"
                             AutomationProperties.Name="Default manager credentials hint"
                             FontSize="11"
                             Foreground="Gray"

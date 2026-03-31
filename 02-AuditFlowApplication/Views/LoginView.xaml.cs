@@ -2,6 +2,7 @@
 using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace _02_AuditFlowApplication.Views
 {
@@ -14,6 +15,26 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new LoginViewModel();
             DataContext = _viewModel;
+
+            // Enter on username moves to password
+            UsernameTextBox.KeyDown += (s, e) =>
+            {
+                if (e.Key == Key.Return)
+                {
+                    PasswordBox.Focus();
+                    e.Handled = true;
+                }
+            };
+
+            // Enter on password triggers login
+            PasswordBox.KeyDown += (s, e) =>
+            {
+                if (e.Key == Key.Return)
+                {
+                    LoginButton_Click(s, e);
+                    e.Handled = true;
+                }
+            };
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

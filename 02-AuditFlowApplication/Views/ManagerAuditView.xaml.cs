@@ -1,5 +1,6 @@
 ﻿using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.Models;
+using _02_AuditFlowApplication.Services;
 using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,15 +13,15 @@ namespace _02_AuditFlowApplication.Views
     public partial class ManagerAuditView : UserControl
     {
         private readonly ManagerAuditViewModel _viewModel;
+        private readonly AuditService _auditService = new AuditService();
 
         public ManagerAuditView()
         {
             InitializeComponent();
             _viewModel = new ManagerAuditViewModel();
             DataContext = _viewModel;
+            Layout.SetActiveButton("Audits");
             LoadAudits();
-
-            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
         }
 
         private void LoadAudits()
@@ -239,6 +240,164 @@ namespace _02_AuditFlowApplication.Views
             container.Child = panel;
             popup.Child = container;
             popup.IsOpen = true;
+        }
+
+        private void EditAudit_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var auditId = (int)button.Tag;
+            var audit = _viewModel.GetAuditById(auditId);
+            if (audit == null) return;
+
+            var dialog = new Window
+            {
+                Title = "Edit Audit",
+                Width = 500,
+                Height = 520,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                ResizeMode = ResizeMode.NoResize,
+                Background = System.Windows.Media.Brushes.White
+            };
+
+            var mainStack = new StackPanel { Margin = new Thickness(30) };
+
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Edit Audit",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(0, 0, 0, 20)
+            });
+
+            // Audit Name
+            mainStack.Children.Add(new TextBlock { Text = "Audit Name", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            var auditNameBox = new TextBox
+            {
+                Text = audit.AuditName,
+                Height = 35,
+                Padding = new Thickness(8),
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            mainStack.Children.Add(auditNameBox);
+
+            // Start Date
+            mainStack.Children.Add(new TextBlock { Text = "Start Date", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            var startDatePicker = new DatePicker
+            {
+                SelectedDate = audit.StartDate,
+                Height = 35,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            mainStack.Children.Add(startDatePicker);
+
+            // End Date
+            mainStack.Children.Add(new TextBlock { Text = "End Date", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            var endDatePicker = new DatePicker
+            {
+                SelectedDate = audit.EndDate,
+                Height = 35,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 25)
+            };
+            mainStack.Children.Add(endDatePicker);
+
+            // Buttons
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal };
+
+            var saveButton = new Button
+            {
+                Content = "Save Changes",
+                Width = 150,
+                Height = 40,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#5D3754")),
+                Foreground = System.Windows.Media.Brushes.White,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                BorderThickness = new Thickness(0),
+                Cursor = Cursors.Hand
+            };
+
+            var cancelButton = new Button
+            {
+                Content = "Cancel",
+                Width = 100,
+                Height = 40,
+                Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#9E9E9E")),
+                Foreground = System.Windows.Media.Brushes.White,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                BorderThickness = new Thickness(0),
+                Cursor = Cursors.Hand
+            };
+
+            saveButton.Click += (s, args) =>
+            {
+                if (string.IsNullOrWhiteSpace(auditNameBox.Text))
+                {
+                    MessageBox.Show("Audit Name is required.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (endDatePicker.SelectedDate <= startDatePicker.SelectedDate)
+                {
+                    MessageBox.Show("End Date must be after Start Date.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                audit.AuditName = auditNameBox.Text.Trim();
+                audit.StartDate = startDatePicker.SelectedDate.Value;
+                audit.EndDate = endDatePicker.SelectedDate.Value;
+
+                _auditService.UpdateAudit(audit);
+                MessageBox.Show("Audit updated successfully.", "Updated",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                dialog.Close();
+                LoadAudits();
+            };
+
+            cancelButton.Click += (s, args) => dialog.Close();
+
+            buttonPanel.Children.Add(saveButton);
+            buttonPanel.Children.Add(cancelButton);
+            mainStack.Children.Add(buttonPanel);
+
+            dialog.Content = mainStack;
+            dialog.ShowDialog();
+        }
+
+        private void DeleteAudit_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var auditId = (int)button.Tag;
+            var audit = _viewModel.GetAuditById(auditId);
+            if (audit == null) return;
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{audit.AuditName}'?\nThis will also delete all associated tasks and evidence.",
+                "Confirm Delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _auditService.DeleteAudit(auditId);
+                LoadAudits();
+                MessageBox.Show("Audit deleted successfully.", "Deleted",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void SaveAudit_Click(object sender, RoutedEventArgs e)

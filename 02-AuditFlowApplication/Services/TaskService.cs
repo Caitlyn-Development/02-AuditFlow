@@ -94,5 +94,75 @@ namespace _02_AuditFlowApplication.Services
                 }
             }
         }
+
+        public void CreateTask(AuditTask task)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"INSERT INTO Tasks 
+            (TaskName, Description, AuditId, AssignedToUserId, DueDate, Status, CreatedDate)
+            VALUES (@taskName, @description, @auditId, @assignedToUserId, @dueDate, @status, @createdDate)";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@taskName", task.TaskName);
+                    command.Parameters.AddWithValue("@description", task.Description ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@auditId", task.AuditId);
+                    command.Parameters.AddWithValue("@assignedToUserId", task.AssignedToUserId);
+                    command.Parameters.AddWithValue("@dueDate", task.DueDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@status", "Not Started");
+                    command.Parameters.AddWithValue("@createdDate", task.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateTask(AuditTask task)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"UPDATE Tasks 
+                         SET TaskName = @taskName,
+                             Description = @description,
+                             DueDate = @dueDate,
+                             AssignedToUserId = @assignedToUserId
+                         WHERE TaskId = @taskId";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@taskName", task.TaskName);
+                    command.Parameters.AddWithValue("@description", task.Description ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@dueDate", task.DueDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@assignedToUserId", task.AssignedToUserId);
+                    command.Parameters.AddWithValue("@taskId", task.TaskId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteTask(int taskId)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                // Delete associated evidence first
+                string deleteEvidence = "DELETE FROM Evidence WHERE TaskId = @taskId";
+                using (SqliteCommand command = new SqliteCommand(deleteEvidence, connection))
+                {
+                    command.Parameters.AddWithValue("@taskId", taskId);
+                    command.ExecuteNonQuery();
+                }
+
+                // Then delete the task
+                string deleteTask = "DELETE FROM Tasks WHERE TaskId = @taskId";
+                using (SqliteCommand command = new SqliteCommand(deleteTask, connection))
+                {
+                    command.Parameters.AddWithValue("@taskId", taskId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

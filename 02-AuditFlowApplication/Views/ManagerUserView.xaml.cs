@@ -15,9 +15,9 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new ManagerUserViewModel();
             DataContext = _viewModel;
+            Layout.SetActiveButton("Users");
             LoadUsers();
 
-            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
         }
 
         private void LoadUsers()

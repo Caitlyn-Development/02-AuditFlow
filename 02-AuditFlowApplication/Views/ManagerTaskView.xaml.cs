@@ -17,19 +17,22 @@ namespace _02_AuditFlowApplication.Views
         private List<string> _uploadedFiles = new List<string>();
         private readonly string[] _allowedExtensions = { ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
         private readonly EvidenceService _evidenceService = new EvidenceService();
+        private readonly TaskService _taskService = new TaskService();
+        private readonly AuditService _auditService = new AuditService();
 
         public ManagerTaskView()
         {
             InitializeComponent();
             _viewModel = new ManagerTaskViewModel();
             DataContext = _viewModel;
+            Layout.SetActiveButton("Tasks");
             LoadTasks();
             LoadUsers();
             LoadAudits();
             LoadReviewedEvidence();
             LoadPendingEvidence();
+            LoadTaskCreationDropdowns();
 
-            NavigationHelper.WireManagerNavigation(DashboardButton, AuditsButton, TasksButton, UsersButton, LogoutButton);
         }
 
         private void LoadTasks()
@@ -54,7 +57,7 @@ namespace _02_AuditFlowApplication.Views
             UsersFilterBox.Items.Add(new ComboBoxItem
             {
                 Content = "All Users",
-                Style = (Style)FindResource("ComboBoxItemStyle")
+                Style = (Style)FindResource("DefaultComboBoxItemStyle")
             });
 
             foreach (var user in auditors)
@@ -62,7 +65,7 @@ namespace _02_AuditFlowApplication.Views
                 UsersFilterBox.Items.Add(new ComboBoxItem
                 {
                     Content = user.FullName,
-                    Style = (Style)FindResource("ComboBoxItemStyle")
+                    Style = (Style)FindResource("DefaultComboBoxItemStyle")
                 });
             }
 
@@ -77,7 +80,7 @@ namespace _02_AuditFlowApplication.Views
             AuditFilterBox.Items.Add(new ComboBoxItem
             {
                 Content = "All Audits",
-                Style = (Style)FindResource("ComboBoxItemStyle")
+                Style = (Style)FindResource("DefaultComboBoxItemStyle")
             });
 
             foreach (var audit in auditNames)
@@ -85,7 +88,7 @@ namespace _02_AuditFlowApplication.Views
                 AuditFilterBox.Items.Add(new ComboBoxItem
                 {
                     Content = audit,
-                    Style = (Style)FindResource("ComboBoxItemStyle")
+                    Style = (Style)FindResource("DefaultComboBoxItemStyle")
                 });
             }
 
@@ -285,6 +288,92 @@ namespace _02_AuditFlowApplication.Views
                 element = System.Windows.Media.VisualTreeHelper.GetParent(element);
             }
             return false;
+        }
+
+        private void LoadTaskCreationDropdowns()
+        {
+            // Populate audit dropdown
+            TaskAuditComboBox.Items.Clear();
+            var audits = _auditService.GetAllAudits();
+            foreach (var audit in audits)
+            {
+                TaskAuditComboBox.Items.Add(new ComboBoxItem
+                {
+                    Content = audit.AuditName,
+                    Tag = audit
+                });
+            }
+
+            // Populate assigned to dropdown
+            TaskAssignedToComboBox.Items.Clear();
+            var auditors = _viewModel.GetAuditors();
+            foreach (var auditor in auditors)
+            {
+                TaskAssignedToComboBox.Items.Add(new ComboBoxItem
+                {
+                    Content = auditor.FullName,
+                    Tag = auditor.UserID
+                });
+            }
+        }
+
+        private void SaveTask_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TaskNameBox.Text))
+            {
+                MessageBox.Show("Task Name is required.", "Validation Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (TaskAuditComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select an audit.", "Validation Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (TaskAssignedToComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please assign the task to a user.", "Validation Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (TaskDueDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("Due Date is required.", "Validation Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedAudit = ((ComboBoxItem)TaskAuditComboBox.SelectedItem).Tag as Audit;
+            var assignedToUserId = (int)((ComboBoxItem)TaskAssignedToComboBox.SelectedItem).Tag;
+
+            var task = new AuditTask
+            {
+                TaskName = TaskNameBox.Text.Trim(),
+                Description = TaskDescriptionBox.Text.Trim(),
+                AuditId = selectedAudit.AuditId,
+                AuditName = selectedAudit.AuditName,
+                AssignedToUserId = assignedToUserId,
+                DueDate = TaskDueDatePicker.SelectedDate.Value,
+                Status = AuditTaskStatus.NotStarted,
+                CreatedDate = DateTime.Now
+            };
+
+            _taskService.CreateTask(task);
+
+            MessageBox.Show("Task created successfully.", "Success",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+
+            TaskNameBox.Text = string.Empty;
+            TaskDescriptionBox.Text = string.Empty;
+            TaskAuditComboBox.SelectedIndex = -1;
+            TaskAssignedToComboBox.SelectedIndex = -1;
+            TaskDueDatePicker.SelectedDate = null;
+
+            LoadTasks();
         }
 
         private void LoadPendingEvidence()
@@ -632,6 +721,217 @@ namespace _02_AuditFlowApplication.Views
             {
                 MessageBox.Show($"Error loading reviewed evidence: {ex.Message}",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void EditTask_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var taskId = (int)button.Tag;
+            var task = _viewModel.GetTaskById(taskId);
+            if (task == null) return;
+
+            var dialog = new Window
+            {
+                Title = "Edit Task",
+                Width = 500,
+                Height = 550,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                ResizeMode = ResizeMode.NoResize,
+                Background = System.Windows.Media.Brushes.White
+            };
+
+            var mainStack = new StackPanel { Margin = new Thickness(30) };
+
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Edit Task",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(0, 0, 0, 20)
+            });
+
+            // Task Name
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Task Name",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 5)
+            });
+            var taskNameBox = new TextBox
+            {
+                Text = task.TaskName,
+                Height = 35,
+                Padding = new Thickness(8),
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            mainStack.Children.Add(taskNameBox);
+
+            // Description
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Description",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 5)
+            });
+            var descriptionBox = new TextBox
+            {
+                Text = task.Description,
+                Height = 70,
+                Padding = new Thickness(8),
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                TextWrapping = TextWrapping.Wrap,
+                AcceptsReturn = true,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            mainStack.Children.Add(descriptionBox);
+
+            // Due Date
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Due Date",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 5)
+            });
+            var dueDatePicker = new DatePicker
+            {
+                SelectedDate = task.DueDate,
+                Height = 35,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            mainStack.Children.Add(dueDatePicker);
+
+            // Assigned To
+            mainStack.Children.Add(new TextBlock
+            {
+                Text = "Assigned To",
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 5)
+            });
+            var assignedToComboBox = new ComboBox
+            {
+                Height = 35,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 25)
+            };
+
+            var auditors = _viewModel.GetAuditors();
+            foreach (var auditor in auditors)
+            {
+                assignedToComboBox.Items.Add(new ComboBoxItem
+                {
+                    Content = auditor.FullName,
+                    Tag = auditor.UserID,
+                    IsSelected = auditor.UserID == task.AssignedToUserId
+                });
+            }
+            mainStack.Children.Add(assignedToComboBox);
+
+            // Buttons
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal };
+
+            var saveButton = new Button
+            {
+                Content = "Save Changes",
+                Width = 150,
+                Height = 40,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#5D3754")),
+                Foreground = System.Windows.Media.Brushes.White,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                BorderThickness = new Thickness(0),
+                Cursor = Cursors.Hand
+            };
+
+            var cancelButton = new Button
+            {
+                Content = "Cancel",
+                Width = 100,
+                Height = 40,
+                Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#9E9E9E")),
+                Foreground = System.Windows.Media.Brushes.White,
+                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                BorderThickness = new Thickness(0),
+                Cursor = Cursors.Hand
+            };
+
+            saveButton.Click += (s, args) =>
+            {
+                if (string.IsNullOrWhiteSpace(taskNameBox.Text))
+                {
+                    MessageBox.Show("Task Name is required.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (dueDatePicker.SelectedDate == null)
+                {
+                    MessageBox.Show("Due Date is required.", "Validation Error",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var selectedAuditor = assignedToComboBox.SelectedItem as ComboBoxItem;
+
+                task.TaskName = taskNameBox.Text.Trim();
+                task.Description = descriptionBox.Text.Trim();
+                task.DueDate = dueDatePicker.SelectedDate.Value;
+                if (selectedAuditor != null)
+                    task.AssignedToUserId = (int)selectedAuditor.Tag;
+
+                _taskService.UpdateTask(task);
+                MessageBox.Show("Task updated successfully.", "Updated",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                dialog.Close();
+                LoadTasks();
+            };
+
+            cancelButton.Click += (s, args) => dialog.Close();
+
+            buttonPanel.Children.Add(saveButton);
+            buttonPanel.Children.Add(cancelButton);
+            mainStack.Children.Add(buttonPanel);
+
+            dialog.Content = mainStack;
+            dialog.ShowDialog();
+        }
+
+        private void DeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var taskId = (int)button.Tag;
+            var task = _viewModel.GetTaskById(taskId);
+            if (task == null) return;
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{task.TaskName}'?\nThis will also delete all associated evidence.",
+                "Confirm Delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _taskService.DeleteTask(taskId);
+                LoadTasks();
+                MessageBox.Show("Task deleted successfully.", "Deleted",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

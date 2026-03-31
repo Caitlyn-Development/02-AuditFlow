@@ -4,6 +4,7 @@ using _02_AuditFlowApplication.Services;
 using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace _02_AuditFlowApplication.Views
 {
@@ -20,7 +21,7 @@ namespace _02_AuditFlowApplication.Views
             DataContext = _auditViewModel;
             LoadAudits();
 
-            NavigationHelper.WireAuditorNavigation(DashboardButton, AuditsButton, TasksButton, LogoutButton);
+            Layout.SetActiveButton("Audits");
         }
 
         private void LoadAudits()
@@ -143,10 +144,37 @@ namespace _02_AuditFlowApplication.Views
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            using Task _ = Task.Delay(200).ContinueWith(_ =>
+            try
             {
-                Dispatcher.Invoke(() => SearchPopup.IsOpen = false);
-            });
+                System.Threading.Tasks.Task.Delay(200).ContinueWith(_ =>
+                {
+                    if (Dispatcher.CheckAccess())
+                        SearchPopup.IsOpen = false;
+                    else
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            if (SearchPopup != null)
+                                SearchPopup.IsOpen = false;
+                        }));
+                });
+            }
+            catch { }
+        }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down && SearchPopup.IsOpen)
+            {
+                SearchResultsListBox.Focus();
+                if (SearchResultsListBox.Items.Count > 0)
+                    SearchResultsListBox.SelectedIndex = 0;
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                SearchPopup.IsOpen = false;
+                e.Handled = true;
+            }
         }
     }
 }

@@ -15,12 +15,19 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new DashboardViewModel();
             DataContext = _viewModel;
+
+            Layout.SetActiveButton("Dashboard");
+
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(DashboardViewModel.CalendarCells))
+                    PopulateCalendar();
+            };
+
+            PrevMonthButton.Click += (s, e) => _viewModel.GoToPreviousMonth();
+            NextMonthButton.Click += (s, e) => _viewModel.GoToNextMonth();
+
             PopulateCalendar();
-
-            PrevMonthButton.Click += PrevMonthButton_Click;
-            NextMonthButton.Click += NextMonthButton_Click;
-
-            NavigationHelper.WireAuditorNavigation(DashboardButton, AuditsButton, TasksButton, LogoutButton);
         }
 
         private void PopulateCalendar()

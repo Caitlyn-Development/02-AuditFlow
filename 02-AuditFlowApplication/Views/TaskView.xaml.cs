@@ -24,7 +24,7 @@ namespace _02_AuditFlowApplication.Views
             DataContext = _viewModel;
             LoadTasks();
 
-            NavigationHelper.WireAuditorNavigation(DashboardButton, AuditsButton, TasksButton, LogoutButton);
+            Layout.SetActiveButton("Tasks");
         }
 
         private void LoadTasks()
