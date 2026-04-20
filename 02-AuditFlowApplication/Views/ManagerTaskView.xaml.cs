@@ -1,9 +1,8 @@
-﻿using _02_AuditFlowApplication.Helpers;
+﻿using _02_AuditFlowApplication.Data;
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.Services;
 using _02_AuditFlowApplication.ViewModels;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +24,7 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new ManagerTaskViewModel();
             DataContext = _viewModel;
+            DatabaseHelper.UpdateOverdueStatuses();
             Layout.SetActiveButton("Tasks");
             LoadTasks();
             LoadUsers();
@@ -266,7 +266,10 @@ namespace _02_AuditFlowApplication.Views
                         MessageBox.Show($"Error updating status: {error}", "Error",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     else
+                    {
                         TasksGrid.ItemsSource = _viewModel.FilteredTasks;
+                        LoadTasks();
+                    }
 
                     popup.IsOpen = false;
                     Window.GetWindow(this).PreviewMouseDown -= outsideClickHandler;

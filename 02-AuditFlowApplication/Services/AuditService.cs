@@ -94,6 +94,19 @@ namespace _02_AuditFlowApplication.Services
             return GetAllAudits().Where(a => a.Type == type).ToList();
         }
 
+        public List<Audit> GetAuditsForUser(int userId)
+        {
+            var allAudits = GetAllAudits();
+            var taskService = new TaskService();
+            var userTasks = taskService.GetAllTasks()
+                .Where(t => t.AssignedToUserId == userId)
+                .Select(t => t.AuditId)
+                .Distinct()
+                .ToList();
+
+            return allAudits.Where(a => userTasks.Contains(a.AuditId)).ToList();
+        }
+
         public void UpdateAuditStatus(int auditId, AuditStatus newStatus)
         {
             using (SqliteConnection connection = DatabaseHelper.GetConnection())
@@ -184,6 +197,41 @@ namespace _02_AuditFlowApplication.Services
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        public void LogAuditStatusChange(User changedBy, Audit audit, AuditStatus oldStatus, AuditStatus newStatus)
+        {
+            using (SqliteConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = @"INSERT INTO AuditStatusLog 
+            (ChangedByUserId, ChangedByUsername, AuditId, AuditName, OldStatus, NewStatus, ChangeDate)
+            VALUES (@changedByUserId, @changedByUsername, @auditId, @auditName, @oldStatus, @newStatus, @changeDate)";
+
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@changedByUserId", changedBy.UserID);
+                    command.Parameters.AddWithValue("@changedByUsername", changedBy.Username);
+                    command.Parameters.AddWithValue("@auditId", audit.AuditId);
+                    command.Parameters.AddWithValue("@auditName", audit.AuditName);
+                    command.Parameters.AddWithValue("@oldStatus", FormatStatus(oldStatus));
+                    command.Parameters.AddWithValue("@newStatus", FormatStatus(newStatus));
+                    command.Parameters.AddWithValue("@changeDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private string FormatStatus(AuditStatus status)
+        {
+            return status switch
+            {
+                AuditStatus.NotStarted => "Not Started",
+                AuditStatus.InProgress => "In Progress",
+                AuditStatus.Completed => "Completed",
+                AuditStatus.Overdue => "Overdue",
+                _ => status.ToString()
+            };
         }
 
         public void UpdateAudit(Audit audit)

@@ -1,4 +1,4 @@
-﻿using _02_AuditFlowApplication.Helpers;
+﻿using _02_AuditFlowApplication.Data;
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.Services;
 using _02_AuditFlowApplication.ViewModels;
@@ -20,6 +20,7 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new ManagerAuditViewModel();
             DataContext = _viewModel;
+            DatabaseHelper.UpdateOverdueStatuses();
             Layout.SetActiveButton("Audits");
             LoadAudits();
         }
@@ -223,7 +224,8 @@ namespace _02_AuditFlowApplication.Views
 
                 btn.Click += (s, args) =>
                 {
-                    var (success, error) = _viewModel.UpdateAuditStatus(audit, capturedStatus);
+                    var currentUser = Application.Current.Properties["CurrentUser"] as User;
+                    var (success, error) = _viewModel.UpdateAuditStatus(audit, capturedStatus, currentUser);
                     if (!success)
                         MessageBox.Show($"Error updating status: {error}", "Error",
                             MessageBoxButton.OK, MessageBoxImage.Error);

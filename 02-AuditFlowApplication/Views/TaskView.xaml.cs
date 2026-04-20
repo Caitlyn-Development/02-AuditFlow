@@ -1,4 +1,4 @@
-﻿using _02_AuditFlowApplication.Helpers;
+﻿using _02_AuditFlowApplication.Data;
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.ViewModels;
 using Microsoft.Win32;
@@ -22,6 +22,7 @@ namespace _02_AuditFlowApplication.Views
             InitializeComponent();
             _viewModel = new TaskViewModel();
             DataContext = _viewModel;
+            DatabaseHelper.UpdateOverdueStatuses();
             LoadTasks();
 
             Layout.SetActiveButton("Tasks");

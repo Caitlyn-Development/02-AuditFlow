@@ -15,6 +15,7 @@ namespace _02_AuditFlowApplication
             base.OnStartup(e);
 
             DatabaseHelper.InitialiseDatabase();
+            DatabaseHelper.UpdateOverdueStatuses();
 
             // Show login window
             var mainWindow = new MainWindow();

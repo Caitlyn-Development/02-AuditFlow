@@ -113,7 +113,7 @@
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="#FF1E1E1E"
-                                Text="5" />
+                                Text="{Binding TotalAudits}" />
                             <TextBlock
                                 Padding="0,5"
                                 FontFamily="Verdana"
@@ -168,7 +168,8 @@
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="#FF1E1E1E"
-                                Text="3" />
+                                Text="{Binding AuditsInProgress}" />
+
                             <TextBlock
                                 Margin="0,5,0,0"
                                 Padding="0,5"
@@ -224,7 +225,7 @@
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="#FF1E1E1E"
-                                Text="2" />
+                                Text="{Binding CompletedAudits}" />
                             <TextBlock
                                 Margin="0,5,0,0"
                                 Padding="0,5"
@@ -280,7 +281,7 @@
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="#FF1E1E1E"
-                                Text="0" />
+                                Text="{Binding OverdueAudits}" />
                             <TextBlock
                                 Margin="0,5,0,0"
                                 Padding="0,5"
@@ -461,157 +462,156 @@
                             Style="{StaticResource SectionHeaderStyle}"
                             Text="Upcoming Deadlines" />
 
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                        <DataGrid
+                            x:Name="UpcomingDeadlinesGrid"
+                            AutoGenerateColumns="False"
+                            Background="White"
+                            BorderThickness="0"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            GridLinesVisibility="None"
+                            HeadersVisibility="Column"
+                            IsReadOnly="True"
+                            RowHeight="50"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
 
-                            <Grid
-                                Grid.Row="0"
-                                Height="45"
-                                Margin="0,0,0,10"
-                                Background="#F8F9FA">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"
-                                    Foreground="#666666"
-                                    Text="Audit Name" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"
-                                    Foreground="#666666"
-                                    Text="Type of Audit" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"
-                                    Foreground="#666666"
-                                    Text="Due Date" />
-                                <TextBlock
-                                    Grid.Column="3"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="13"
-                                    FontWeight="SemiBold"
-                                    Foreground="#666666"
-                                    Text="Status" />
-                            </Grid>
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#F8F9FA" />
+                                    <Setter Property="Foreground" Value="#666666" />
+                                    <Setter Property="FontFamily" Value="Verdana" />
+                                    <Setter Property="FontSize" Value="13" />
+                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                    <Setter Property="Padding" Value="15,10" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
 
-                            <Grid
-                                Grid.Row="1"
-                                Height="60"
-                                Background="White">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Border
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="4"
-                                    BorderBrush="#F0F0F0"
-                                    BorderThickness="0,0,0,1" />
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#333333"
-                                    Text="IT Systems Audit 2025" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#666666"
-                                    Text="IT" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#666666"
-                                    Text="22-10-2025" />
-                                <Border
-                                    Grid.Column="3"
-                                    Margin="15,0"
-                                    Padding="12,6"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Background="#E3F2FD"
-                                    CornerRadius="12">
-                                    <TextBlock
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Foreground="#2196F3"
-                                        Text="In Progress" />
-                                </Border>
-                            </Grid>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    <Setter Property="BorderBrush" Value="#F0F0F0" />
+                                </Style>
+                            </DataGrid.RowStyle>
 
-                            <Grid
-                                Grid.Row="2"
-                                Height="60"
-                                Background="White">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#333333"
-                                    Text="Supplier Risk Assessment" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#666666"
-                                    Text="Procurement" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    Margin="15,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="#666666"
-                                    Text="13-10-2025" />
-                                <Border
-                                    Grid.Column="3"
-                                    Margin="15,0"
-                                    Padding="12,6"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Background="#F5F5F5"
-                                    CornerRadius="12">
-                                    <TextBlock
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Foreground="#666666"
-                                        Text="Not Started" />
-                                </Border>
-                            </Grid>
-                        </Grid>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Padding" Value="15,10" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Foreground" Value="#1E1E1E" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="2*"
+                                    Binding="{Binding AuditName}"
+                                    Header="Audit Name">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="15,0" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#333333" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Type}"
+                                    Header="Type of Audit">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="15,0" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#666666" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding EndDate, StringFormat=dd-MM-yyyy}"
+                                    Header="Due Date">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Padding" Value="15,0" />
+                                            <Setter Property="FontFamily" Value="Verdana" />
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="Foreground" Value="#666666" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTemplateColumn Width="*" Header="Status">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Margin="15,0"
+                                                Padding="12,6"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="12">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#F5F5F5" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="InProgress">
+                                                                <Setter Property="Background" Value="#E3F2FD" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="NotStarted">
+                                                                <Setter Property="Background" Value="#F5F5F5" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Overdue">
+                                                                <Setter Property="Background" Value="#FFEBEE" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock
+                                                    FontFamily="Verdana"
+                                                    FontSize="12"
+                                                    FontWeight="SemiBold"
+                                                    Text="{Binding StatusDisplay}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="#666666" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Status}" Value="InProgress">
+                                                                    <Setter Property="Foreground" Value="#2196F3" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="Overdue">
+                                                                    <Setter Property="Foreground" Value="#BD0000" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock
+                            x:Name="NoDeadlinesText"
+                            Margin="15,20"
+                            FontFamily="Verdana"
+                            FontSize="14"
+                            Foreground="#999999"
+                            Text="No upcoming deadlines this month."
+                            Visibility="Collapsed" />
                     </StackPanel>
                 </Border>
             </StackPanel>

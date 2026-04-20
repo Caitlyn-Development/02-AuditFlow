@@ -111,12 +111,27 @@ namespace _02_AuditFlowApplication.Data
                       FOREIGN KEY (CreatedByUserId) REFERENCES Users(UserId)
                   )";
 
+                string createAuditStatusLogTable = @"
+                  CREATE TABLE IF NOT EXISTS AuditStatusLog (
+                    LogId INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ChangedByUserId INTEGER NOT NULL,
+                    ChangedByUsername TEXT NOT NULL,
+                    AuditId INTEGER NOT NULL,
+                    AuditName TEXT NOT NULL,
+                    OldStatus TEXT NOT NULL,
+                    NewStatus TEXT NOT NULL,
+                    ChangeDate TEXT NOT NULL,
+                    FOREIGN KEY (ChangedByUserId) REFERENCES Users(UserId),
+                    FOREIGN KEY (AuditId) REFERENCES Audits(AuditId)
+                  )";
+
                 ExecuteNonQuery(connection, createUsersTable);
                 ExecuteNonQuery(connection, createAuditsTable);
                 ExecuteNonQuery(connection, createTasksTable);
                 ExecuteNonQuery(connection, createEvidenceTable);
                 ExecuteNonQuery(connection, createUserAuditLogTable);
                 ExecuteNonQuery(connection, createAuditLogTable);
+                ExecuteNonQuery(connection, createAuditStatusLogTable);
 
                 connection.Close();
             }
@@ -179,6 +194,34 @@ namespace _02_AuditFlowApplication.Data
                 ExecuteNonQuery(connection, insertEvidence);
 
                 connection.Close();
+            }
+        }
+
+        public static void UpdateOverdueStatuses()
+        {
+            using (SqliteConnection connection = GetConnection())
+            {
+                connection.Open();
+
+                // Update overdue audits - only update if not already completed
+                string updateAudits = @"
+            UPDATE Audits 
+            SET Status = 'Overdue'
+            WHERE DATE(EndDate) < DATE('now')
+            AND Status NOT IN ('Completed', 'Overdue')";
+
+                using (SqliteCommand command = new SqliteCommand(updateAudits, connection))
+                    command.ExecuteNonQuery();
+
+                // Update overdue tasks - only update if not already completed
+                string updateTasks = @"
+            UPDATE Tasks 
+            SET Status = 'Overdue'
+            WHERE DATE(DueDate) < DATE('now')
+            AND Status NOT IN ('Completed', 'Overdue')";
+
+                using (SqliteCommand command = new SqliteCommand(updateTasks, connection))
+                    command.ExecuteNonQuery();
             }
         }
 

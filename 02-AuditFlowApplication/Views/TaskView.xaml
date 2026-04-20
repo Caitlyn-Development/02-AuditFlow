@@ -663,7 +663,7 @@
                                 Margin="5,10,5,10"
                                 Click="SubmitEvidence_Click"
                                 Content="Submit Evidence"
-                                IsEnabled="False"
+                                IsEnabled="True"
                                 Style="{StaticResource DefaultAuditorStyle}" />
                         </Grid>
                     </StackPanel>

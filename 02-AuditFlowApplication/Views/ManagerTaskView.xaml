@@ -505,7 +505,9 @@
                                                 Height="30"
                                                 Padding="5,5"
                                                 HorizontalAlignment="Left"
-                                                CornerRadius="20">
+                                                CornerRadius="20"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="StatusBorder_Click">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Style.Triggers>

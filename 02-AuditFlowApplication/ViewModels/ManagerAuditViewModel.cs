@@ -127,11 +127,13 @@ namespace _02_AuditFlowApplication.ViewModels
             return (true, null);
         }
 
-        public (bool Success, string ErrorMessage) UpdateAuditStatus(Audit audit, AuditStatus newStatus)
+        public (bool Success, string ErrorMessage) UpdateAuditStatus(Audit audit, AuditStatus newStatus, User changedBy)
         {
             try
             {
+                var oldStatus = audit.Status;
                 _auditService.UpdateAuditStatus(audit.AuditId, newStatus);
+                _auditService.LogAuditStatusChange(changedBy, audit, oldStatus, newStatus);
                 audit.Status = newStatus;
                 FilteredAudits = _allAudits.ToList();
                 return (true, null);

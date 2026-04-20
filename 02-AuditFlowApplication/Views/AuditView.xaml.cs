@@ -1,4 +1,5 @@
-﻿using _02_AuditFlowApplication.Helpers;
+﻿using _02_AuditFlowApplication.Data;
+using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.Services;
 using _02_AuditFlowApplication.ViewModels;
@@ -19,6 +20,7 @@ namespace _02_AuditFlowApplication.Views
             _auditService = new AuditService();
             _auditViewModel = new AuditViewModel();
             DataContext = _auditViewModel;
+            DatabaseHelper.UpdateOverdueStatuses();
             LoadAudits();
 
             Layout.SetActiveButton("Audits");

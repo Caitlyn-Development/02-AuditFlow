@@ -1,4 +1,4 @@
-﻿using _02_AuditFlowApplication.Helpers;
+﻿using _02_AuditFlowApplication.Models;
 using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +13,9 @@ namespace _02_AuditFlowApplication.Views
         public DashboardView()
         {
             InitializeComponent();
-            _viewModel = new DashboardViewModel();
+
+            var currentUser = Application.Current.Properties["CurrentUser"] as User;
+            _viewModel = new DashboardViewModel(currentUser?.UserID ?? 0);
             DataContext = _viewModel;
 
             Layout.SetActiveButton("Dashboard");
@@ -22,12 +24,15 @@ namespace _02_AuditFlowApplication.Views
             {
                 if (e.PropertyName == nameof(DashboardViewModel.CalendarCells))
                     PopulateCalendar();
+                if (e.PropertyName == nameof(DashboardViewModel.UpcomingDeadlines))
+                    PopulateUpcomingDeadlines();
             };
 
             PrevMonthButton.Click += (s, e) => _viewModel.GoToPreviousMonth();
             NextMonthButton.Click += (s, e) => _viewModel.GoToNextMonth();
 
             PopulateCalendar();
+            PopulateUpcomingDeadlines();
         }
 
         private void PopulateCalendar()
@@ -113,6 +118,21 @@ namespace _02_AuditFlowApplication.Views
                 cellContent.Children.Insert(0, dayNumber);
                 dayCell.Child = cellContent;
                 CalendarGrid.Children.Add(dayCell);
+            }
+        }
+
+        private void PopulateUpcomingDeadlines()
+        {
+            if (_viewModel.UpcomingDeadlines == null || !_viewModel.UpcomingDeadlines.Any())
+            {
+                UpcomingDeadlinesGrid.Visibility = Visibility.Collapsed;
+                NoDeadlinesText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                UpcomingDeadlinesGrid.Visibility = Visibility.Visible;
+                NoDeadlinesText.Visibility = Visibility.Collapsed;
+                UpcomingDeadlinesGrid.ItemsSource = _viewModel.UpcomingDeadlines;
             }
         }
 
