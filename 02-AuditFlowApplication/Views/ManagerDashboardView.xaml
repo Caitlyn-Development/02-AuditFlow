@@ -112,8 +112,12 @@
                                     Height="30"
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
-                                    Background="#E3F2FD"
-                                    CornerRadius="4" />
+                                    CornerRadius="4">
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/business-time-solid-full.svg" />
+                                </Border>
                             </Grid>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -128,7 +132,7 @@
                                 FontFamily="Verdana"
                                 FontSize="14"
                                 Foreground="#FF1E1E1E"
-                                Text="Total audits assigned to you"
+                                Text="Total audits assigned"
                                 TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
@@ -168,8 +172,12 @@
                                     Height="30"
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
-                                    Background="#FFF3E0"
-                                    CornerRadius="4" />
+                                    CornerRadius="4">
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/list-solid-full.svg" />
+                                </Border>
                             </Grid>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -225,9 +233,12 @@
                                     Height="30"
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
-                                    Background="#E8F5E9"
-                                    CornerRadius="4" />
-
+                                    CornerRadius="4">
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/square-check-regular-full.svg" />
+                                </Border>
                             </Grid>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -283,8 +294,12 @@
                                     Height="30"
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
-                                    Background="#FFEBEE"
-                                    CornerRadius="4" />
+                                    CornerRadius="4">
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/flag-regular-full.svg" />
+                                </Border>
                             </Grid>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock

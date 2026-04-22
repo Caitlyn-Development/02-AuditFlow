@@ -105,7 +105,10 @@
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
                                     CornerRadius="4">
-                                    <svgc:SvgViewbox Source="/Resources/Svg/business-time-solid-full.svg" />
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/business-time-solid-full.svg" />
                                 </Border>
                             </Grid>
                             <TextBlock
@@ -160,7 +163,10 @@
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
                                     CornerRadius="4">
-                                    <svgc:SvgViewbox Source="/Resources/Svg/list-solid-full.svg" />
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/list-solid-full.svg" />
                                 </Border>
                             </Grid>
                             <TextBlock
@@ -217,7 +223,10 @@
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
                                     CornerRadius="4">
-                                    <svgc:SvgViewbox Source="/Resources/Svg/square-check-regular-full.svg" />
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/square-check-regular-full.svg" />
                                 </Border>
                             </Grid>
                             <TextBlock
@@ -273,7 +282,10 @@
                                     Margin="70,0,0,0"
                                     VerticalAlignment="Top"
                                     CornerRadius="4">
-                                    <svgc:SvgViewbox Source="/Resources/Svg/flag-regular-full.svg" />
+                                    <svgc:SvgViewbox
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/flag-regular-full.svg" />
                                 </Border>
                             </Grid>
                             <TextBlock

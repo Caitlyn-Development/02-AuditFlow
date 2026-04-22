@@ -47,10 +47,6 @@
                         <svgc:SvgViewbox Source="/Resources/Svg/gear-solid-full.svg" />
                     </Button>
                     <Button
-                        Content="●"
-                        FontSize="20"
-                        Style="{StaticResource DefaultIconStyle}" />
-                    <Button
                         x:Name="LogoutButton"
                         Cursor="Hand"
                         Style="{StaticResource DefaultIconStyle}">

@@ -49,12 +49,6 @@
                         <svgc:SvgViewbox Source="/Resources/Svg/gear-solid-full.svg" />
                     </Button>
                     <Button
-                        AutomationProperties.Name="User profile"
-                        Content="●"
-                        Cursor="Hand"
-                        FontSize="20"
-                        Style="{StaticResource DefaultIconStyle}" />
-                    <Button
                         x:Name="LogoutButton"
                         AutomationProperties.HelpText="Click to log out"
                         AutomationProperties.Name="Logout"
