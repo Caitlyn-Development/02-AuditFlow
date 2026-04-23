@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:_02_AuditFlowApplication.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
     Background="#FFFFFF"
     KeyboardNavigation.TabNavigation="Cycle"
     mc:Ignorable="d">
@@ -92,40 +93,110 @@
                             Foreground="#FF1E1E1E"
                             Text="Enter your account details below:" />
 
-                        <Label
-                            AutomationProperties.Name="Username label"
-                            Content="Username:"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Foreground="#FF1E1E1E"
-                            Target="{Binding ElementName=UsernameTextBox}" />
-
-                        <TextBox
-                            x:Name="UsernameTextBox"
+                        <Border
                             Margin="5,5,5,15"
-                            AutomationProperties.HelpText="Enter your manager username"
-                            AutomationProperties.Name="Username"
-                            FontSize="14"
-                            KeyboardNavigation.IsTabStop="True"
-                            TabIndex="0" />
+                            Background="White"
+                            BorderBrush="#CCCCCC"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <svgc:SvgViewbox
+                                    Grid.Column="0"
+                                    Width="30"
+                                    Height="30"
+                                    Margin="11,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="/Resources/Svg/user-regular-full.svg" />
+                                <TextBox
+                                    x:Name="UsernameTextBox"
+                                    Grid.Column="1"
+                                    Padding="8,10"
+                                    VerticalContentAlignment="Center"
+                                    AutomationProperties.HelpText="Enter your manager username"
+                                    AutomationProperties.Name="Username"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    TabIndex="0" />
+                            </Grid>
+                        </Border>
 
-                        <Label
-                            Margin="0,10,0,0"
-                            AutomationProperties.Name="Password label"
-                            Content="Password:"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Foreground="#FF1E1E1E"
-                            Target="{Binding ElementName=PasswordBox}" />
-
-                        <PasswordBox
-                            x:Name="PasswordBox"
+                        <!--  Password field with icon and toggle  -->
+                        <Border
                             Margin="5,5,5,25"
-                            AutomationProperties.HelpText="Enter your manager password"
-                            AutomationProperties.Name="Password"
-                            FontSize="14"
-                            KeyboardNavigation.IsTabStop="True"
-                            TabIndex="1" />
+                            Background="White"
+                            BorderBrush="#CCCCCC"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="44" />
+                                </Grid.ColumnDefinitions>
+                                <svgc:SvgViewbox
+                                    Grid.Column="0"
+                                    Width="30"
+                                    Height="30"
+                                    Margin="11,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="/Resources/Svg/lock-solid-full.svg" />
+                                <PasswordBox
+                                    x:Name="PasswordBox"
+                                    Grid.Column="1"
+                                    Padding="8,10"
+                                    VerticalContentAlignment="Center"
+                                    AutomationProperties.HelpText="Enter your manager password"
+                                    AutomationProperties.Name="Password"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    TabIndex="1" />
+                                <TextBox
+                                    x:Name="PasswordTextBox"
+                                    Grid.Column="1"
+                                    Padding="8,10"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontFamily="Verdana"
+                                    FontSize="14"
+                                    TabIndex="1"
+                                    Visibility="Collapsed" />
+                                <Button
+                                    x:Name="TogglePasswordButton"
+                                    Grid.Column="2"
+                                    Width="36"
+                                    Height="36"
+                                    Margin="4,0"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.HelpText="Toggle password visibility"
+                                    AutomationProperties.Name="Show password"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Click="TogglePassword_Click"
+                                    Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <svgc:SvgViewbox
+                                        x:Name="TogglePasswordIcon"
+                                        Width="30"
+                                        Height="30"
+                                        Source="/Resources/Svg/eye-solid-full.svg" />
+                                </Button>
+                            </Grid>
+                        </Border>
 
                         <Button
                             x:Name="LoginButton"

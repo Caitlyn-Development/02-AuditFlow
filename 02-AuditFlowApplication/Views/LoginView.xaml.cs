@@ -1,6 +1,7 @@
 ﻿using _02_AuditFlowApplication.Helpers;
 using _02_AuditFlowApplication.ViewModels;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,6 +10,7 @@ namespace _02_AuditFlowApplication.Views
     public partial class LoginView : UserControl
     {
         private readonly LoginViewModel _viewModel;
+        private bool _passwordVisible = false;
 
         public LoginView()
         {
@@ -16,7 +18,6 @@ namespace _02_AuditFlowApplication.Views
             _viewModel = new LoginViewModel();
             DataContext = _viewModel;
 
-            // Enter on username moves to password
             UsernameTextBox.KeyDown += (s, e) =>
             {
                 if (e.Key == Key.Return)
@@ -26,8 +27,16 @@ namespace _02_AuditFlowApplication.Views
                 }
             };
 
-            // Enter on password triggers login
             PasswordBox.KeyDown += (s, e) =>
+            {
+                if (e.Key == Key.Return)
+                {
+                    LoginButton_Click(s, e);
+                    e.Handled = true;
+                }
+            };
+
+            PasswordTextBox.KeyDown += (s, e) =>
             {
                 if (e.Key == Key.Return)
                 {
@@ -37,11 +46,12 @@ namespace _02_AuditFlowApplication.Views
             };
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var (success, user, errorMessage) = _viewModel.Login(
-                UsernameTextBox.Text,
-                PasswordBox.Password);
+            string username = UsernameTextBox.Text;
+            string password = _passwordVisible ? PasswordTextBox.Text : PasswordBox.Password;
+
+            var (success, user, errorMessage) = _viewModel.Login(username, password);
 
             if (success)
             {
@@ -50,15 +60,35 @@ namespace _02_AuditFlowApplication.Views
             }
             else
             {
-                var image = errorMessage.Contains("Manager")
-                    ? MessageBoxImage.Warning
-                    : MessageBoxImage.Error;
+                MessageBox.Show(errorMessage, "Login Failed",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
 
-                var title = errorMessage.Contains("Manager")
-                    ? "Access Denied"
-                    : "Login Failed";
+        private void TogglePassword_Click(object sender, RoutedEventArgs e)
+        {
+            _passwordVisible = !_passwordVisible;
 
-                MessageBox.Show(errorMessage, title, MessageBoxButton.OK, image);
+            if (_passwordVisible)
+            {
+                PasswordTextBox.Text = PasswordBox.Password;
+                PasswordTextBox.Visibility = Visibility.Visible;
+                PasswordBox.Visibility = Visibility.Collapsed;
+                PasswordTextBox.Focus();
+                PasswordTextBox.CaretIndex = PasswordTextBox.Text.Length;
+
+                TogglePasswordIcon.Source = new Uri("/Resources/Svg/eye-slash-solid-full.svg", UriKind.Relative);
+                TogglePasswordButton.SetValue(AutomationProperties.NameProperty, "Hide password");
+            }
+            else
+            {
+                PasswordBox.Password = PasswordTextBox.Text;
+                PasswordBox.Visibility = Visibility.Visible;
+                PasswordTextBox.Visibility = Visibility.Collapsed;
+                PasswordBox.Focus();
+
+                TogglePasswordIcon.Source = new Uri("/Resources/Svg/eye-solid-full.svg", UriKind.Relative);
+                TogglePasswordButton.SetValue(AutomationProperties.NameProperty, "Show password");
             }
         }
 

@@ -65,7 +65,8 @@ namespace _02_AuditFlowApplication.Views
             }
 
             var result = MessageBox.Show(
-                $"Are you sure you want to delete the following user?\n\nUsername: {userToDelete.Username}\nFull Name: {userToDelete.FullName}\n\nThis action cannot be undone.",
+                $"Are you sure you want to delete the following user?\n\nUsername: " +
+                $"{userToDelete.Username}\nFull Name: {userToDelete.FullName}\n\nThis action cannot be undone.",
                 "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)

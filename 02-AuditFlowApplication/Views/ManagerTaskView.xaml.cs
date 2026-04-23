@@ -295,7 +295,6 @@ namespace _02_AuditFlowApplication.Views
 
         private void LoadTaskCreationDropdowns()
         {
-            // Populate audit dropdown
             TaskAuditComboBox.Items.Clear();
             var audits = _auditService.GetAllAudits();
             foreach (var audit in audits)
@@ -307,7 +306,6 @@ namespace _02_AuditFlowApplication.Views
                 });
             }
 
-            // Populate assigned to dropdown
             TaskAssignedToComboBox.Items.Clear();
             var auditors = _viewModel.GetAuditors();
             foreach (var auditor in auditors)
@@ -427,12 +425,10 @@ namespace _02_AuditFlowApplication.Views
 
             var cardContent = new StackPanel();
 
-            // Top row - task info and approve/reject buttons side by side
             var topRow = new Grid();
             topRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             topRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            // Left side - task info
             var taskInfo = new StackPanel
             {
                 VerticalAlignment = VerticalAlignment.Center
@@ -468,7 +464,6 @@ namespace _02_AuditFlowApplication.Views
             Grid.SetColumn(taskInfo, 0);
             topRow.Children.Add(taskInfo);
 
-            // Right side - approve and reject buttons
             var buttonPanel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -519,14 +514,12 @@ namespace _02_AuditFlowApplication.Views
 
             cardContent.Children.Add(topRow);
 
-            // Divider
             cardContent.Children.Add(new Separator
             {
                 Margin = new Thickness(0, 15, 0, 15),
                 Background = new SolidColorBrush(Color.FromArgb(51, 30, 30, 30))
             });
 
-            // Attached files section
             var filesSection = new Border
             {
                 BorderBrush = new SolidColorBrush(Color.FromArgb(51, 30, 30, 30)),
@@ -563,7 +556,6 @@ namespace _02_AuditFlowApplication.Views
                 fileGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                 fileGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-                // File icon
                 var fileIcon = new SharpVectors.Converters.SvgViewbox
                 {
                     Width = 30,

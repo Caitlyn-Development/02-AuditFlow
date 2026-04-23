@@ -103,12 +103,6 @@ namespace _02_AuditFlowApplication.Views
             TasksGrid.ItemsSource = _viewModel.FilteredTasks;
         }
 
-        private void ApplyFilters()
-        {
-            _viewModel.ApplyFilters();
-            TasksGrid.ItemsSource = _viewModel.FilteredTasks;
-        }
-
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = SearchTextBox.Text.Trim();

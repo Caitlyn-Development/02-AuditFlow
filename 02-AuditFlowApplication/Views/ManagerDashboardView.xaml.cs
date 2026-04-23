@@ -27,7 +27,6 @@ namespace _02_AuditFlowApplication.Views
                     PopulateUpcomingDeadlines();
             };
 
-            // Wire to overridden methods on ManagerDashboardViewModel
             PrevMonthButton.Click += (s, e) => _viewModel.GoToPreviousMonth();
             NextMonthButton.Click += (s, e) => _viewModel.GoToNextMonth();
 

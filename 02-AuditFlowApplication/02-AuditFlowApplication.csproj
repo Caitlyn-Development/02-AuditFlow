@@ -16,6 +16,8 @@
     <None Remove="Resources\Svg\arrow-up-from-bracket-solid-full.svg" />
     <None Remove="Resources\Svg\business-time-solid-full.svg" />
     <None Remove="Resources\Svg\circle-xmark-solid-full.svg" />
+    <None Remove="Resources\Svg\eye-slash-solid-full.svg" />
+    <None Remove="Resources\Svg\eye-solid-full.svg" />
     <None Remove="Resources\Svg\file-image-regular-full.svg" />
     <None Remove="Resources\Svg\file-lines-regular-full.svg" />
     <None Remove="Resources\Svg\file-pdf-regular-full.svg" />
@@ -24,8 +26,10 @@
     <None Remove="Resources\Svg\flag-regular-full.svg" />
     <None Remove="Resources\Svg\gear-solid-full.svg" />
     <None Remove="Resources\Svg\list-solid-full.svg" />
+    <None Remove="Resources\Svg\lock-solid-full.svg" />
     <None Remove="Resources\Svg\magnifying-glass-solid-full.svg" />
     <None Remove="Resources\Svg\pen-to-square-solid-full.svg" />
+    <None Remove="Resources\Svg\user-regular-full.svg" />
     <None Remove="Resources\Svg\xmark-solid-full.svg" />
   </ItemGroup>
 
@@ -62,6 +66,8 @@
     <Resource Include="Resources\Svg\circle-xmark-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Svg\eye-slash-solid-full.svg" />
+    <Resource Include="Resources\Svg\eye-solid-full.svg" />
     <Resource Include="Resources\Svg\file-image-regular-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -80,6 +86,7 @@
     <Resource Include="Resources\Svg\flag-regular-full.svg" />
     <Resource Include="Resources\Svg\gear-solid-full.svg" />
     <Resource Include="Resources\Svg\list-solid-full.svg" />
+    <Resource Include="Resources\Svg\lock-solid-full.svg" />
     <Resource Include="Resources\Svg\magnifying-glass-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -89,6 +96,7 @@
     <Resource Include="Resources\Svg\square-check-regular-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Svg\user-regular-full.svg" />
     <Resource Include="Resources\Svg\xmark-solid-full.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
