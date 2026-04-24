@@ -44,7 +44,6 @@ namespace _02_AuditFlowApplication.ViewModels
             set { _overdueAudits = value; OnPropertyChanged(nameof(OverdueAudits)); }
         }
 
-        // Upcoming deadlines
         private List<Audit> _upcomingDeadlines;
         public List<Audit> UpcomingDeadlines
         {
@@ -108,21 +107,18 @@ namespace _02_AuditFlowApplication.ViewModels
             {
                 _userAudits = _auditService.GetAuditsForUser(_userId);
 
-                // Stat cards
                 TotalAudits = _userAudits.Count;
                 AuditsInProgress = _userAudits.Count(a => a.Status == AuditStatus.InProgress);
                 CompletedAudits = _userAudits.Count(a => a.Status == AuditStatus.Completed);
                 OverdueAudits = _userAudits.Count(a => a.Status == AuditStatus.Overdue);
 
-                // Upcoming deadlines - audits due this month
                 UpcomingDeadlines = _userAudits
-                    .Where(a => a.EndDate.Month == CurrentMonth.Month
-                             && a.EndDate.Year == CurrentMonth.Year
+                    .Where(a => a.EndDate.Month == DateTime.Now.Month
+                             && a.EndDate.Year == DateTime.Now.Year
                              && a.Status != AuditStatus.Completed)
                     .OrderBy(a => a.EndDate)
                     .ToList();
 
-                // Calendar events
                 var events = new Dictionary<DateTime, List<string>>();
                 foreach (var audit in _userAudits)
                 {
@@ -137,6 +133,11 @@ namespace _02_AuditFlowApplication.ViewModels
             {
                 _userAudits = new List<Audit>();
                 AuditEvents = new Dictionary<DateTime, List<string>>();
+                UpcomingDeadlines = new List<Audit>();
+                TotalAudits = 0;
+                AuditsInProgress = 0;
+                CompletedAudits = 0;
+                OverdueAudits = 0;
             }
             finally
             {
@@ -194,32 +195,12 @@ namespace _02_AuditFlowApplication.ViewModels
         public void GoToPreviousMonth()
         {
             CurrentMonth = CurrentMonth.AddMonths(-1);
-            // Update upcoming deadlines for new month
-            if (_userAudits != null)
-            {
-                UpcomingDeadlines = _userAudits
-                    .Where(a => a.EndDate.Month == CurrentMonth.Month
-                             && a.EndDate.Year == CurrentMonth.Year
-                             && a.Status != AuditStatus.Completed)
-                    .OrderBy(a => a.EndDate)
-                    .ToList();
-            }
             BuildCalendar();
         }
 
         public void GoToNextMonth()
         {
             CurrentMonth = CurrentMonth.AddMonths(1);
-            // Update upcoming deadlines for new month
-            if (_userAudits != null)
-            {
-                UpcomingDeadlines = _userAudits
-                    .Where(a => a.EndDate.Month == CurrentMonth.Month
-                             && a.EndDate.Year == CurrentMonth.Year
-                             && a.Status != AuditStatus.Completed)
-                    .OrderBy(a => a.EndDate)
-                    .ToList();
-            }
             BuildCalendar();
         }
 

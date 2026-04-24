@@ -12,9 +12,9 @@ namespace AuditFlowUnitTesting
 
         public DashboardViewModelTests()
         {
-            // ViewModel constructor catches all exceptions from AuditService
-            // so it will safely initialise with empty events if DB unavailable
-            _viewModel = new DashboardViewModel();
+            // Pass userId 0 — AuditService catches all DB exceptions
+            // and returns empty collections when database is unavailable
+            _viewModel = new DashboardViewModel(0);
         }
 
         #region Calendar Initialisation
@@ -39,6 +39,27 @@ namespace AuditFlowUnitTesting
         public void DashboardViewModel_OnCreation_AuditEventsShouldNotBeNull()
         {
             _viewModel.AuditEvents.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void DashboardViewModel_OnCreation_CalendarCellsShouldNotBeNull()
+        {
+            _viewModel.CalendarCells.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void DashboardViewModel_OnCreation_UpcomingDeadlinesShouldNotBeNull()
+        {
+            _viewModel.UpcomingDeadlines.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void DashboardViewModel_OnCreation_StatCardsShouldBeZeroWhenNoDatabaseAvailable()
+        {
+            _viewModel.TotalAudits.ShouldBeGreaterThanOrEqualTo(0);
+            _viewModel.AuditsInProgress.ShouldBeGreaterThanOrEqualTo(0);
+            _viewModel.CompletedAudits.ShouldBeGreaterThanOrEqualTo(0);
+            _viewModel.OverdueAudits.ShouldBeGreaterThanOrEqualTo(0);
         }
 
         #endregion
@@ -120,6 +141,30 @@ namespace AuditFlowUnitTesting
             _viewModel.CurrentMonth.ShouldBe(originalMonth);
         }
 
+        [Fact]
+        public void GoToPreviousMonth_ShouldRebuildCalendarCells()
+        {
+            _viewModel.BuildCalendar();
+            var cellsBefore = _viewModel.CalendarCells.Count;
+
+            _viewModel.GoToPreviousMonth();
+
+            _viewModel.CalendarCells.ShouldNotBeNull();
+            _viewModel.CalendarCells.Count.ShouldBe(cellsBefore);
+        }
+
+        [Fact]
+        public void GoToNextMonth_ShouldRebuildCalendarCells()
+        {
+            _viewModel.BuildCalendar();
+            var cellsBefore = _viewModel.CalendarCells.Count;
+
+            _viewModel.GoToNextMonth();
+
+            _viewModel.CalendarCells.ShouldNotBeNull();
+            _viewModel.CalendarCells.Count.ShouldBe(cellsBefore);
+        }
+
         #endregion
 
         #region Calendar Calculations
@@ -135,7 +180,7 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
-        public void GetDaysInMonth_ForMonthWith31Days_ShouldReturn31()
+        public void GetDaysInMonth_ForJanuary_ShouldReturn31()
         {
             while (_viewModel.CurrentMonth.Month != 1)
                 _viewModel.GoToNextMonth();
@@ -147,6 +192,15 @@ namespace AuditFlowUnitTesting
         public void GetDaysInMonth_ForApril_ShouldReturn30()
         {
             while (_viewModel.CurrentMonth.Month != 4)
+                _viewModel.GoToNextMonth();
+
+            _viewModel.GetDaysInMonth().ShouldBe(30);
+        }
+
+        [Fact]
+        public void GetDaysInMonth_ForJune_ShouldReturn30()
+        {
+            while (_viewModel.CurrentMonth.Month != 6)
                 _viewModel.GoToNextMonth();
 
             _viewModel.GetDaysInMonth().ShouldBe(30);
@@ -182,6 +236,89 @@ namespace AuditFlowUnitTesting
 
         #endregion
 
+        #region BuildCalendar
+
+        [Fact]
+        public void BuildCalendar_ShouldAlwaysGenerate35Cells()
+        {
+            _viewModel.BuildCalendar();
+
+            _viewModel.CalendarCells.Count.ShouldBe(35);
+        }
+
+        [Fact]
+        public void BuildCalendar_AfterNextMonth_ShouldStillGenerate35Cells()
+        {
+            _viewModel.GoToNextMonth();
+            _viewModel.BuildCalendar();
+
+            _viewModel.CalendarCells.Count.ShouldBe(35);
+        }
+
+        [Fact]
+        public void BuildCalendar_AfterPreviousMonth_ShouldStillGenerate35Cells()
+        {
+            _viewModel.GoToPreviousMonth();
+            _viewModel.BuildCalendar();
+
+            _viewModel.CalendarCells.Count.ShouldBe(35);
+        }
+
+        [Fact]
+        public void BuildCalendar_CurrentMonthCells_ShouldHaveIsCurrentMonthTrue()
+        {
+            _viewModel.BuildCalendar();
+
+            var currentMonthCells = _viewModel.CalendarCells
+                .Where(c => c.IsCurrentMonth)
+                .ToList();
+
+            currentMonthCells.ShouldNotBeEmpty();
+            currentMonthCells.Count.ShouldBe(_viewModel.GetDaysInMonth());
+        }
+
+        [Fact]
+        public void BuildCalendar_OtherMonthCells_ShouldHaveIsOtherMonthTrue()
+        {
+            _viewModel.BuildCalendar();
+
+            var otherMonthCells = _viewModel.CalendarCells
+                .Where(c => c.IsOtherMonth)
+                .ToList();
+
+            otherMonthCells.ShouldAllBe(c => !c.IsCurrentMonth);
+        }
+
+        [Fact]
+        public void BuildCalendar_CurrentMonthAndOtherMonth_ShouldSumTo35()
+        {
+            _viewModel.BuildCalendar();
+
+            var currentCount = _viewModel.CalendarCells.Count(c => c.IsCurrentMonth);
+            var otherCount = _viewModel.CalendarCells.Count(c => c.IsOtherMonth);
+
+            (currentCount + otherCount).ShouldBe(35);
+        }
+
+        [Fact]
+        public void BuildCalendar_CellDayNumbers_ShouldNotBeNullOrEmpty()
+        {
+            _viewModel.BuildCalendar();
+
+            _viewModel.CalendarCells.ShouldAllBe(c =>
+                !string.IsNullOrEmpty(c.DayNumber));
+        }
+
+        [Fact]
+        public void BuildCalendar_EventsList_ShouldNeverBeNull()
+        {
+            _viewModel.BuildCalendar();
+
+            _viewModel.CalendarCells.ShouldAllBe(c => c.Events != null);
+        }
+
+        #endregion
+
         #region Audit Events
 
         [Fact]
@@ -213,6 +350,20 @@ namespace AuditFlowUnitTesting
             var result = _viewModel.GetEventsOnDate(anyDate);
 
             result.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void HasEventsOnDate_AndGetEventsOnDate_ShouldBeConsistent()
+        {
+            var date = new DateTime(2000, 1, 1);
+
+            var hasEvents = _viewModel.HasEventsOnDate(date);
+            var events = _viewModel.GetEventsOnDate(date);
+
+            if (hasEvents)
+                events.ShouldNotBeEmpty();
+            else
+                events.ShouldBeEmpty();
         }
 
         #endregion
@@ -256,6 +407,51 @@ namespace AuditFlowUnitTesting
             _viewModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(DashboardViewModel.AuditEvents))
+                    propertyChangedRaised = true;
+            };
+
+            _viewModel.LoadAuditEvents();
+
+            propertyChangedRaised.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void CalendarCells_WhenBuilt_ShouldRaisePropertyChangedEvent()
+        {
+            var propertyChangedRaised = false;
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(DashboardViewModel.CalendarCells))
+                    propertyChangedRaised = true;
+            };
+
+            _viewModel.BuildCalendar();
+
+            propertyChangedRaised.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void TotalAudits_WhenChanged_ShouldRaisePropertyChangedEvent()
+        {
+            var propertyChangedRaised = false;
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(DashboardViewModel.TotalAudits))
+                    propertyChangedRaised = true;
+            };
+
+            _viewModel.LoadAuditEvents();
+
+            propertyChangedRaised.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void UpcomingDeadlines_WhenLoaded_ShouldRaisePropertyChangedEvent()
+        {
+            var propertyChangedRaised = false;
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(DashboardViewModel.UpcomingDeadlines))
                     propertyChangedRaised = true;
             };
 

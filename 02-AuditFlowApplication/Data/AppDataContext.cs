@@ -19,7 +19,6 @@ namespace _02_AuditFlowApplication.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure relationships
             modelBuilder.Entity<Audit>()
                 .HasOne(a => a.CreatedBy)
                 .WithMany()

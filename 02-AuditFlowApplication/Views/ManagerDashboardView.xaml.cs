@@ -42,7 +42,6 @@ namespace _02_AuditFlowApplication.Views
             int startDayOfWeek = _viewModel.GetStartDayOfWeek();
             int daysInMonth = _viewModel.GetDaysInMonth();
             int daysInPrevMonth = _viewModel.GetDaysInPreviousMonth();
-
             int dayCounter = 1;
             int nextMonthDayCounter = 1;
 
@@ -51,56 +50,99 @@ namespace _02_AuditFlowApplication.Views
                 Border dayCell = new Border
                 {
                     Margin = new Thickness(2),
-                    Height = 80,
-                    BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0E0E0")),
-                    BorderThickness = new Thickness(1)
+                    Height = 110,
+                    BorderBrush = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#E0E0E0")),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(6)
                 };
 
                 StackPanel cellContent = new StackPanel
                 {
-                    Margin = new Thickness(8)
+                    Margin = new Thickness(6)
                 };
 
                 TextBlock dayNumber = new TextBlock
                 {
-                    FontSize = 14,
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#666666"))
+                    FontSize = 13,
+                    FontFamily = new FontFamily("Verdana"),
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#666666")),
+                    Margin = new Thickness(0, 0, 0, 4)
                 };
 
                 if (i < startDayOfWeek - 1)
                 {
-                    dayCell.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8F8F8"));
+                    dayCell.Background = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#F8F8F8"));
                     int prevMonthDay = daysInPrevMonth - (startDayOfWeek - 2 - i);
                     dayNumber.Text = prevMonthDay.ToString();
-                    dayNumber.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CCCCCC"));
+                    dayNumber.Foreground = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#CCCCCC"));
                 }
                 else if (dayCounter <= daysInMonth)
                 {
                     dayCell.Background = Brushes.White;
                     dayNumber.Text = dayCounter.ToString();
+                    dayNumber.Foreground = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#1E1E1E"));
 
-                    DateTime currentDate = new DateTime(_viewModel.CurrentMonth.Year, _viewModel.CurrentMonth.Month, dayCounter);
+                    DateTime currentDate = new DateTime(
+                        _viewModel.CurrentMonth.Year,
+                        _viewModel.CurrentMonth.Month,
+                        dayCounter);
 
                     foreach (var eventName in _viewModel.GetEventsOnDate(currentDate))
                     {
                         Border eventBadge = new Border
                         {
-                            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C4DFF")),
-                            CornerRadius = new CornerRadius(10),
-                            Margin = new Thickness(0, 4, 0, 0),
-                            HorizontalAlignment = HorizontalAlignment.Left
+                            Background = new SolidColorBrush(
+                                (Color)ColorConverter.ConvertFromString("#F3EDF7")),
+                            BorderBrush = new SolidColorBrush(
+                                (Color)ColorConverter.ConvertFromString("#5D3754")),
+                            BorderThickness = new Thickness(1),
+                            CornerRadius = new CornerRadius(6),
+                            Margin = new Thickness(0, 3, 0, 0),
+                            Padding = new Thickness(6, 4, 6, 4),
+                            HorizontalAlignment = HorizontalAlignment.Stretch
                         };
+
+                        Grid badgeGrid = new Grid();
+                        badgeGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        {
+                            Width = new GridLength(3)
+                        });
+                        badgeGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        {
+                            Width = new GridLength(1, GridUnitType.Star)
+                        });
+
+                        Border accentBar = new Border
+                        {
+                            Background = new SolidColorBrush(
+                                (Color)ColorConverter.ConvertFromString("#5D3754")),
+                            CornerRadius = new CornerRadius(3, 0, 0, 3),
+                            Margin = new Thickness(0, 0, 6, 0)
+                        };
+                        Grid.SetColumn(accentBar, 0);
+                        badgeGrid.Children.Add(accentBar);
 
                         TextBlock eventText = new TextBlock
                         {
                             Text = eventName,
-                            FontSize = 9,
+                            FontFamily = new FontFamily("Verdana"),
+                            FontSize = 13,
                             FontWeight = FontWeights.SemiBold,
-                            Foreground = Brushes.White,
-                            TextWrapping = TextWrapping.Wrap
+                            Foreground = new SolidColorBrush(
+                                (Color)ColorConverter.ConvertFromString("#5D3754")),
+                            TextWrapping = TextWrapping.Wrap,
+                            VerticalAlignment = VerticalAlignment.Center
                         };
+                        Grid.SetColumn(eventText, 1);
+                        badgeGrid.Children.Add(eventText);
 
-                        eventBadge.Child = eventText;
+                        eventBadge.Child = badgeGrid;
                         cellContent.Children.Add(eventBadge);
                     }
 
@@ -108,9 +150,11 @@ namespace _02_AuditFlowApplication.Views
                 }
                 else
                 {
-                    dayCell.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8F8F8"));
+                    dayCell.Background = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#F8F8F8"));
                     dayNumber.Text = nextMonthDayCounter.ToString();
-                    dayNumber.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CCCCCC"));
+                    dayNumber.Foreground = new SolidColorBrush(
+                        (Color)ColorConverter.ConvertFromString("#CCCCCC"));
                     nextMonthDayCounter++;
                 }
 

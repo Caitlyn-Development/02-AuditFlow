@@ -61,11 +61,9 @@ namespace AuditFlowUnitTesting
                 }
             };
 
-            // Inject test data directly without hitting the database
             SetAllAudits(_viewModel, _testAudits);
         }
 
-        // Helper to inject test audits directly into the private field
         private void SetAllAudits(ManagerAuditViewModel viewModel, List<Audit> audits)
         {
             var field = typeof(ManagerAuditViewModel)

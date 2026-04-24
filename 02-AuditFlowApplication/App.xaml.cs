@@ -1,6 +1,4 @@
 ﻿using _02_AuditFlowApplication.Data;
-using _02_AuditFlowApplication.Services;
-using System.IO;
 using System.Windows;
 
 namespace _02_AuditFlowApplication
@@ -17,7 +15,6 @@ namespace _02_AuditFlowApplication
             DatabaseHelper.InitialiseDatabase();
             DatabaseHelper.UpdateOverdueStatuses();
 
-            // Show login window
             var mainWindow = new MainWindow();
             mainWindow.Show();
         }

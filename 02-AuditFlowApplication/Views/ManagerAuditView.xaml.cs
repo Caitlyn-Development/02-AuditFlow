@@ -258,7 +258,7 @@ namespace _02_AuditFlowApplication.Views
                 Height = 520,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 ResizeMode = ResizeMode.NoResize,
-                Background = System.Windows.Media.Brushes.White
+                Background = Brushes.White
             };
 
             var mainStack = new StackPanel { Margin = new Thickness(30) };
@@ -266,50 +266,46 @@ namespace _02_AuditFlowApplication.Views
             mainStack.Children.Add(new TextBlock
             {
                 Text = "Edit Audit",
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 20,
                 FontWeight = FontWeights.SemiBold,
                 Margin = new Thickness(0, 0, 0, 20)
             });
 
-            // Audit Name
-            mainStack.Children.Add(new TextBlock { Text = "Audit Name", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            mainStack.Children.Add(new TextBlock { Text = "Audit Name", FontFamily = new FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
             var auditNameBox = new TextBox
             {
                 Text = audit.AuditName,
                 Height = 35,
                 Padding = new Thickness(8),
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 14,
                 Margin = new Thickness(0, 0, 0, 15)
             };
             mainStack.Children.Add(auditNameBox);
 
-            // Start Date
-            mainStack.Children.Add(new TextBlock { Text = "Start Date", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            mainStack.Children.Add(new TextBlock { Text = "Start Date", FontFamily = new FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
             var startDatePicker = new DatePicker
             {
                 SelectedDate = audit.StartDate,
                 Height = 35,
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 14,
                 Margin = new Thickness(0, 0, 0, 15)
             };
             mainStack.Children.Add(startDatePicker);
 
-            // End Date
-            mainStack.Children.Add(new TextBlock { Text = "End Date", FontFamily = new System.Windows.Media.FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
+            mainStack.Children.Add(new TextBlock { Text = "End Date", FontFamily = new FontFamily("Verdana"), FontSize = 14, Margin = new Thickness(0, 0, 0, 5) });
             var endDatePicker = new DatePicker
             {
                 SelectedDate = audit.EndDate,
                 Height = 35,
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 14,
                 Margin = new Thickness(0, 0, 0, 25)
             };
             mainStack.Children.Add(endDatePicker);
 
-            // Buttons
             var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal };
 
             var saveButton = new Button
@@ -318,10 +314,10 @@ namespace _02_AuditFlowApplication.Views
                 Width = 150,
                 Height = 40,
                 Margin = new Thickness(0, 0, 10, 0),
-                Background = new System.Windows.Media.SolidColorBrush(
-                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#5D3754")),
-                Foreground = System.Windows.Media.Brushes.White,
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                Background = new SolidColorBrush(
+                    (Color)ColorConverter.ConvertFromString("#5D3754")),
+                Foreground = Brushes.White,
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 14,
                 FontWeight = FontWeights.Bold,
                 BorderThickness = new Thickness(0),
@@ -333,10 +329,10 @@ namespace _02_AuditFlowApplication.Views
                 Content = "Cancel",
                 Width = 100,
                 Height = 40,
-                Background = new System.Windows.Media.SolidColorBrush(
-                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#9E9E9E")),
-                Foreground = System.Windows.Media.Brushes.White,
-                FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                Background = new SolidColorBrush(
+                    (Color)ColorConverter.ConvertFromString("#9E9E9E")),
+                Foreground = Brushes.White,
+                FontFamily = new FontFamily("Verdana"),
                 FontSize = 14,
                 FontWeight = FontWeights.Bold,
                 BorderThickness = new Thickness(0),

@@ -68,7 +68,9 @@ namespace AuditFlowUnitTesting
         private void SetAllTasks(ManagerTaskViewModel viewModel, List<AuditTask> tasks)
         {
             var field = typeof(ManagerTaskViewModel)
-                .GetField("_allTasks", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                .GetField("_allTasks",
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Instance);
             field?.SetValue(viewModel, tasks);
 
             var filteredProp = typeof(ManagerTaskViewModel)
@@ -115,9 +117,18 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void SelectedStatus_WhenSetToOnHold_ShouldReturnEmptyList()
+        {
+            _viewModel.SelectedStatus = AuditTaskStatus.OnHold;
+
+            _viewModel.FilteredTasks.ShouldBeEmpty();
+        }
+
+        [Fact]
         public void SelectedStatus_WhenSetToNull_ShouldReturnAllTasks()
         {
             _viewModel.SelectedStatus = AuditTaskStatus.Completed;
+
             _viewModel.SelectedStatus = null;
 
             _viewModel.FilteredTasks.Count.ShouldBe(4);
@@ -146,9 +157,19 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void SelectedAudit_WhenSetToDataPrivacyReview_ShouldReturnOnlyDataPrivacyTasks()
+        {
+            _viewModel.SelectedAudit = "Data Privacy Review";
+
+            _viewModel.FilteredTasks.ShouldAllBe(t => t.AuditName == "Data Privacy Review");
+            _viewModel.FilteredTasks.Count.ShouldBe(1);
+        }
+
+        [Fact]
         public void SelectedAudit_WhenSetToNull_ShouldReturnAllTasks()
         {
             _viewModel.SelectedAudit = "IT Systems Audit";
+
             _viewModel.SelectedAudit = null;
 
             _viewModel.FilteredTasks.Count.ShouldBe(4);
@@ -188,6 +209,7 @@ namespace AuditFlowUnitTesting
         public void SelectedUser_WhenSetToNull_ShouldReturnAllTasks()
         {
             _viewModel.SelectedUser = "Sarah Johnson";
+
             _viewModel.SelectedUser = null;
 
             _viewModel.FilteredTasks.Count.ShouldBe(4);
@@ -226,7 +248,7 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
-        public void ApplyFilters_WhenAllFiltersSet_ShouldReturnMatchingTasks()
+        public void ApplyFilters_WhenAllThreeFiltersSet_ShouldReturnMatchingTasks()
         {
             _viewModel.SelectedAudit = "IT Systems Audit";
             _viewModel.SelectedUser = "Sarah Johnson";
@@ -243,6 +265,81 @@ namespace AuditFlowUnitTesting
             _viewModel.SelectedStatus = AuditTaskStatus.InProgress;
 
             _viewModel.FilteredTasks.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void ApplyFilters_WhenAllFiltersCleared_ShouldReturnAllTasks()
+        {
+            _viewModel.SelectedAudit = "IT Systems Audit";
+            _viewModel.SelectedUser = "Sarah Johnson";
+            _viewModel.SelectedStatus = AuditTaskStatus.InProgress;
+
+            _viewModel.SelectedAudit = null;
+            _viewModel.SelectedUser = null;
+            _viewModel.SelectedStatus = null;
+
+            _viewModel.FilteredTasks.Count.ShouldBe(4);
+        }
+
+        [Fact]
+        public void ApplyFilters_WhenUserAndAuditSet_ShouldReturnMatchingTasks()
+        {
+            _viewModel.SelectedAudit = "IT Systems Audit";
+            _viewModel.SelectedUser = "Mike Williams";
+
+            _viewModel.FilteredTasks.Count.ShouldBe(1);
+            _viewModel.FilteredTasks[0].TaskName.ShouldBe("Network Security Scan");
+        }
+
+        #endregion
+
+        #region GetTaskById
+
+        [Fact]
+        public void GetTaskById_WithValidId_ShouldReturnCorrectTask()
+        {
+            var result = _viewModel.GetTaskById(1);
+
+            result.ShouldNotBeNull();
+            result.TaskId.ShouldBe(1);
+            result.TaskName.ShouldBe("Review Server Logs");
+        }
+
+        [Fact]
+        public void GetTaskById_WithInvalidId_ShouldReturnNull()
+        {
+            var result = _viewModel.GetTaskById(999);
+
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GetTaskById_WithEachTaskId_ShouldReturnCorrectTask()
+        {
+            foreach (var task in _testTasks)
+            {
+                var result = _viewModel.GetTaskById(task.TaskId);
+
+                result.ShouldNotBeNull();
+                result.TaskId.ShouldBe(task.TaskId);
+                result.TaskName.ShouldBe(task.TaskName);
+            }
+        }
+
+        [Fact]
+        public void GetTaskById_WithZeroId_ShouldReturnNull()
+        {
+            var result = _viewModel.GetTaskById(0);
+
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GetTaskById_WithNegativeId_ShouldReturnNull()
+        {
+            var result = _viewModel.GetTaskById(-1);
+
+            result.ShouldBeNull();
         }
 
         #endregion
@@ -276,6 +373,14 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void GetSearchSuggestions_WithWhitespace_ShouldReturnEmptyList()
+        {
+            var suggestions = _viewModel.GetSearchSuggestions("   ");
+
+            suggestions.ShouldBeEmpty();
+        }
+
+        [Fact]
         public void GetSearchSuggestions_WithNull_ShouldReturnEmptyList()
         {
             var suggestions = _viewModel.GetSearchSuggestions(null);
@@ -300,6 +405,15 @@ namespace AuditFlowUnitTesting
             suggestions[0].TaskName.ShouldBe("Review Server Logs");
         }
 
+        [Fact]
+        public void GetSearchSuggestions_WithExactTaskName_ShouldReturnSingleResult()
+        {
+            var suggestions = _viewModel.GetSearchSuggestions("GDPR Compliance Check");
+
+            suggestions.Count.ShouldBe(1);
+            suggestions[0].TaskName.ShouldBe("GDPR Compliance Check");
+        }
+
         #endregion
 
         #region FileValidation
@@ -307,73 +421,101 @@ namespace AuditFlowUnitTesting
         [Fact]
         public void IsValidFileType_WithPdfExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("document.pdf", _allowedExtensions);
+            _viewModel.IsValidFileType("document.pdf", _allowedExtensions).ShouldBeTrue();
+        }
 
-            result.ShouldBeTrue();
+        [Fact]
+        public void IsValidFileType_WithDocExtension_ShouldReturnTrue()
+        {
+            _viewModel.IsValidFileType("document.doc", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
         public void IsValidFileType_WithDocxExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("document.docx", _allowedExtensions);
-
-            result.ShouldBeTrue();
+            _viewModel.IsValidFileType("document.docx", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
         public void IsValidFileType_WithJpgExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("image.jpg", _allowedExtensions);
+            _viewModel.IsValidFileType("image.jpg", _allowedExtensions).ShouldBeTrue();
+        }
 
-            result.ShouldBeTrue();
+        [Fact]
+        public void IsValidFileType_WithJpegExtension_ShouldReturnTrue()
+        {
+            _viewModel.IsValidFileType("image.jpeg", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
         public void IsValidFileType_WithPngExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("image.png", _allowedExtensions);
-
-            result.ShouldBeTrue();
+            _viewModel.IsValidFileType("image.png", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
-        public void IsValidFileType_WithInvalidExtension_ShouldReturnFalse()
+        public void IsValidFileType_WithGifExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("file.exe", _allowedExtensions);
+            _viewModel.IsValidFileType("image.gif", _allowedExtensions).ShouldBeTrue();
+        }
 
-            result.ShouldBeFalse();
+        [Fact]
+        public void IsValidFileType_WithBmpExtension_ShouldReturnTrue()
+        {
+            _viewModel.IsValidFileType("image.bmp", _allowedExtensions).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void IsValidFileType_WithExeExtension_ShouldReturnFalse()
+        {
+            _viewModel.IsValidFileType("file.exe", _allowedExtensions).ShouldBeFalse();
         }
 
         [Fact]
         public void IsValidFileType_WithZipExtension_ShouldReturnFalse()
         {
-            var result = _viewModel.IsValidFileType("archive.zip", _allowedExtensions);
+            _viewModel.IsValidFileType("archive.zip", _allowedExtensions).ShouldBeFalse();
+        }
 
-            result.ShouldBeFalse();
+        [Fact]
+        public void IsValidFileType_WithTxtExtension_ShouldReturnFalse()
+        {
+            _viewModel.IsValidFileType("notes.txt", _allowedExtensions).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void IsValidFileType_WithXlsxExtension_ShouldReturnFalse()
+        {
+            _viewModel.IsValidFileType("spreadsheet.xlsx", _allowedExtensions).ShouldBeFalse();
         }
 
         [Fact]
         public void IsValidFileType_WithUpperCaseExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("document.PDF", _allowedExtensions);
-
-            result.ShouldBeTrue();
+            _viewModel.IsValidFileType("document.PDF", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
         public void IsValidFileType_WithMixedCaseExtension_ShouldReturnTrue()
         {
-            var result = _viewModel.IsValidFileType("document.Pdf", _allowedExtensions);
-
-            result.ShouldBeTrue();
+            _viewModel.IsValidFileType("document.Pdf", _allowedExtensions).ShouldBeTrue();
         }
 
         [Fact]
         public void IsValidFileType_WithNoExtension_ShouldReturnFalse()
         {
-            var result = _viewModel.IsValidFileType("filewithnoextension", _allowedExtensions);
+            _viewModel.IsValidFileType("filewithnoextension", _allowedExtensions).ShouldBeFalse();
+        }
 
-            result.ShouldBeFalse();
+        [Fact]
+        public void IsValidFileType_AllAllowedExtensions_ShouldAllReturnTrue()
+        {
+            foreach (var ext in _allowedExtensions)
+            {
+                var result = _viewModel.IsValidFileType($"testfile{ext}", _allowedExtensions);
+                result.ShouldBeTrue($"Extension {ext} should be valid");
+            }
         }
 
         #endregion

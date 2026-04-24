@@ -192,7 +192,8 @@ namespace _02_AuditFlowApplication.Services
                     command.Parameters.AddWithValue("@createdByUsername", createdBy.Username);
                     command.Parameters.AddWithValue("@auditId", audit.AuditId);
                     command.Parameters.AddWithValue("@auditName", audit.AuditName);
-                    command.Parameters.AddWithValue("@changeDescription", $"Audit '{audit.AuditName}' of type '{audit.Type}' created. Start: {audit.StartDate:dd/MM/yyyy}, End: {audit.EndDate:dd/MM/yyyy}. Recurring: {audit.IsRecurring}.");
+                    command.Parameters.AddWithValue("@changeDescription", $"Audit '{audit.AuditName}' of type '{audit.Type}' " +
+                        $"created. Start: {audit.StartDate:dd/MM/yyyy}, End: {audit.EndDate:dd/MM/yyyy}. Recurring: {audit.IsRecurring}.");
                     command.Parameters.AddWithValue("@changeDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     command.ExecuteNonQuery();
                 }

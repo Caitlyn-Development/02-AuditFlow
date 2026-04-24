@@ -88,6 +88,32 @@ namespace AuditFlowUnitTesting
             Should.NotThrow(() => _viewModel.LoadAudits(null));
         }
 
+        [Fact]
+        public void LoadAudits_ShouldReplaceExistingAudits_WhenCalledTwice()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            var newAudits = new List<Audit>
+            {
+                new Audit
+                {
+                    AuditId = 5,
+                    AuditName = "New Audit",
+                    Type = AuditType.Quality,
+                    Status = AuditStatus.NotStarted,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(7),
+                    CreatedByUserID = 1,
+                    CreatedDate = DateTime.Now
+                }
+            };
+
+            _viewModel.LoadAudits(newAudits);
+
+            _viewModel.FilteredAudits.Count.ShouldBe(1);
+            _viewModel.FilteredAudits[0].AuditName.ShouldBe("New Audit");
+        }
+
         #endregion
 
         #region FilterByStatus
@@ -111,6 +137,28 @@ namespace AuditFlowUnitTesting
             _viewModel.SelectedStatus = AuditStatus.Completed;
 
             _viewModel.FilteredAudits.ShouldAllBe(a => a.Status == AuditStatus.Completed);
+            _viewModel.FilteredAudits.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void SelectedStatus_WhenSetToNotStarted_ShouldReturnOnlyNotStartedAudits()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            _viewModel.SelectedStatus = AuditStatus.NotStarted;
+
+            _viewModel.FilteredAudits.ShouldAllBe(a => a.Status == AuditStatus.NotStarted);
+            _viewModel.FilteredAudits.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void SelectedStatus_WhenSetToOverdue_ShouldReturnOnlyOverdueAudits()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            _viewModel.SelectedStatus = AuditStatus.Overdue;
+
+            _viewModel.FilteredAudits.ShouldAllBe(a => a.Status == AuditStatus.Overdue);
             _viewModel.FilteredAudits.Count.ShouldBe(1);
         }
 
@@ -152,6 +200,17 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void SelectedType_WhenSetToSafety_ShouldReturnOnlySafetyAudits()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            _viewModel.SelectedType = AuditType.Safety;
+
+            _viewModel.FilteredAudits.ShouldAllBe(a => a.Type == AuditType.Safety);
+            _viewModel.FilteredAudits.Count.ShouldBe(1);
+        }
+
+        [Fact]
         public void SelectedType_WhenSetToNull_ShouldReturnAllAudits()
         {
             _viewModel.LoadAudits(_testAudits);
@@ -160,6 +219,16 @@ namespace AuditFlowUnitTesting
             _viewModel.SelectedType = null;
 
             _viewModel.FilteredAudits.Count.ShouldBe(4);
+        }
+
+        [Fact]
+        public void SelectedType_WhenNoAuditsMatchType_ShouldReturnEmptyList()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            _viewModel.SelectedType = AuditType.DataProtection;
+
+            _viewModel.FilteredAudits.ShouldBeEmpty();
         }
 
         #endregion
@@ -189,52 +258,37 @@ namespace AuditFlowUnitTesting
             _viewModel.FilteredAudits.ShouldBeEmpty();
         }
 
-        #endregion
-
-        #region Search
-
         [Fact]
-        public void SearchText_WhenSetToPartialName_ShouldFilterByName()
+        public void ApplyFilters_WhenStatusTypeAndSearchSet_ShouldReturnMatchingAudits()
         {
             _viewModel.LoadAudits(_testAudits);
 
-            _viewModel.SearchText = "IT";
-
-            _viewModel.FilteredAudits.Count.ShouldBe(2);
-            _viewModel.FilteredAudits.ShouldAllBe(a => a.AuditName.StartsWith("IT", StringComparison.OrdinalIgnoreCase));
-        }
-
-        [Fact]
-        public void SearchText_WhenSetToExactName_ShouldReturnSingleResult()
-        {
-            _viewModel.LoadAudits(_testAudits);
-
-            _viewModel.SearchText = "Financial Review";
+            _viewModel.SelectedType = AuditType.Security;
+            _viewModel.SelectedStatus = AuditStatus.Overdue;
+            _viewModel.SearchText = "IT Security";
 
             _viewModel.FilteredAudits.Count.ShouldBe(1);
-            _viewModel.FilteredAudits[0].AuditName.ShouldBe("Financial Review");
+            _viewModel.FilteredAudits[0].AuditName.ShouldBe("IT Security Review");
         }
 
         [Fact]
-        public void SearchText_WhenCleared_ShouldReturnAllAudits()
+        public void ApplyFilters_WhenFiltersCleared_ShouldReturnAllAudits()
         {
             _viewModel.LoadAudits(_testAudits);
+            _viewModel.SelectedType = AuditType.Security;
+            _viewModel.SelectedStatus = AuditStatus.InProgress;
             _viewModel.SearchText = "IT";
 
+            _viewModel.SelectedType = null;
+            _viewModel.SelectedStatus = null;
             _viewModel.SearchText = string.Empty;
 
             _viewModel.FilteredAudits.Count.ShouldBe(4);
         }
 
-        [Fact]
-        public void SearchText_WhenNoMatch_ShouldReturnEmptyList()
-        {
-            _viewModel.LoadAudits(_testAudits);
+        #endregion
 
-            _viewModel.SearchText = "NonExistentAudit";
-
-            _viewModel.FilteredAudits.ShouldBeEmpty();
-        }
+        #region Search
 
         [Fact]
         public void GetSearchSuggestions_WithPartialMatch_ShouldReturnMatchingAudits()
@@ -248,6 +302,17 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void GetSearchSuggestions_WithExactName_ShouldReturnSingleResult()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            var suggestions = _viewModel.GetSearchSuggestions("Financial Review");
+
+            suggestions.Count.ShouldBe(1);
+            suggestions[0].AuditName.ShouldBe("Financial Review");
+        }
+
+        [Fact]
         public void GetSearchSuggestions_WithEmptyString_ShouldReturnEmptyList()
         {
             _viewModel.LoadAudits(_testAudits);
@@ -258,11 +323,39 @@ namespace AuditFlowUnitTesting
         }
 
         [Fact]
+        public void GetSearchSuggestions_WithWhitespace_ShouldReturnEmptyList()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            var suggestions = _viewModel.GetSearchSuggestions("   ");
+
+            suggestions.ShouldBeEmpty();
+        }
+
+        [Fact]
         public void GetSearchSuggestions_WithNoMatch_ShouldReturnEmptyList()
         {
             _viewModel.LoadAudits(_testAudits);
 
             var suggestions = _viewModel.GetSearchSuggestions("XYZ");
+
+            suggestions.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void GetSearchSuggestions_IsCaseInsensitive()
+        {
+            _viewModel.LoadAudits(_testAudits);
+
+            var suggestions = _viewModel.GetSearchSuggestions("it");
+
+            suggestions.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void GetSearchSuggestions_BeforeLoadAudits_ShouldReturnEmptyList()
+        {
+            var suggestions = _viewModel.GetSearchSuggestions("IT");
 
             suggestions.ShouldBeEmpty();
         }
@@ -314,6 +407,22 @@ namespace AuditFlowUnitTesting
             };
 
             _viewModel.SelectedType = AuditType.Security;
+
+            propertyChangedRaised.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void SearchText_WhenChanged_ShouldRaisePropertyChangedEvent()
+        {
+            _viewModel.LoadAudits(_testAudits);
+            var propertyChangedRaised = false;
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AuditViewModel.SearchText))
+                    propertyChangedRaised = true;
+            };
+
+            _viewModel.SearchText = "IT";
 
             propertyChangedRaised.ShouldBeTrue();
         }
