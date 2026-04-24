@@ -4,7 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
     xmlns:views="clr-namespace:_02_AuditFlowApplication.Views"
-    Background="#FFFFFF">
+    AutomationProperties.HelpText="Dashboard showing audit statistics, calendar, and upcoming deadlines"
+    AutomationProperties.Name="Auditor dashboard"
+    Background="#FFFFFF"
+    KeyboardNavigation.TabNavigation="Cycle">
 
     <UserControl.Resources>
         <Style x:Key="StatCardStyle" TargetType="Border">
@@ -76,8 +79,11 @@
                         Margin="24,0,50,0"
                         Padding="10"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Shows the total number of audits assigned to you"
+                        AutomationProperties.Name="Total Audits stat card"
                         BorderThickness="2"
                         CornerRadius="15"
+                        Focusable="True"
                         Style="{StaticResource StatCardStyle}">
                         <Border.BorderBrush>
                             <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
@@ -135,8 +141,11 @@
                         Margin="0,0,50,0"
                         Padding="10"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Shows the number of currently in progress audits"
+                        AutomationProperties.Name="Audits In Progress stat card"
                         BorderThickness="2"
                         CornerRadius="15"
+                        Focusable="True"
                         Style="{StaticResource StatCardStyle}">
                         <Border.BorderBrush>
                             <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
@@ -195,8 +204,11 @@
                         Margin="0,0,50,0"
                         Padding="10"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Shows the number of closed audits"
+                        AutomationProperties.Name="Completed Audits stat card"
                         BorderThickness="2"
                         CornerRadius="15"
+                        Focusable="True"
                         Style="{StaticResource StatCardStyle}">
                         <Border.BorderBrush>
                             <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
@@ -254,8 +266,11 @@
                         Margin="0,0,50,0"
                         Padding="10"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Shows the number of audits past their due date"
+                        AutomationProperties.Name="Overdue Audits stat card"
                         BorderThickness="2"
                         CornerRadius="15"
+                        Focusable="True"
                         Style="{StaticResource StatCardStyle}">
                         <Border.BorderBrush>
                             <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
@@ -311,6 +326,8 @@
                     Width="1459"
                     Margin="0,0,0,25"
                     Padding="25"
+                    AutomationProperties.HelpText="Monthly calendar showing scheduled audit events"
+                    AutomationProperties.Name="Audit calendar"
                     Background="White"
                     BorderThickness="2"
                     CornerRadius="10">
@@ -344,10 +361,13 @@
                                     Width="35"
                                     Height="35"
                                     Margin="0,0,10,0"
+                                    AutomationProperties.HelpText="Navigate to the previous month on the calendar"
+                                    AutomationProperties.Name="Previous month"
                                     Background="#F5F5F5"
                                     BorderThickness="2"
                                     Content="◀"
-                                    Cursor="Hand">
+                                    Cursor="Hand"
+                                    KeyboardNavigation.TabIndex="0">
                                     <Button.BorderBrush>
                                         <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
                                     </Button.BorderBrush>
@@ -356,6 +376,7 @@
                                     x:Name="CalendarMonthYear"
                                     Margin="10,0"
                                     VerticalAlignment="Center"
+                                    AutomationProperties.Name="Current calendar month"
                                     FontFamily="Verdana"
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -366,10 +387,13 @@
                                     Width="35"
                                     Height="35"
                                     Margin="10,0,0,0"
+                                    AutomationProperties.HelpText="Navigate to the next month on the calendar"
+                                    AutomationProperties.Name="Next month"
                                     Background="#F5F5F5"
                                     BorderThickness="2"
                                     Content="▶"
-                                    Cursor="Hand">
+                                    Cursor="Hand"
+                                    KeyboardNavigation.TabIndex="5">
                                     <Button.BorderBrush>
                                         <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
                                     </Button.BorderBrush>
@@ -386,10 +410,12 @@
                             <UniformGrid
                                 Grid.Row="0"
                                 Margin="0,0,0,10"
+                                AutomationProperties.Name="Calendar day headers"
                                 Columns="7"
                                 Rows="1">
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Monday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -397,6 +423,7 @@
                                     Text="Mon" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Tuesday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -404,6 +431,7 @@
                                     Text="Tue" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Wednesday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -411,6 +439,7 @@
                                     Text="Wed" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Thursday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -418,6 +447,7 @@
                                     Text="Thur" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Friday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -425,12 +455,14 @@
                                     Text="Fri" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Saturday"
                                     FontSize="14"
                                     FontWeight="SemiBold"
                                     Foreground="#999999"
                                     Text="Sat" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
+                                    AutomationProperties.Name="Sunday"
                                     FontFamily="Verdana"
                                     FontSize="14"
                                     FontWeight="SemiBold"
@@ -441,6 +473,8 @@
                             <UniformGrid
                                 x:Name="CalendarGrid"
                                 Grid.Row="1"
+                                AutomationProperties.HelpText="Five week calendar grid showing audit events for the selected month"
+                                AutomationProperties.Name="Calendar grid"
                                 Columns="7"
                                 Rows="5" />
                         </Grid>
@@ -452,6 +486,8 @@
                     Width="1495"
                     Margin="0,10,0,0"
                     Padding="25"
+                    AutomationProperties.HelpText="Lists audits due this month that have not been completed"
+                    AutomationProperties.Name="Upcoming deadlines section"
                     Background="White"
                     BorderThickness="2"
                     CornerRadius="8">
@@ -619,6 +655,7 @@
                         <TextBlock
                             x:Name="NoDeadlinesText"
                             Margin="15,20"
+                            AutomationProperties.Name="No upcoming deadlines this month"
                             FontFamily="Verdana"
                             FontSize="14"
                             Foreground="#999999"

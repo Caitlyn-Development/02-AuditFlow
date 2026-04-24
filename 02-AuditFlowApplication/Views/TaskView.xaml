@@ -7,7 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
     xmlns:views="clr-namespace:_02_AuditFlowApplication.Views"
+    AutomationProperties.HelpText="View assigned tasks, filter by audit or status, and submit evidence files"
+    AutomationProperties.Name="Tasks and Evidence Management page"
     Background="#FFFFFF"
+    KeyboardNavigation.TabNavigation="Cycle"
     mc:Ignorable="d">
 
     <Grid VerticalAlignment="Center">
@@ -35,11 +38,12 @@
                     Width="1121"
                     Margin="10,0,0,25"
                     HorizontalAlignment="Left"
+                    AutomationProperties.Name="Tasks and Evidence Management"
                     FontFamily="Verdana"
                     FontSize="22"
                     FontWeight="Bold"
                     Foreground="#FF1E1E1E"
-                    Text="Tasks &amp; Evidence Management " />
+                    Text="Tasks &amp; Evidence Management" />
 
 
                 <!--  Statistics Cards Row  -->
@@ -86,6 +90,8 @@
                         Margin="0,0,50,0"
                         Padding="15,0,15,0"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Search for tasks by name"
+                        AutomationProperties.Name="Task search"
                         Background="White"
                         BorderThickness="2"
                         CornerRadius="15">
@@ -120,6 +126,8 @@
                                 x:Name="SearchTextBox"
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
+                                AutomationProperties.HelpText="Type a task name to search. Suggestions will appear below."
+                                AutomationProperties.Name="Search tasks"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 FontFamily="Verdana"
@@ -191,6 +199,8 @@
                                     </Border.Effect>
                                     <ListBox
                                         x:Name="SearchResultsListBox"
+                                        AutomationProperties.HelpText="List of matching task suggestions. Use arrow keys to navigate and Enter to select."
+                                        AutomationProperties.Name="Search suggestions"
                                         Background="Transparent"
                                         BorderThickness="0"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -248,11 +258,14 @@
                         Padding="20"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Select an audit to filter the tasks list"
+                        AutomationProperties.Name="Filter by audit"
                         Background="White"
                         BorderThickness="2"
                         FontFamily="Verdana"
                         FontSize="18"
                         Foreground="#1e1e1e"
+                        KeyboardNavigation.TabIndex="1"
                         SelectionChanged="AuditFilterBox_Changed"
                         Style="{StaticResource DefaultComboBoxStyle}">
                         <ComboBox.Resources>
@@ -281,11 +294,14 @@
                         Padding="20"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
+                        AutomationProperties.HelpText="Select a status to filter the tasks list"
+                        AutomationProperties.Name="Filter by status"
                         Background="White"
                         BorderThickness="2"
                         FontFamily="Verdana"
                         FontSize="18"
                         Foreground="#1e1e1e"
+                        KeyboardNavigation.TabIndex="2"
                         SelectionChanged="StatusFilterBox_Changed"
                         Style="{StaticResource DefaultComboBoxStyle}">
                         <ComboBox.Resources>
@@ -316,6 +332,7 @@
                     MinHeight="437"
                     Margin="0,0,0,25"
                     Padding="25"
+                    AutomationProperties.HelpText="Table of tasks assigned to you. Click a status badge to update task status."
                     Background="White"
                     BorderThickness="2"
                     CornerRadius="15">
@@ -510,6 +527,8 @@
                     MinHeight="1004"
                     Margin="0,20,0,25"
                     Padding="25"
+                    AutomationProperties.HelpText="Select a task and upload evidence files by dragging and dropping or browsing"
+                    AutomationProperties.Name="Upload evidence section"
                     Background="White"
                     BorderThickness="2,2,2,2"
                     CornerRadius="10">
@@ -567,11 +586,14 @@
                                 Margin="0,40,0,60"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                AutomationProperties.HelpText="Choose the task you want to submit evidence for before uploading files"
+                                AutomationProperties.Name="Select task for evidence upload"
                                 BorderBrush="#FF1E1E1E"
                                 BorderThickness="2,2,2,2"
                                 FontFamily="Verdana"
                                 FontSize="16"
                                 Foreground="#FF1E1E1E"
+                                KeyboardNavigation.TabIndex="4"
                                 Text="Select Task">
                                 <ComboBox.Background>
                                     <LinearGradientBrush EndPoint="0,1">
@@ -591,11 +613,15 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
                                 AllowDrop="True"
+                                AutomationProperties.HelpText="Drag and drop evidence files here or click to browse. Supports PDF, Word, and image files."
+                                AutomationProperties.Name="Evidence file drop zone"
                                 BorderThickness="2"
                                 CornerRadius="15,15,15,15"
                                 DragEnter="DropZone_DragEnter"
                                 DragLeave="DropZone_DragLeave"
                                 Drop="DropZone_Drop"
+                                Focusable="True"
+                                KeyboardNavigation.TabIndex="5"
                                 MouseLeftButtonDown="DropZone_Click">
                                 <Border.BorderBrush>
                                     <SolidColorBrush Opacity="0.2" Color="#FF1E1E1E" />
@@ -633,6 +659,7 @@
                                     <TextBlock
                                         Margin="0,10,0,0"
                                         HorizontalAlignment="Center"
+                                        AutomationProperties.Name="Click to browse for files"
                                         FontFamily="Verdana"
                                         FontSize="14"
                                         Foreground="Gray"
@@ -650,6 +677,8 @@
                                 Margin="0,440,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
+                                AutomationProperties.HelpText="List of files staged for submission. Each file has a remove button."
+                                AutomationProperties.Name="Uploaded files list"
                                 VerticalScrollBarVisibility="Auto">
                                 <StackPanel x:Name="UploadedFilesPanel" />
                             </ScrollViewer>
@@ -661,9 +690,12 @@
                                 Grid.Column="1"
                                 Width="200"
                                 Margin="5,10,5,10"
+                                AutomationProperties.HelpText="Submit the uploaded files as evidence for the selected task. Only available when a task is selected and at least one file has been added."
+                                AutomationProperties.Name="Submit evidence"
                                 Click="SubmitEvidence_Click"
                                 Content="Submit Evidence"
                                 IsEnabled="True"
+                                KeyboardNavigation.TabIndex="6"
                                 Style="{StaticResource DefaultAuditorStyle}" />
                         </Grid>
                     </StackPanel>
